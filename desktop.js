@@ -9,7 +9,6 @@ import { dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { createHtml } from "./buildSrc/createHtml.js"
 import { Argument, Option, program } from "commander"
-import { checkOfflineDatabaseMigrations } from "./buildSrc/checkOfflineDbMigratons.js"
 import { domainConfigs } from "./buildSrc/DomainConfigs.js"
 import { BlockList } from "node:net"
 

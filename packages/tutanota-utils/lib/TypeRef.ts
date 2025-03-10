@@ -1,8 +1,20 @@
+export type AppName = Values<typeof AppNameEnum>
+export const AppNameEnum = Object.freeze({
+	Base: "base",
+	Sys: "sys",
+	Tutanota: "tutanota",
+	Usage: "usage",
+	Monitor: "monitor",
+	Accounting: "accounting",
+	Gossip: "gossip",
+	Storage: "storage",
+})
+
 /**
  * T should be restricted to Entity.
  */
 export class TypeRef<T> {
-	readonly app: string
+	readonly app: AppName
 	readonly typeId: number
 
 	/**
@@ -11,7 +23,7 @@ export class TypeRef<T> {
 	 */
 	readonly phantom: T | null = null
 
-	constructor(app: string, typeId: number) {
+	constructor(app: AppName, typeId: number) {
 		this.app = app
 		this.typeId = typeId
 		Object.freeze(this)
