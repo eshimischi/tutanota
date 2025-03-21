@@ -31,10 +31,10 @@ export function getFonts(): string {
 	return fonts.join(", ")
 }
 
-const boxShadow = `0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)`
+const boxShadow = `0 10px 20px rgba(107,79,71,0.30), 0 6px 6px rgba(107,79,71,0.30)`
 const searchBarShadow = "0px 2px 4px rgb(0, 0, 0, 0.12)"
 
-const scrollbarWidthHeight = px(18)
+const scrollbarWidthHeight = px(24)
 styles.registerStyle("main", () => {
 	const lightTheme = locator.themeController.getBaseTheme("light")
 	return {
@@ -243,8 +243,8 @@ styles.registerStyle("main", () => {
 		".hr": {
 			margin: 0,
 			border: "none",
-			height: "1px",
-			"background-color": theme.list_border,
+			height: "2px",
+			"background-color": theme.navigation_menu_bg,
 		},
 		".border": {
 			border: `1px solid ${theme.content_border}`,
@@ -1605,6 +1605,9 @@ styles.registerStyle("main", () => {
 		},
 		".input": {
 			outline: "none",
+		},
+		".input::placeholder": {
+			color: theme.content_message_bg,
 		},
 		"blockquote.tutanota_quote, blockquote[type=cite]": {
 			"border-left": `1px solid ${theme.content_accent}`,

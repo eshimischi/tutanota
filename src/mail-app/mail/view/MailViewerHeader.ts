@@ -200,7 +200,7 @@ export class MailViewerHeader implements Component<MailViewerHeaderAttrs> {
 			m(
 				".flex.flex-grow.align-self-start.items-start.overflow-hidden",
 				{
-					class: styles.isSingleColumnLayout() ? "mt-m" : "mt",
+					style: { lineHeight: 1, marginBottom: px(size.vpad_xsm) },
 					role: "button",
 					"mail-expander": "true",
 					// "aria-expanded" is always true because this component is only used in expanded view
@@ -239,18 +239,18 @@ export class MailViewerHeader implements Component<MailViewerHeaderAttrs> {
 					),
 				],
 			),
-			m(
-				".flex-end.items-start.ml-between-s",
-				{
-					class: styles.isSingleColumnLayout() ? "" : "mt-xs",
-					style: {
-						// align "more" button with the datetime text
-						marginRight: styles.isSingleColumnLayout() ? "-3px" : "6px",
-					},
-					onclick: (e: MouseEvent) => e.stopPropagation(),
-				},
-				this.moreButton(attrs),
-			),
+			// m(
+			// 	".flex-end.items-start.ml-between-s",
+			// 	{
+			// 		class: styles.isSingleColumnLayout() ? "" : "mt-xs",
+			// 		style: {
+			// 			// align "more" button with the datetime text
+			// 			marginRight: styles.isSingleColumnLayout() ? "-3px" : "6px",
+			// 		},
+			// 		onclick: (e: MouseEvent) => e.stopPropagation(),
+			// 	},
+			// 	this.moreButton(attrs),
+			// ),
 		])
 	}
 
@@ -271,7 +271,7 @@ export class MailViewerHeader implements Component<MailViewerHeaderAttrs> {
 		if (styles.isSingleColumnLayout()) {
 			classes += ".ml"
 		} else {
-			classes += ".pl-l"
+			classes += ".pl"
 		}
 
 		return classes
@@ -289,7 +289,7 @@ export class MailViewerHeader implements Component<MailViewerHeaderAttrs> {
 					: this.renderHardAuthenticationFailWarning(viewModel) ?? this.renderSoftAuthenticationFailWarning(viewModel),
 			),
 			m("." + responsiveCardHMargin(), this.renderExternalContentBanner(attrs)),
-			m("hr.hr.mt-xs." + responsiveCardHMargin()),
+			m("hr.hr.mt-s." + responsiveCardHMargin()),
 		].filter(Boolean)
 	}
 

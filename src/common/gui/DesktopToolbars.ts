@@ -10,10 +10,11 @@ export const DesktopListToolbar = pureComponent((__, children) => {
 		".flex.pt-xs.pb-xs.items-center.list-bg",
 		{
 			style: {
-				"border-radius": `${size.border_radius}px 0 0 0`,
+				// "border-radius": `${size.border_radius}px 0 0 0`,
 				// matching the list
-				marginLeft: `5px`,
-				marginBottom: px(size.hpad_large),
+				marginLeft: "3px",
+				marginBottom: px(size.vpad_small),
+				backgroundColor: "transparent",
 			},
 		},
 		children,
@@ -33,14 +34,15 @@ export const DesktopViewerToolbar = pureComponent((__, children) => {
 		{
 			style: {
 				marginLeft: 0,
-				marginBottom: px(size.hpad_large),
+				marginBottom: px(size.vpad_small),
 			},
 		},
 		m(
 			".flex.list-bg.pt-xs.pb-xs.plr-m",
 			{
 				style: {
-					"border-radius": `0 ${size.border_radius_larger}px 0 0`,
+					// "border-radius": `0 ${size.border_radius_larger}px 0 0`,
+					backgroundColor: "transparent",
 				},
 			},
 			[

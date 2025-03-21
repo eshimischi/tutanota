@@ -1,6 +1,6 @@
 import m, { Children, Component, Vnode } from "mithril"
 import { styles } from "./styles.js"
-import { px } from "./size.js"
+import { px, size } from "./size.js"
 
 export interface BackgroundColumnLayoutAttrs {
 	mobileHeader: () => Children
@@ -9,6 +9,7 @@ export interface BackgroundColumnLayoutAttrs {
 	backgroundColor?: string
 	floatingActionButton?: () => Children
 	classes?: string
+	style?: Record<string, string>
 }
 
 /**
@@ -22,7 +23,7 @@ export class BackgroundColumnLayout implements Component<BackgroundColumnLayoutA
 			{
 				style: {
 					backgroundColor: attrs.backgroundColor,
-					borderRadius: px(6),
+					...attrs.style,
 				},
 				class: attrs.classes ?? "",
 			},

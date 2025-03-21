@@ -5,6 +5,7 @@ import type { AllIcons } from "./Icon"
 import { Icon } from "./Icon"
 import { px, size } from "../size"
 import { assertMainOrNode } from "../../api/common/Env"
+import { theme } from "../theme.js"
 
 assertMainOrNode()
 
@@ -56,7 +57,8 @@ export default class ColumnEmptyMessageBox implements Component<ColumnEmptyMessa
 			".fill-absolute.flex.col.items-center.justify-center.overflow-hidden",
 			{
 				style: {
-					backgroundColor: attrs?.backgroundColor,
+					// backgroundColor: attrs?.backgroundColor,
+					backgroundColor: theme.main_bg,
 				},
 			},
 			m(

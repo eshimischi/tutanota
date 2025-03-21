@@ -132,6 +132,11 @@ export class MailView extends BaseTopLevelView implements TopLevelView<MailViewA
 					const folder = this.mailViewModel.getFolder()
 					return m(BackgroundColumnLayout, {
 						backgroundColor: theme.main_bg,
+						style: {
+							borderTopLeftRadius: px(size.border_radius_larger),
+							borderRight: `2px solid ${theme.navigation_menu_bg}`,
+							paddingRight: px(12),
+						},
 						desktopToolbar: () => m(DesktopListToolbar, m(SelectAllCheckbox, selectionAttrsForList(this.mailViewModel)), this.renderFilterButton()),
 						columnLayout: folder
 							? m(

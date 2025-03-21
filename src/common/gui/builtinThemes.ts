@@ -21,14 +21,15 @@ const SONNE_70 = "#FFECB7"
  *      light theme background
  */
 const light_white = "#ffffff"
-const grey_lighter_4 = "#faf8f7"
-const grey_lighter_3 = "#F5F1F0"
-const grey_lighter_2 = "#e1e1e1"
-const grey_lighter_1 = "#d5d5d5"
-const grey_lighter_0 = "#b8b8b8"
-const grey = "#868686"
-const grey_darker_0 = "#707070"
-const grey_darker_1 = "#303030"
+const red_grey_lighter_4 = "#faf8f7"
+const red_grey_lighter_3 = "#F5F1F0"
+const red_grey_lighter_2 = "#e0d4d1"
+const red_grey_lighter_1 = "#ccb8b3"
+const red_grey_lighter_0 = "#b89b94"
+const red_grey = "#a37e75"
+const red_grey_darker_0 = "#8a655c"
+const red_grey_darker_1 = "#6b4f47"
+const red_black = "#2e221f"
 const red = "#850122"
 const secondary_red = "#FF2222"
 const dunkel = "#410002"
@@ -62,10 +63,10 @@ const black = "#000000"
 
 // These are constants that have been chosen because they work across themes
 // This is even lighter than hover, for special cases like inactive search bar background
-export const stateBgLike = "rgba(139,139,139,0.18)"
-export const stateBgHover = "rgba(139,139,139,0.22)"
-export const stateBgFocus = "rgba(139,139,139,0.29)"
-export const stateBgActive = "rgba(139,139,139,0.38)"
+export const stateBgLike = "rgba(184,155,148,0.18)"
+export const stateBgHover = "rgba(184,155,148,0.22)"
+export const stateBgFocus = "rgba(184,155,148,0.29)"
+export const stateBgActive = "rgba(184,155,148,0.38)"
 export const logoDefaultGrey = logo_text_bright_grey
 export const tutaRed = red
 export const tutaDunkel = dunkel
@@ -92,10 +93,10 @@ export const themes = (): Themes => {
 	const lightRed = Object.freeze({
 		themeId: !isCalendarApp ? "light" : "light_secondary",
 		logo: getLogo(false, !isCalendarApp),
-		button_bubble_bg: grey_lighter_3,
-		button_bubble_fg: grey_darker_1,
-		content_fg: grey_darker_1,
-		content_button: grey_darker_0,
+		button_bubble_bg: red_grey_lighter_3,
+		button_bubble_fg: red_grey_darker_1,
+		content_fg: red_grey_darker_1,
+		content_button: red_grey_darker_0,
 		content_button_selected: red,
 		content_button_icon: light_white,
 		content_button_icon_selected: light_white,
@@ -104,27 +105,27 @@ export const themes = (): Themes => {
 		content_accent_secondary_tuta_bday: light_purple,
 		content_bg: light_white,
 		content_bg_tuta_bday: dark,
-		content_border: grey_lighter_1,
-		content_message_bg: grey_lighter_0,
+		content_border: red_grey_lighter_1,
+		content_message_bg: red_grey_lighter_0,
 		main_bg: light_white,
-		header_box_shadow_bg: grey_lighter_1,
-		header_button: grey_darker_0,
+		header_box_shadow_bg: red_grey_lighter_1,
+		header_button: red_grey_darker_0,
 		header_button_selected: red,
 		list_bg: light_white,
-		list_alternate_bg: grey_lighter_4,
+		list_alternate_bg: red_grey_lighter_4,
 		list_accent_fg: red,
-		list_message_bg: grey_lighter_0,
-		list_border: grey_lighter_2,
-		modal_bg: grey_darker_1,
+		list_message_bg: red_grey_lighter_0,
+		list_border: red_grey_lighter_2,
+		modal_bg: red_black,
 		elevated_bg: light_white,
-		navigation_bg: grey_lighter_4,
-		navigation_border: grey_lighter_2,
-		navigation_button: grey_darker_0,
+		navigation_bg: red_grey_lighter_4,
+		navigation_border: red_grey_lighter_2,
+		navigation_button: red_grey_darker_0,
 		navigation_button_icon: light_white,
 		navigation_button_selected: red,
 		navigation_button_icon_selected: light_white,
-		navigation_menu_bg: grey_lighter_3,
-		navigation_menu_icon: grey,
+		navigation_menu_bg: red_grey_lighter_3,
+		navigation_menu_icon: red_grey,
 		error_color: SONNE,
 	})
 	const darkRed = Object.freeze({
@@ -171,10 +172,10 @@ export const themes = (): Themes => {
 		themeId: isCalendarApp ? "light" : "light_secondary",
 		// blue is not really our brand color, treat blue like whitelabel color
 		logo: getLogo(false, isCalendarApp),
-		button_bubble_bg: grey_lighter_3,
-		button_bubble_fg: grey_darker_1,
-		content_fg: grey_darker_1,
-		content_button: grey_darker_0,
+		button_bubble_bg: red_grey_lighter_3,
+		button_bubble_fg: red_grey_darker_1,
+		content_fg: red_grey_darker_1,
+		content_button: red_grey_darker_0,
 		content_button_selected: blue,
 		content_button_icon: light_white,
 		content_button_icon_selected: light_white,
@@ -183,27 +184,27 @@ export const themes = (): Themes => {
 		content_accent_secondary_tuta_bday: light_purple,
 		content_bg: light_white,
 		content_bg_tuta_bday: dark,
-		content_border: grey_lighter_1,
-		content_message_bg: grey_lighter_0,
+		content_border: red_grey_lighter_1,
+		content_message_bg: red_grey_lighter_0,
 		main_bg: light_white,
-		header_box_shadow_bg: grey_lighter_1,
-		header_button: grey_darker_0,
+		header_box_shadow_bg: red_grey_lighter_1,
+		header_button: red_grey_darker_0,
 		header_button_selected: blue,
 		list_bg: light_white,
-		list_alternate_bg: grey_lighter_4,
+		list_alternate_bg: red_grey_lighter_4,
 		list_accent_fg: blue,
-		list_message_bg: grey_lighter_0,
-		list_border: grey_lighter_2,
-		modal_bg: grey_darker_1,
+		list_message_bg: red_grey_lighter_0,
+		list_border: red_grey_lighter_2,
+		modal_bg: red_grey_darker_1,
 		elevated_bg: light_white,
-		navigation_bg: grey_lighter_4,
-		navigation_border: grey_lighter_2,
-		navigation_button: grey_darker_0,
+		navigation_bg: red_grey_lighter_4,
+		navigation_border: red_grey_lighter_2,
+		navigation_button: red_grey_darker_0,
 		navigation_button_icon: light_white,
 		navigation_button_selected: blue,
 		navigation_button_icon_selected: light_white,
-		navigation_menu_bg: grey_lighter_3,
-		navigation_menu_icon: grey,
+		navigation_menu_bg: red_grey_lighter_3,
+		navigation_menu_icon: red_grey,
 		error_color: SONNE,
 	})
 	const darkBlue = Object.freeze({
