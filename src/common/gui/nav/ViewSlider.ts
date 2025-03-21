@@ -119,6 +119,7 @@ export class ViewSlider implements Component<ViewSliderAttrs> {
 							style: {
 								width: this.getWidth() + "px",
 								transform: "translateX(" + this.getOffset(this.visibleBackgroundColumns[0]) + "px)",
+								backgroundColor: theme.navigation_bg,
 							},
 						},
 						mainSliderColumns.map((column, index) =>

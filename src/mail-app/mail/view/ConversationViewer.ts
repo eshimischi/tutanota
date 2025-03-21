@@ -113,7 +113,7 @@ export class ConversationViewer implements Component<ConversationViewerAttrs> {
 		this.lastItems = viewModel.conversationItems()
 		this.doScroll(viewModel, this.lastItems)
 
-		return m(".fill-absolute.nav-bg.flex.col", [
+		return m(".fill-absolute.flex.col", [
 			// see comment for .scrollbar-gutter-stable-or-fallback
 			m(
 				".flex-grow.overflow-y-scroll",

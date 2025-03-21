@@ -21,8 +21,8 @@ const SONNE_70 = "#FFECB7"
  *      light theme background
  */
 const light_white = "#ffffff"
-const grey_lighter_4 = "#f6f6f6"
-const grey_lighter_3 = "#eaeaea"
+const grey_lighter_4 = "#faf8f7"
+const grey_lighter_3 = "#F5F1F0"
 const grey_lighter_2 = "#e1e1e1"
 const grey_lighter_1 = "#d5d5d5"
 const grey_lighter_0 = "#b8b8b8"
@@ -106,7 +106,7 @@ export const themes = (): Themes => {
 		content_bg_tuta_bday: dark,
 		content_border: grey_lighter_1,
 		content_message_bg: grey_lighter_0,
-		header_bg: light_white,
+		main_bg: light_white,
 		header_box_shadow_bg: grey_lighter_1,
 		header_button: grey_darker_0,
 		header_button_selected: red,
@@ -145,7 +145,7 @@ export const themes = (): Themes => {
 		content_bg_tuta_bday: light_white,
 		content_border: dark_lighter_1,
 		content_message_bg: dark_lighter_2,
-		header_bg: dark,
+		main_bg: dark,
 		header_box_shadow_bg: dark_darker_0,
 		header_button: light_lighter_0,
 		header_button_selected: light_red,
@@ -185,7 +185,7 @@ export const themes = (): Themes => {
 		content_bg_tuta_bday: dark,
 		content_border: grey_lighter_1,
 		content_message_bg: grey_lighter_0,
-		header_bg: light_white,
+		main_bg: light_white,
 		header_box_shadow_bg: grey_lighter_1,
 		header_button: grey_darker_0,
 		header_button_selected: blue,
@@ -224,7 +224,7 @@ export const themes = (): Themes => {
 		content_bg_tuta_bday: light_white,
 		content_border: dark_lighter_1,
 		content_message_bg: dark_lighter_2,
-		header_bg: dark,
+		main_bg: dark,
 		header_box_shadow_bg: dark_darker_0,
 		header_button: light_lighter_0,
 		header_button_selected: light_blue,

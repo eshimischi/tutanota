@@ -1445,7 +1445,7 @@ styles.registerStyle("main", () => {
 			"box-sizing": "border-box",
 			"border-top": `1px solid ${theme.navigation_border}`,
 			height: `calc(${size.bottom_nav_bar}px + env(safe-area-inset-bottom))`,
-			background: theme.header_bg,
+			background: theme.main_bg,
 			"padding-bottom": "env(safe-area-inset-bottom)",
 			"z-index": 2,
 		},
@@ -1553,6 +1553,7 @@ styles.registerStyle("main", () => {
 		" .folder-column": {
 			height: "100%",
 			"padding-top": "env(safe-area-inset-top)",
+			backgroundColor: theme.navigation_menu_bg,
 		},
 		".list-border-right": {
 			"border-right": `1px solid ${theme.list_border}`,

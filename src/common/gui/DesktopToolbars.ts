@@ -2,6 +2,7 @@ import { pureComponent } from "./base/PureComponent.js"
 import m from "mithril"
 import { px, size } from "./size.js"
 import { responsiveCardHMargin } from "./cards.js"
+import { theme } from "./theme.js"
 
 /** Toolbar layout that is used in the second/list column. */
 export const DesktopListToolbar = pureComponent((__, children) => {
@@ -9,7 +10,7 @@ export const DesktopListToolbar = pureComponent((__, children) => {
 		".flex.pt-xs.pb-xs.items-center.list-bg",
 		{
 			style: {
-				"border-radius": `${size.border_radius}px 0 0 ${size.border_radius}px`,
+				"border-radius": `${size.border_radius}px 0 0 0`,
 				// matching the list
 				marginLeft: `5px`,
 				marginBottom: px(size.hpad_large),
@@ -30,7 +31,6 @@ export const DesktopViewerToolbar = pureComponent((__, children) => {
 	return m(
 		".scrollbar-gutter-stable-or-fallback.overflow-y-hidden.noprint",
 		{
-			class: responsiveCardHMargin(),
 			style: {
 				marginLeft: 0,
 				marginBottom: px(size.hpad_large),
@@ -40,7 +40,7 @@ export const DesktopViewerToolbar = pureComponent((__, children) => {
 			".flex.list-bg.pt-xs.pb-xs.plr-m",
 			{
 				style: {
-					"border-radius": `0 ${size.border_radius_larger}px ${size.border_radius_larger}px 0`,
+					"border-radius": `0 ${size.border_radius_larger}px 0 0`,
 				},
 			},
 			[
