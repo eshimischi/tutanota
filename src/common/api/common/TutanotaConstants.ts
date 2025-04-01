@@ -1200,6 +1200,7 @@ export enum UsageTestMetricType {
 	Number = "0",
 	Enum = "1",
 	Likert = "2",
+	String = "3",
 }
 
 export const UsageTestMetricTypeToName = reverse(UsageTestMetricType)

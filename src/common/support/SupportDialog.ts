@@ -19,6 +19,7 @@ import { SupportSuccessPage } from "./pages/SupportSuccessPage.js"
 import { SupportRequestSentPage } from "./pages/SupportRequestSentPage.js"
 import { EmailSupportUnavailablePage } from "./pages/EmailSupportUnavailablePage.js"
 import { Keys } from "../api/common/TutanotaConstants.js"
+import { getSupportUsageTestStage } from "./SupportUsageTestUtils.js"
 
 assertMainOrNode()
 
@@ -71,7 +72,16 @@ export async function showSupportDialog(logins: LoginController) {
 						navigateToPage("emailSupportBehindPaywall")
 					}
 				},
-				goToTopicDetailPage: () => navigateToPage("topicDetail"),
+				goToTopicDetailPage: () => {
+					const selectedTopic = data.selectedTopic()
+					if (selectedTopic) {
+						const topicStage = getSupportUsageTestStage(1)
+						topicStage.setMetric({ name: "Topic", value: selectedTopic.issueEN.replaceAll(" ", "") })
+						void topicStage.complete()
+					}
+
+					navigateToPage("topicDetail")
+				},
 			}),
 			title: lang.get("supportMenu_label"),
 			leftAction: { type: ButtonType.Secondary, click: () => goBack(), label: "back_action", title: "back_action" },
@@ -100,12 +110,23 @@ export async function showSupportDialog(logins: LoginController) {
 			leftAction: { type: ButtonType.Secondary, click: () => goBack(), label: "back_action", title: "back_action" },
 		},
 		solutionWasHelpful: {
-			content: m(SupportSuccessPage),
+			content: m(SupportSuccessPage, { dialog }),
 			title: lang.get("supportMenu_label"),
-			leftAction: { type: ButtonType.Secondary, click: () => dialog.onClose(), label: "close_alt", title: "close_alt" },
+			leftAction: {
+				type: ButtonType.Secondary,
+				click: () => {
+					const stage = locator.usageTestController.getTest("support.rating").getStage(0)
+					stage.setMetric({ name: "Result", value: "Dismissed" })
+					void stage.complete()
+
+					dialog.onClose()
+				},
+				label: "close_alt",
+				title: "close_alt",
+			},
 		},
 		supportRequestSent: {
-			content: m(SupportRequestSentPage),
+			content: m(SupportRequestSentPage, { data }),
 			title: lang.get("supportMenu_label"),
 			leftAction: { type: ButtonType.Secondary, click: () => dialog.onClose(), label: "close_alt", title: "close_alt" },
 		},
