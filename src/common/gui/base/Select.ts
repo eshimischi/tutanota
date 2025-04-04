@@ -554,7 +554,7 @@ class OptionListContainer implements ClassComponent {
 	}
 
 	private renderNoItem(): Children {
-		return m("span.placeholder.text-center", { color: theme.list_message_bg }, lang.get("noEntries_msg"))
+		return m("span.placeholder.text-center", { color: theme.surface_dim }, lang.get("noEntries_msg"))
 	}
 
 	setOrigin(origin: DomRectReadOnlyPolyfilled): this {

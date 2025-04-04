@@ -244,7 +244,7 @@ export class CalendarView extends BaseTopLevelView implements TopLevelView<Calen
 					switch (this.currentViewType) {
 						case CalendarViewType.MONTH:
 							return m(BackgroundColumnLayout, {
-								backgroundColor: theme.navigation_bg,
+								backgroundColor: theme.surface_container_low,
 								desktopToolbar: () => this.renderDesktopToolbar(),
 								mobileHeader: () => this.renderMobileHeader(attrs.header),
 								columnLayout: m(CalendarMonthView, {
@@ -271,7 +271,7 @@ export class CalendarView extends BaseTopLevelView implements TopLevelView<Calen
 							})
 						case CalendarViewType.DAY:
 							return m(BackgroundColumnLayout, {
-								backgroundColor: theme.navigation_bg,
+								backgroundColor: theme.surface_container_low,
 								desktopToolbar: () => this.renderDesktopToolbar(),
 								mobileHeader: () => this.renderMobileHeader(attrs.header),
 								columnLayout: m(MultiDayCalendarView, {
@@ -304,7 +304,7 @@ export class CalendarView extends BaseTopLevelView implements TopLevelView<Calen
 
 						case CalendarViewType.WEEK:
 							return m(BackgroundColumnLayout, {
-								backgroundColor: theme.navigation_bg,
+								backgroundColor: theme.surface_container_low,
 								desktopToolbar: () => this.renderDesktopToolbar(),
 								mobileHeader: () => this.renderMobileHeader(attrs.header),
 								columnLayout: m(MultiDayCalendarView, {
@@ -338,7 +338,7 @@ export class CalendarView extends BaseTopLevelView implements TopLevelView<Calen
 
 						case CalendarViewType.THREE_DAY:
 							return m(BackgroundColumnLayout, {
-								backgroundColor: theme.navigation_bg,
+								backgroundColor: theme.surface_container_low,
 								desktopToolbar: () => this.renderDesktopToolbar(),
 								mobileHeader: () => this.renderMobileHeader(attrs.header),
 								columnLayout: m(MultiDayCalendarView, {
@@ -372,7 +372,7 @@ export class CalendarView extends BaseTopLevelView implements TopLevelView<Calen
 
 						case CalendarViewType.AGENDA:
 							return m(BackgroundColumnLayout, {
-								backgroundColor: theme.navigation_bg,
+								backgroundColor: theme.surface_container_low,
 								desktopToolbar: () => this.renderDesktopToolbar(),
 								mobileHeader: () => this.renderMobileHeader(attrs.header),
 								columnLayout: m(CalendarAgendaView, {
@@ -907,7 +907,7 @@ export class CalendarView extends BaseTopLevelView implements TopLevelView<Calen
 						size: IconSize.Medium,
 						class: "pr-s",
 						style: {
-							fill: theme.content_button,
+							fill: theme.on_surface_variant,
 						},
 				  })
 				: null,

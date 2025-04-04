@@ -56,6 +56,21 @@ export type Theme = {
 	navigation_menu_icon: string
 	error_color: string
 	tuta_color_nota: string
+	primary: string
+	on_primary: string
+	secondary: string
+	on_secondary: string
+	error: string
+	surface_dim: string
+	surface: string
+	surface_container_low: string
+	surface_container: string
+	surface_container_high: string
+	on_surface: string
+	on_surface_variant: string
+	outline: string
+	outline_variant: string
+	shadow: string
 }
 
 const themeSingleton = {}
@@ -92,19 +107,19 @@ export const themeOptions = (isCalendarApp: boolean) =>
 	] as const
 
 export function getContentButtonIconBackground(): string {
-	return theme.content_button_icon_bg || theme.content_button // fallback for the new color content_button_icon_bg
+	return theme.content_button_icon_bg || theme.on_surface_variant // fallback for the new color content_button_icon_bg
 }
 
 export function getNavButtonIconBackground(): string {
-	return theme.navigation_button_icon_bg || theme.navigation_button // fallback for the new color content_button_icon_bg
+	return theme.navigation_button_icon_bg || theme.on_surface_variant // fallback for the new color content_button_icon_bg
 }
 
 export function getElevatedBackground(): string {
-	return theme.elevated_bg || theme.content_bg
+	return theme.surface || theme.surface
 }
 
 export function getNavigationMenuBg(): string {
-	return theme.navigation_menu_bg || theme.navigation_bg
+	return theme.surface_container || theme.surface_container_low
 }
 
 export function getNavigationMenuIcon(): string {
@@ -114,7 +129,7 @@ export function getNavigationMenuIcon(): string {
 export function getLightOrDarkTutaLogo(isCalendarApp: boolean): string {
 	// Use tuta logo with our brand colors
 	const isCalendarTheme = (theme.themeId === "light" && isCalendarApp) || (theme.themeId === "light_secondary" && !isCalendarApp)
-	if (isColorLight(theme.content_bg) && !isCalendarTheme) {
+	if (isColorLight(theme.surface) && !isCalendarTheme) {
 		return getTutaLogoSvg(tutaRed, tutaDunkel)
 	} else {
 		return getTutaLogoSvg(logoDefaultGrey, logoDefaultGrey)

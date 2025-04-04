@@ -46,7 +46,7 @@ export class CalendarSearchListView implements Component<CalendarSearchListViewA
 			? m(ColumnEmptyMessageBox, {
 					icon,
 					message: "searchNoResults_msg",
-					color: theme.list_message_bg,
+					color: theme.surface_dim,
 			  })
 			: m(List, {
 					state: attrs.listModel.state,

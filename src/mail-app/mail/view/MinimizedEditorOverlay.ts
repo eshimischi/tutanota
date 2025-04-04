@@ -61,7 +61,7 @@ export class MinimizedEditorOverlay implements Component<MinimizedEditorOverlayA
 					top: COUNTER_POS_OFFSET,
 					right: COUNTER_POS_OFFSET,
 				},
-				color: theme.navigation_button_icon,
+				color: theme.surface,
 				background: getNavButtonIconBackground(),
 			}),
 			m(".flex.justify-between.pb-xs.pt-xs", [

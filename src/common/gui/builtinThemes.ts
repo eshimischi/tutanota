@@ -33,7 +33,7 @@ const red = "#850122"
 const secondary_red = "#FF2222"
 const red_nota = "#d93951"
 const dunkel = "#410002"
-const blue = "#013E85"
+const blue = "#003E85"
 const secondary_blue = "#4282FF"
 const blue_nota = "#3964d9"
 const light_blue = "#ACC7FF"
@@ -94,41 +94,65 @@ export const themes = (): Themes => {
 	const lightRed = Object.freeze({
 		themeId: !isCalendarApp ? "light" : "light_secondary",
 		logo: getLogo(false, !isCalendarApp),
-		button_bubble_bg: grey_lighter_3,
-		button_bubble_fg: grey_darker_1,
-		content_fg: grey_darker_1,
-		content_button: grey_darker_0,
-		content_button_selected: red,
-		content_button_icon: light_white,
-		content_button_icon_selected: light_white,
-		content_accent: red,
+
+		button_bubble_bg: grey_lighter_3, // secondary, surface_container(grey_lighter_3)
+		button_bubble_fg: grey_darker_1, // on_secondary, on_surface (grey_darker_1)
+		content_bg: light_white, // surface (light_white)
+		content_fg: grey_darker_1, // on_surface (grey_darker_1)
+		content_button: grey_darker_0, // on_surface_variant (grey_darker_0)
+		content_button_selected: red, // primary (red)
+		content_button_icon: light_white, // surface (light_white)
+		content_button_icon_selected: light_white, // surface (light_white)
+		content_accent: red, // primary (red)
+		content_border: grey_lighter_1, // outline (grey_lighter_1)
+		content_message_bg: grey_lighter_0, // surface_dim, surface_container_high (grey_lighter_0), outline (grey_lighter_1)!!!
+		header_bg: light_white, // surface (light_white)
+		header_box_shadow_bg: grey_lighter_1, // using boxShadowMedium in main-style.ts
+		header_button: grey_darker_0, // on_surface_variant (grey_darker_0)
+		header_button_selected: red, // primary (red)
+		list_bg: light_white, // surface (light_white)
+		list_alternate_bg: grey_lighter_4, // surface_container_low (grey_lighter_4)
+		list_accent_fg: red, // primary (red)
+		list_message_bg: grey_lighter_0, // surface_dim (grey_lighter_0)
+		list_border: grey_lighter_2, // outline_variant (grey_lighter_2)
+		modal_bg: grey_darker_1, // shadow (grey_darker_1)
+		elevated_bg: light_white, // surface (light_white)
+		navigation_bg: grey_lighter_4, //　surface_container_low (grey_lighter_4)
+		navigation_border: grey_lighter_2, // outline (grey_lighter_1)!!!
+		navigation_button: grey_darker_0, // on_surface_variant (grey_darker_0)
+		navigation_button_icon: light_white, // surface (light_white)
+		navigation_button_selected: red, // primary (red)
+		navigation_button_icon_selected: light_white, // not used
+		navigation_menu_bg: grey_lighter_3, // surface_container (grey_lighter_3)
+		navigation_menu_icon: grey, // on_surface_variant (grey_darker_0)
+		error_color: SONNE, // error (SONNE)
+
+		tuta_color_nota: red_nota,
 		content_accent_tuta_bday: dark_purple,
 		content_accent_secondary_tuta_bday: light_purple,
-		content_bg: light_white,
 		content_bg_tuta_bday: dark,
-		content_border: grey_lighter_1,
-		content_message_bg: grey_lighter_0,
-		header_bg: light_white,
-		header_box_shadow_bg: grey_lighter_1,
-		header_button: grey_darker_0,
-		header_button_selected: red,
-		list_bg: light_white,
-		list_alternate_bg: grey_lighter_4,
-		list_accent_fg: red,
-		list_message_bg: grey_lighter_0,
-		list_border: grey_lighter_2,
-		modal_bg: grey_darker_1,
-		elevated_bg: light_white,
-		navigation_bg: grey_lighter_4,
-		navigation_border: grey_lighter_2,
-		navigation_button: grey_darker_0,
-		navigation_button_icon: light_white,
-		navigation_button_selected: red,
-		navigation_button_icon_selected: light_white,
-		navigation_menu_bg: grey_lighter_3,
-		navigation_menu_icon: grey,
-		error_color: SONNE,
-		tuta_color_nota: red_nota,
+
+		// New color tokens
+		// Shadows, hover colors are defined in the different places
+		primary: red,
+		on_primary: light_white,
+		secondary: grey_lighter_3,
+		on_secondary: grey_darker_1,
+		error: SONNE,
+
+		surface_dim: grey_lighter_0,
+		surface: light_white,
+
+		surface_container_low: grey_lighter_4,
+		surface_container: grey_lighter_3,
+		surface_container_high: grey_lighter_0,
+
+		on_surface: grey_darker_1,
+		on_surface_variant: grey_darker_0,
+
+		outline: grey_lighter_1,
+		outline_variant: grey_lighter_2,
+		shadow: grey_darker_1, // Only used for modal now, there are other box shadow definition in main-style.ts
 	})
 	const darkRed = Object.freeze({
 		themeId: !isCalendarApp ? "dark" : "dark_secondary",
@@ -170,6 +194,27 @@ export const themes = (): Themes => {
 		navigation_menu_icon: light_grey,
 		error_color: SONNE_70,
 		tuta_color_nota: red_nota,
+
+		// New color tokens
+		primary: red,
+		on_primary: light_white,
+		secondary: grey_lighter_3,
+		on_secondary: grey_darker_1,
+		error: SONNE,
+
+		surface_dim: grey_lighter_0,
+		surface: light_white,
+
+		surface_container_low: grey_lighter_4,
+		surface_container: grey_lighter_3,
+		surface_container_high: grey_lighter_0,
+
+		on_surface: grey_darker_1,
+		on_surface_variant: grey_darker_0,
+
+		outline: grey_lighter_1,
+		outline_variant: grey_lighter_2,
+		shadow: grey_darker_1,
 	})
 	const lightBlue = Object.freeze({
 		themeId: isCalendarApp ? "light" : "light_secondary",
@@ -210,6 +255,27 @@ export const themes = (): Themes => {
 		navigation_menu_icon: grey,
 		error_color: SONNE,
 		tuta_color_nota: blue_nota,
+
+		// New color tokens
+		primary: red,
+		on_primary: light_white,
+		secondary: grey_lighter_3,
+		on_secondary: grey_darker_1,
+		error: SONNE,
+
+		surface_dim: grey_lighter_0,
+		surface: light_white,
+
+		surface_container_low: grey_lighter_4,
+		surface_container: grey_lighter_3,
+		surface_container_high: grey_lighter_0,
+
+		on_surface: grey_darker_1,
+		on_surface_variant: grey_darker_0,
+
+		outline: grey_lighter_1,
+		outline_variant: grey_lighter_2,
+		shadow: grey_darker_1,
 	})
 	const darkBlue = Object.freeze({
 		themeId: isCalendarApp ? "dark" : "dark_secondary",
@@ -251,6 +317,27 @@ export const themes = (): Themes => {
 		navigation_menu_icon: light_grey,
 		error_color: SONNE_70,
 		tuta_color_nota: blue_nota,
+
+		// New color tokens
+		primary: red,
+		on_primary: light_white,
+		secondary: grey_lighter_3,
+		on_secondary: grey_darker_1,
+		error: SONNE,
+
+		surface_dim: grey_lighter_0,
+		surface: light_white,
+
+		surface_container_low: grey_lighter_4,
+		surface_container: grey_lighter_3,
+		surface_container_high: grey_lighter_0,
+
+		on_surface: grey_darker_1,
+		on_surface_variant: grey_darker_0,
+
+		outline: grey_lighter_1,
+		outline_variant: grey_lighter_2,
+		shadow: grey_darker_1,
 	})
 
 	return {
