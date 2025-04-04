@@ -2,7 +2,7 @@ import m, { Children, Component, Vnode } from "mithril"
 import type { NavButtonAttrs } from "../../../common/gui/base/NavButton.js"
 import { isNavButtonSelected, NavButton } from "../../../common/gui/base/NavButton.js"
 import { CounterBadge } from "../../../common/gui/base/CounterBadge"
-import { getNavButtonIconBackground, theme } from "../../../common/gui/theme"
+import { theme } from "../../../common/gui/theme"
 import { px, size } from "../../../common/gui/size"
 import { IconButton, IconButtonAttrs } from "../../../common/gui/base/IconButton.js"
 import { Icon, IconSize } from "../../../common/gui/base/Icon.js"
@@ -135,8 +135,8 @@ export class MailFolderRow implements Component<MailFolderRowAttrs> {
 					: m("", { style: { marginRight: px(size.hpad_button) } }, [
 							m(CounterBadge, {
 								count,
-								color: theme.surface,
-								background: getNavButtonIconBackground(),
+								color: theme.surface_container,
+								background: theme.on_surface_variant,
 								showFullCount: true,
 							}),
 					  ]),

@@ -110,20 +110,12 @@ export function getContentButtonIconBackground(): string {
 	return theme.content_button_icon_bg || theme.on_surface_variant // fallback for the new color content_button_icon_bg
 }
 
-export function getNavButtonIconBackground(): string {
-	return theme.navigation_button_icon_bg || theme.on_surface_variant // fallback for the new color content_button_icon_bg
-}
-
 export function getElevatedBackground(): string {
-	return theme.surface || theme.surface
+	return isColorLight(theme.surface) ? theme.surface : theme.surface_container
 }
 
 export function getNavigationMenuBg(): string {
-	return theme.surface_container || theme.surface_container_low
-}
-
-export function getNavigationMenuIcon(): string {
-	return theme.navigation_menu_icon || theme.navigation_button_icon
+	return isColorLight(theme.surface) ? theme.surface_container : theme.surface
 }
 
 export function getLightOrDarkTutaLogo(isCalendarApp: boolean): string {

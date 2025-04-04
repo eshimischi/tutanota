@@ -102,7 +102,7 @@ export const themes = (): Themes => {
 		content_button: grey_darker_0, // on_surface_variant (grey_darker_0)
 		content_button_selected: red, // primary (red)
 		content_button_icon: light_white, // surface (light_white)
-		content_button_icon_selected: light_white, // surface (light_white)
+		content_button_icon_selected: light_white, // surface, on_primary (light_white)
 		content_accent: red, // primary (red)
 		content_border: grey_lighter_1, // outline (grey_lighter_1)
 		content_message_bg: grey_lighter_0, // surface_dim, surface_container_high (grey_lighter_0), outline (grey_lighter_1)!!!
@@ -196,25 +196,25 @@ export const themes = (): Themes => {
 		tuta_color_nota: red_nota,
 
 		// New color tokens
-		primary: red,
-		on_primary: light_white,
-		secondary: grey_lighter_3,
-		on_secondary: grey_darker_1,
-		error: SONNE,
+		primary: light_red,
+		on_primary: dark_lighter_0,
+		secondary: dark_lighter_2,
+		on_secondary: light_lighter_1,
+		error: SONNE_70,
 
-		surface_dim: grey_lighter_0,
-		surface: light_white,
+		surface_dim: dark_lighter_2,
+		surface: dark_darker_0,
 
-		surface_container_low: grey_lighter_4,
-		surface_container: grey_lighter_3,
-		surface_container_high: grey_lighter_0,
+		surface_container_low: dark_lighter_0,
+		surface_container: dark_lighter_0, // !!
+		surface_container_high: dark_lighter_2,
 
-		on_surface: grey_darker_1,
-		on_surface_variant: grey_darker_0,
+		on_surface: light_lighter_1,
+		on_surface_variant: light_lighter_0,
 
-		outline: grey_lighter_1,
-		outline_variant: grey_lighter_2,
-		shadow: grey_darker_1,
+		outline: dark_lighter_1,
+		outline_variant: dark_lighter_1,
+		shadow: dark_darker_0,
 	})
 	const lightBlue = Object.freeze({
 		themeId: isCalendarApp ? "light" : "light_secondary",
