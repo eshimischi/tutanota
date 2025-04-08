@@ -19,6 +19,7 @@ import { SupportSuccessPage } from "./pages/SupportSuccessPage.js"
 import { SupportRequestSentPage } from "./pages/SupportRequestSentPage.js"
 import { EmailSupportUnavailablePage } from "./pages/EmailSupportUnavailablePage.js"
 import { Keys } from "../api/common/TutanotaConstants.js"
+import { Dialog } from "../gui/base/Dialog.js"
 
 assertMainOrNode()
 
@@ -27,7 +28,8 @@ export interface SupportDialogState {
 	selectedCategory: Stream<SupportCategory | null>
 	selectedTopic: Stream<SupportTopic | null>
 	categories: SupportCategory[]
-	supportRequest: string
+	supportRequestHtml: string
+	isSupportRequestEmpty: boolean
 	shouldIncludeLogs: Stream<boolean>
 	logs: Stream<DataFile[]>
 }
@@ -38,7 +40,8 @@ export async function showSupportDialog(logins: LoginController) {
 		selectedCategory: Stream<SupportCategory | null>(null),
 		selectedTopic: Stream<SupportTopic | null>(null),
 		categories: [],
-		supportRequest: "",
+		supportRequestHtml: "",
+		isSupportRequestEmpty: true,
 		shouldIncludeLogs: Stream(true),
 		logs: Stream([]),
 	}
@@ -97,7 +100,21 @@ export async function showSupportDialog(logins: LoginController) {
 		contactSupport: {
 			content: m(ContactSupportPage, { data, goToSuccessPage: () => navigateToPage("supportRequestSent") }),
 			title: lang.get("supportMenu_label"),
-			leftAction: { type: ButtonType.Secondary, click: () => goBack(), label: "back_action", title: "back_action" },
+			leftAction: {
+				type: ButtonType.Secondary,
+				click: async () => {
+					if (data.isSupportRequestEmpty) {
+						goBack()
+					} else {
+						const yes = await Dialog.confirm("supportBackLostRequest_msg")
+						if (yes) {
+							goBack()
+						}
+					}
+				},
+				label: "back_action",
+				title: "back_action",
+			},
 		},
 		solutionWasHelpful: {
 			content: m(SupportSuccessPage),

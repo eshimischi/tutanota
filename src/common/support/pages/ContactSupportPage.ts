@@ -60,8 +60,11 @@ export class ContactSupportPage implements Component<Props> {
 		m.redraw()
 	}
 
-	onupdate(vnode: VnodeDOM<Props>): any {
-		vnode.attrs.data.supportRequest = this.htmlEditor?.getValue() ?? ""
+	onupdate({ attrs: { data } }: VnodeDOM<Props>): void {
+		const supportRequestHtml = this.htmlEditor?.getValue() ?? ""
+
+		data.supportRequestHtml = supportRequestHtml
+		data.isSupportRequestEmpty = supportRequestHtml.trim() === "" || new RegExp(/^<div( dir=["'][A-z]*["'])?><br><\/div>$/).test(supportRequestHtml)
 	}
 
 	/**
@@ -182,9 +185,14 @@ export class ContactSupportPage implements Component<Props> {
 								return
 							}
 
+							if (data.isSupportRequestEmpty) {
+								this.htmlEditor?.editor.domElement?.focus()
+								return
+							}
+
 							const mailBody = data.shouldIncludeLogs()
-								? `${data.supportRequest}${clientInfoString(new Date(), true).message}`
-								: data.supportRequest
+								? `${data.supportRequestHtml}${clientInfoString(new Date(), true).message}`
+								: data.supportRequestHtml
 
 							const sanitisedBody = htmlSanitizer.sanitizeHTML(convertTextToHtml(mailBody), {
 								blockExternalContent: true,

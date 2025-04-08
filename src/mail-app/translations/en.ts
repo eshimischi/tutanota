@@ -1997,6 +1997,7 @@ export default {
 		"yourMessage_label": "Your message",
 		"you_label": "You",
 		"zoomIn_action": "Zoom In",
-		"zoomOut_action": "Zoom Out"
+		"zoomOut_action": "Zoom Out",
+		"supportForm_whatWentWrong_msg": "What went wrong?"
 	}
 }
