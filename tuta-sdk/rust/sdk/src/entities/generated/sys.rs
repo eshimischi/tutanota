@@ -3800,6 +3800,8 @@ pub struct SurveyData {
 	pub category: i64,
 	pub details: Option<String>,
 	pub reason: i64,
+	#[serde(rename = "type")]
+	pub r#type: Option<i64>,
 	pub version: i64,
 }
 
@@ -3808,6 +3810,22 @@ impl Entity for SurveyData {
 		TypeRef {
 			app: "sys",
 			type_: "SurveyData",
+		}
+	}
+}
+
+#[derive(uniffi::Record, Clone, Serialize, Deserialize)]
+#[cfg_attr(any(test, feature = "testing"), derive(PartialEq, Debug))]
+pub struct SurveyDataPostIn {
+	pub _format: i64,
+	pub surveyData: SurveyData,
+}
+
+impl Entity for SurveyDataPostIn {
+	fn type_ref() -> TypeRef {
+		TypeRef {
+			app: "sys",
+			type_: "SurveyDataPostIn",
 		}
 	}
 }

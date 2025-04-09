@@ -1,5 +1,5 @@
 import { deviceConfig } from "../misc/DeviceConfig.js"
-import { completeEvaluationStage, completeTriggerStage, createEvent, isEventHappyMoment, TriggerType } from "./InAppRatingUtils.js"
+import { completeEvaluationStage, completeTriggerStage, createEvent, TriggerType } from "./UserSatisfactionUtils.js"
 import { MultiPageDialog } from "../gui/dialogs/MultiPageDialog.js"
 import { EvaluationPage } from "./pages/EvaluationPage.js"
 import m from "mithril"
@@ -8,6 +8,8 @@ import { ButtonType } from "../gui/base/Button.js"
 import { AndroidPlayStorePage } from "./pages/AndroidPlayStorePage.js"
 import { Const } from "../api/common/TutanotaConstants.js"
 import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
+import { lang } from "../misc/LanguageViewModel.js"
+import { writeSupportMail } from "../../mail-app/mail/editor/MailEditor.js"
 
 export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore"
 
@@ -54,6 +56,23 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 				dialog.close()
 				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
 			},
+			leftAction: {
+				label: lang.makeTranslation("", "Contact support"),
+				click: () => {
+					dialog.close()
+
+					void writeSupportMail("placeholder text")
+				},
+				type: ButtonType.Secondary,
+			},
+			rightAction: {
+				label: "notNow_label",
+				click: () => {
+					dialog.close()
+				},
+				title: "notNow_label",
+				type: ButtonType.Secondary,
+			},
 		},
 	})).getDialog()
 
@@ -80,7 +99,7 @@ export async function handleRatingByEvent(triggerType: TriggerType) {
 		return
 	}
 
-	if (isEventHappyMoment(currentDate, deviceConfig)) {
-		showAppRatingDialog(triggerType)
-	}
+	// if (isEventHappyMoment(currentDate, deviceConfig)) {
+	showAppRatingDialog(triggerType)
+	// }
 }

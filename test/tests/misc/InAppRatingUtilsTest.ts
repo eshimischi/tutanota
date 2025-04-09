@@ -1,5 +1,5 @@
 import o from "@tutao/otest"
-import { evaluateRatingEligibility, isEventHappyMoment, RatingDisallowReason } from "../../../src/common/ratings/InAppRatingUtils.js"
+import { evaluateRatingEligibility, isEventHappyMoment, RatingDisallowReason } from "../../../src/common/ratings/UserSatisfactionUtils.js"
 import { DeviceConfig } from "../../../src/common/misc/DeviceConfig.js"
 import { object, verify, when } from "testdouble"
 import { CommonLocator, initCommonLocator } from "../../../src/common/api/main/CommonLocator.js"

@@ -95,7 +95,7 @@ import {
 } from "../../../common/mailFunctionality/SharedMailUtils.js"
 import { mailLocator } from "../../mailLocator.js"
 
-import { handleRatingByEvent } from "../../../common/ratings/InAppRatingDialog.js"
+import { handleRatingByEvent } from "../../../common/ratings/UserSatisfactionDialog.js"
 
 export type MailEditorAttrs = {
 	model: SendMailModel
@@ -1218,4 +1218,26 @@ async function getMailboxDetailsAndProperties(
 	mailboxDetails = mailboxDetails ?? (await locator.mailboxModel.getUserMailboxDetails())
 	const mailboxProperties = await locator.mailboxModel.getMailboxProperties(mailboxDetails.mailboxGroupRoot)
 	return { mailboxDetails, mailboxProperties }
+}
+
+/**
+ * Create and show a new mail editor with a support query, addressed to premium support,
+ * or show an option to upgrade
+ * @param subject
+ * @param mailboxDetails
+ * @returns true if sending support email is allowed, false if upgrade to premium is required (may have been ordered)
+ */
+export async function writeSupportMail(subject: string = "", mailboxDetails?: MailboxDetail): Promise<boolean> {
+	const detailsProperties = await getMailboxDetailsAndProperties(mailboxDetails)
+	const recipients = {
+		to: [
+			{
+				name: null,
+				address: "helpdesk@tutao.de",
+			},
+		],
+	}
+	const dialog = await newMailEditorFromTemplate(detailsProperties.mailboxDetails, recipients, subject, "")
+	dialog.show()
+	return true
 }

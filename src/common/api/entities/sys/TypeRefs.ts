@@ -3041,7 +3041,21 @@ export type SurveyData = {
 	category: NumberString;
 	details: null | string;
 	reason: NumberString;
+	type: null | NumberString;
 	version: NumberString;
+}
+export const SurveyDataPostInTypeRef: TypeRef<SurveyDataPostIn> = new TypeRef("sys", "SurveyDataPostIn")
+
+export function createSurveyDataPostIn(values: StrippedEntity<SurveyDataPostIn>): SurveyDataPostIn {
+	return Object.assign(create(typeModels.SurveyDataPostIn, SurveyDataPostInTypeRef), values)
+}
+
+export type SurveyDataPostIn = {
+	_type: TypeRef<SurveyDataPostIn>;
+
+	_format: NumberString;
+
+	surveyData: SurveyData;
 }
 export const SwitchAccountTypePostInTypeRef: TypeRef<SwitchAccountTypePostIn> = new TypeRef("sys", "SwitchAccountTypePostIn")
 

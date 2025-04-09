@@ -4,11 +4,11 @@ import { Dialog } from "../../gui/base/Dialog.js"
 import { isIOSApp } from "../../api/common/Env.js"
 import { deviceConfig } from "../../misc/DeviceConfig.js"
 import { locator } from "../../api/main/CommonLocator.js"
-import { completeEvaluationStage, TriggerType } from "../InAppRatingUtils.js"
+import { completeEvaluationStage, TriggerType } from "../UserSatisfactionUtils.js"
 import { DateTime } from "luxon"
 import { ImageWithOptionsDialog } from "../../gui/dialogs/ImageWithOptionsDialog"
 import { getCurrentDate } from "../../api/common/TutanotaConstants.js"
-import { UserSatisfactionDialogPage } from "../InAppRatingDialog.js"
+import { UserSatisfactionDialogPage } from "../UserSatisfactionDialog.js"
 
 interface EvaluationPageAttrs {
 	triggerType: TriggerType

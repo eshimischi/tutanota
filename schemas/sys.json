@@ -610,6 +610,16 @@
 					"info": "RemoveAssociation CustomerServerProperties/whitelabelRegistrationDomains."
 				}
 			]
+		},
+		{
+			"version": 126,
+			"changes": [
+				{
+					"name": "AddValue",
+					"sourceType": "SurveyData",
+					"info": "AddValue SurveyData/type/2560."
+				}
+			]
 		}
 	]
 }
