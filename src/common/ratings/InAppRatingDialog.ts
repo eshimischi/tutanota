@@ -1,38 +1,43 @@
 import { deviceConfig } from "../misc/DeviceConfig.js"
-import { completeEvaluationStage, completeTriggerStage, createEvent, evaluateRatingEligibility, isEventHappyMoment, TriggerType } from "./InAppRatingUtils.js"
-import { isApp } from "../api/common/Env.js"
+import { completeEvaluationStage, completeTriggerStage, createEvent, isEventHappyMoment, TriggerType } from "./InAppRatingUtils.js"
 import { MultiPageDialog } from "../gui/dialogs/MultiPageDialog.js"
-import { HowAreWeDoingPage } from "./pages/HowAreWeDoingPage.js"
+import { EvaluationPage } from "./pages/EvaluationPage.js"
 import m from "mithril"
 import { DateTime } from "luxon"
 import { ButtonType } from "../gui/base/Button.js"
 import { AndroidPlayStorePage } from "./pages/AndroidPlayStorePage.js"
-import { isEmpty } from "@tutao/tutanota-utils"
 import { Const } from "../api/common/TutanotaConstants.js"
+import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
+
+export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore"
 
 export function showAppRatingDialog(triggerType: TriggerType): void {
 	completeTriggerStage(triggerType)
 
-	const dialog = new MultiPageDialog<"howAreWeDoing" | "androidPlayStore">("howAreWeDoing", (dialog, navigateToPage, _) => ({
-		howAreWeDoing: {
-			content: m(HowAreWeDoingPage, {
+	deviceConfig.setNextEvaluationDate(DateTime.now().plus({ month: 4 }).toJSDate())
+
+	const dialog = new MultiPageDialog<UserSatisfactionDialogPage>("evaluation", (dialog, navigateToPage, _) => ({
+		evaluation: {
+			content: m(EvaluationPage, {
 				triggerType,
 				dialog,
-				goToAndroidPlayStorePage: () => navigateToPage("androidPlayStore"),
+				navigate: navigateToPage,
 			}),
 			rightAction: {
 				label: "notNow_label",
 				click: () => {
 					dialog.close()
-					deviceConfig.setRetryRatingPromptAfter(DateTime.now().plus({ months: 1 }).toJSDate())
+					deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
 					completeEvaluationStage(triggerType, "NotNow")
 				},
 				title: "notNow_label",
 				type: ButtonType.Secondary,
 			},
+			// onClose handler is here because on android, using the back gesture causes the dialog to close.
+			// This interaction shall be interpreted as a "Not now" response.
 			onClose: () => {
 				dialog.close()
-				deviceConfig.setRetryRatingPromptAfter(DateTime.now().plus({ months: 1 }).toJSDate())
+				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
 				completeEvaluationStage(triggerType, "NotNow")
 			},
 		},
@@ -40,7 +45,14 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 			content: m(AndroidPlayStorePage, { triggerType, dialog }),
 			onClose: () => {
 				dialog.close()
-				deviceConfig.setRetryRatingPromptAfter(DateTime.now().plus({ months: 1 }).toJSDate())
+				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
+			},
+		},
+		dissatisfaction: {
+			content: m(DissatisfactionPage),
+			onClose: () => {
+				dialog.close()
+				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
 			},
 		},
 	})).getDialog()
@@ -52,16 +64,19 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
  * If the client is on any app (Tuta Mail or Tuta Calendar), we save the current date as an event to determine if we want to trigger a "rate Tuta" dialog.
  */
 export async function handleRatingByEvent(triggerType: TriggerType) {
-	if (isApp()) {
+	// FIXME
+	if (true) {
 		createEvent(deviceConfig)
 	}
 
 	// Allow stubbing the current date via `Const` for testing purposes.
 	const currentDate = Const.CURRENT_DATE ?? new Date()
 
-	const disallowReasons = await evaluateRatingEligibility(currentDate, deviceConfig, isApp())
+	// FIXME
+	// const disallowReasons = await evaluateRatingEligibility(currentDate, deviceConfig, isApp())
 
-	if (!isEmpty(disallowReasons)) {
+	// FIXME
+	if (false) {
 		return
 	}
 

@@ -57,7 +57,7 @@ export async function evaluateRatingEligibility(now: Date, deviceConfig: DeviceC
 		disallowReasons.push(RatingDisallowReason.ACCOUNT_TOO_YOUNG)
 	}
 
-	const retryRatingPromptAfter = deviceConfig.getRetryRatingPromptAfter()
+	const retryRatingPromptAfter = deviceConfig.getNextEvaluationDate()
 	if (retryRatingPromptAfter != null && now.getTime() < retryRatingPromptAfter.getTime()) {
 		disallowReasons.push(RatingDisallowReason.RATING_DISMISSED)
 	}

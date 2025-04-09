@@ -16,7 +16,7 @@ o.spec("InAppRatingUtilsTest", () => {
 		locatorMock = object()
 
 		initCommonLocator(locatorMock)
-		when(deviceConfigMock.getRetryRatingPromptAfter()).thenReturn(null)
+		when(deviceConfigMock.getNextEvaluationDate()).thenReturn(null)
 		when(deviceConfigMock.getLastRatingPromptedDate()).thenReturn(null)
 		when(locatorMock.systemFacade.getInstallationDate()).thenResolve(String(now.getTime()))
 		when(locatorMock.logins.getUserController()).thenReturn(userControllerMock)
@@ -47,7 +47,7 @@ o.spec("InAppRatingUtilsTest", () => {
 			// Arrange
 			const lastRatingPromptedDate = new Date("2024-06-06T06:06:06Z") // some months ago
 
-			when(deviceConfigMock.getRetryRatingPromptAfter()).thenReturn(null)
+			when(deviceConfigMock.getNextEvaluationDate()).thenReturn(null)
 			when(deviceConfigMock.getLastRatingPromptedDate()).thenReturn(lastRatingPromptedDate)
 
 			// Act
@@ -100,7 +100,7 @@ o.spec("InAppRatingUtilsTest", () => {
 			const appInstallationDate = new Date("2024-08-23T12:34:00Z") // 2 months ago
 			const retryRatingPromptAfter = new Date("2024-10-28T14:34:00Z") // in a day
 
-			when(deviceConfigMock.getRetryRatingPromptAfter()).thenReturn(retryRatingPromptAfter)
+			when(deviceConfigMock.getNextEvaluationDate()).thenReturn(retryRatingPromptAfter)
 			when(locatorMock.systemFacade.getInstallationDate()).thenResolve(String(appInstallationDate.getTime()))
 			when(locatorMock.logins.getUserController().loadCustomerInfo()).thenResolve({ creationTime: customerCreationDate })
 

@@ -29,7 +29,7 @@ export class AndroidPlayStorePage implements Component<AndroidPlayStorePageAttrs
 			subActionText: "maybeLater_action",
 			subActionClick: () => {
 				dialog.close()
-				deviceConfig.setRetryRatingPromptAfter(DateTime.now().plus({ months: 1 }).toJSDate())
+				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
 				completeRatingStage(triggerType, "MaybeLater")
 			},
 		})

@@ -8,14 +8,12 @@ import { completeEvaluationStage, TriggerType } from "../InAppRatingUtils.js"
 import { DateTime } from "luxon"
 import { ImageWithOptionsDialog } from "../../gui/dialogs/ImageWithOptionsDialog"
 
-interface HowAreWeDoingPageAttrs {
-	triggerType: TriggerType
+interface DissatisfactionPageAttrs {
 	dialog: Dialog
-	goToAndroidPlayStorePage: VoidFunction
 }
 
-export class HowAreWeDoingPage implements Component<HowAreWeDoingPageAttrs> {
-	view({ attrs: { triggerType, dialog, goToAndroidPlayStorePage } }: Vnode<HowAreWeDoingPageAttrs>): Children {
+export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> {
+	view({ attrs: { dialog } }: Vnode<DissatisfactionPageAttrs>): Children {
 		return m(
 			"",
 			{ style: { height: "666px" } },
@@ -25,19 +23,10 @@ export class HowAreWeDoingPage implements Component<HowAreWeDoingPageAttrs> {
 				messageText: "ratingExplanation_msg",
 				mainActionText: "ratingLoveIt_label",
 				mainActionClick: () => {
-					completeEvaluationStage(triggerType, "LoveIt")
-					if (isIOSApp()) {
-						deviceConfig.setLastRatingPromptedDate(new Date())
-						void locator.systemFacade.requestInAppRating()
-						dialog.close()
-					} else {
-						goToAndroidPlayStorePage()
-					}
+					dialog.close()
 				},
 				subActionText: "ratingNeedsWork_label",
 				subActionClick: () => {
-					deviceConfig.setRetryRatingPromptAfter(DateTime.now().plus({ months: 3 }).toJSDate())
-					completeEvaluationStage(triggerType, "NeedsWork")
 					dialog.close()
 				},
 			}),
