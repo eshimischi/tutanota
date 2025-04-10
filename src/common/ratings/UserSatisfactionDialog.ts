@@ -10,8 +10,9 @@ import { Const } from "../api/common/TutanotaConstants.js"
 import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
 import { lang } from "../misc/LanguageViewModel.js"
 import { writeSupportMail } from "../../mail-app/mail/editor/MailEditor.js"
+import { SupportTutaPage } from "./pages/SupportTutaPage.js"
 
-export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore"
+export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore" | "supportTuta"
 
 export function showAppRatingDialog(triggerType: TriggerType): void {
 	completeTriggerStage(triggerType)
@@ -64,6 +65,14 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 				click: () => dialog.close(),
 				title: "notNow_label",
 				type: ButtonType.Secondary,
+			},
+		},
+		supportTuta: {
+			content: m(SupportTutaPage, { dialog }),
+			rightAction: {
+				label: "notNow_label",
+				type: ButtonType.Secondary,
+				click: () => dialog.close(),
 			},
 		},
 	})).getDialog()

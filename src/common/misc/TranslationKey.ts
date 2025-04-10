@@ -1442,6 +1442,7 @@ export type TranslationKeyType =
 	| "ratingHowAreWeDoing_title"
 	| "ratingLoveIt_label"
 	| "ratingNeedsWork_label"
+	| "ratingSupportTuta_title"
 	| "readResponse_action"
 	| "reallySubmitContent_msg"
 	| "receiveCalendarNotifications_label"
@@ -1984,3 +1985,4 @@ export type TranslationKeyType =
 	| "zoomIn_action"
 	| "zoomOut_action"
 	| "emptyString_msg"
+	| "donate_action"

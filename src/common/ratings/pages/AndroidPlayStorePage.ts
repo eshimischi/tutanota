@@ -5,7 +5,6 @@ import { windowFacade } from "../../misc/WindowFacade.js"
 import { TUTA_CALENDAR_GOOGLE_PLAY_URL, TUTA_MAIL_GOOGLE_PLAY_URL } from "../../api/common/TutanotaConstants.js"
 import { completeRatingStage, TriggerType } from "../UserSatisfactionUtils.js"
 import { deviceConfig } from "../../misc/DeviceConfig.js"
-import { DateTime } from "luxon"
 import { ImageWithOptionsDialog } from "../../gui/dialogs/ImageWithOptionsDialog"
 
 interface AndroidPlayStorePageAttrs {
@@ -29,7 +28,6 @@ export class AndroidPlayStorePage implements Component<AndroidPlayStorePageAttrs
 			subActionText: "maybeLater_action",
 			subActionClick: () => {
 				dialog.close()
-				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
 				completeRatingStage(triggerType, "MaybeLater")
 			},
 		})

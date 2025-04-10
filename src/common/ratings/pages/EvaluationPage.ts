@@ -39,7 +39,7 @@ export class EvaluationPage implements Component<EvaluationPageAttrs> {
 						navigate("androidPlayStore")
 					}
 				} else {
-					// user rated already in the last year. Go to contribution dialog...
+					navigate("supportTuta")
 				}
 			},
 			subActionText: "ratingNeedsWork_label",
