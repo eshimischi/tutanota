@@ -95,45 +95,45 @@ export const themes = (): Themes => {
 		themeId: !isCalendarApp ? "light" : "light_secondary",
 		logo: getLogo(false, !isCalendarApp),
 
-		button_bubble_bg: grey_lighter_3, // secondary, surface_container(grey_lighter_3)
-		button_bubble_fg: grey_darker_1, // on_secondary, on_surface (grey_darker_1)
-		content_bg: light_white, // surface (light_white)
-		content_fg: grey_darker_1, // on_surface (grey_darker_1)
-		content_button: grey_darker_0, // on_surface_variant (grey_darker_0)
-		content_button_selected: red, // primary (red)
-		content_button_icon: light_white, // surface (light_white)
-		content_button_icon_selected: light_white, // surface, on_primary (light_white)
-		content_accent: red, // primary (red)
-		content_border: grey_lighter_1, // outline (grey_lighter_1)
-		content_message_bg: grey_lighter_0, // surface_dim, surface_container_high (grey_lighter_0), outline (grey_lighter_1)!!!
-		header_bg: light_white, // surface (light_white)
-		header_box_shadow_bg: grey_lighter_1, // using boxShadowMedium in main-style.ts
-		header_button: grey_darker_0, // on_surface_variant (grey_darker_0)
-		header_button_selected: red, // primary (red)
-		list_bg: light_white, // surface (light_white)
-		list_alternate_bg: grey_lighter_4, // surface_container_low (grey_lighter_4)
-		list_accent_fg: red, // primary (red)
-		list_message_bg: grey_lighter_0, // surface_dim (grey_lighter_0)
-		list_border: grey_lighter_2, // outline_variant (grey_lighter_2)
-		modal_bg: grey_darker_1, // shadow (grey_darker_1)
-		elevated_bg: light_white, // surface (light_white)
-		navigation_bg: grey_lighter_4, //　surface_container_low (grey_lighter_4)
-		navigation_border: grey_lighter_2, // outline (grey_lighter_1)!!!
-		navigation_button: grey_darker_0, // on_surface_variant (grey_darker_0)
-		navigation_button_icon: light_white, // surface (light_white)
-		navigation_button_selected: red, // primary (red)
-		navigation_button_icon_selected: light_white, // not used
-		navigation_menu_bg: grey_lighter_3, // surface_container (grey_lighter_3)
-		navigation_menu_icon: grey, // on_surface_variant (grey_darker_0)
-		error_color: SONNE, // error (SONNE)
+		// button_bubble_bg: grey_lighter_3, // secondary, surface_container(grey_lighter_3)
+		// button_bubble_fg: grey_darker_1, // on_secondary, on_surface (grey_darker_1)
+		// content_bg: light_white, // surface (light_white)
+		// content_fg: grey_darker_1, // on_surface (grey_darker_1)
+		// content_button: grey_darker_0, // on_surface_variant (grey_darker_0)
+		// content_button_selected: red, // primary (red)
+		// content_button_icon: light_white, // surface (light_white)
+		// content_button_icon_selected: light_white, // surface, on_primary (light_white)
+		// content_accent: red, // primary (red)
+		// content_border: grey_lighter_1, // outline (grey_lighter_1)
+		// content_message_bg: grey_lighter_0, // surface_dim, surface_container_high (grey_lighter_0), outline (grey_lighter_1)!!!
+		// header_bg: light_white, // surface (light_white)
+		// header_box_shadow_bg: grey_lighter_1, // using boxShadowMedium in main-style.ts
+		// header_button: grey_darker_0, // on_surface_variant (grey_darker_0)
+		// header_button_selected: red, // primary (red)
+		// list_bg: light_white, // surface (light_white)
+		// list_alternate_bg: grey_lighter_4, // surface_container_low (grey_lighter_4)
+		// list_accent_fg: red, // primary (red)
+		// list_message_bg: grey_lighter_0, // surface_dim (grey_lighter_0)
+		// list_border: grey_lighter_2, // outline_variant (grey_lighter_2)
+		// modal_bg: grey_darker_1, // shadow (grey_darker_1)
+		// elevated_bg: light_white, // surface (light_white)
+		// navigation_bg: grey_lighter_4, //　surface_container_low (grey_lighter_4)
+		// navigation_border: grey_lighter_2, // outline (grey_lighter_1)!!!
+		// navigation_button: grey_darker_0, // on_surface_variant (grey_darker_0)
+		// navigation_button_icon: light_white, // surface (light_white)
+		// navigation_button_selected: red, // primary (red)
+		// navigation_button_icon_selected: light_white, // not used
+		// navigation_menu_bg: grey_lighter_3, // surface_container (grey_lighter_3)
+		// navigation_menu_icon: grey, // on_surface_variant (grey_darker_0)
+		// error_color: SONNE, // error (SONNE)
 
+		// Campaign colors
 		tuta_color_nota: red_nota,
 		content_accent_tuta_bday: dark_purple,
 		content_accent_secondary_tuta_bday: light_purple,
 		content_bg_tuta_bday: dark,
 
 		// New color tokens
-		// Shadows, hover colors are defined in the different places
 		primary: red,
 		on_primary: light_white,
 		secondary: grey_lighter_3,
@@ -142,11 +142,9 @@ export const themes = (): Themes => {
 
 		surface_dim: grey_lighter_0,
 		surface: light_white,
-
 		surface_container_low: grey_lighter_4,
 		surface_container: grey_lighter_3,
 		surface_container_high: grey_lighter_0,
-
 		on_surface: grey_darker_1,
 		on_surface_variant: grey_darker_0,
 
@@ -157,43 +155,11 @@ export const themes = (): Themes => {
 	const darkRed = Object.freeze({
 		themeId: !isCalendarApp ? "dark" : "dark_secondary",
 		logo: getLogo(true, !isCalendarApp),
-		button_bubble_bg: dark_lighter_2,
-		button_bubble_fg: light_lighter_1,
-		content_fg: light_lighter_1,
-		content_button: light_lighter_0,
-		content_button_selected: light_red,
-		content_button_icon_bg: dark_lighter_2,
-		content_button_icon: light_lighter_1,
-		content_button_icon_selected: dark_lighter_0,
-		content_accent: light_red,
+		// Campaign colors
+		tuta_color_nota: red_nota,
 		content_accent_tuta_bday: light_purple,
 		content_accent_secondary_tuta_bday: dark_purple,
-		content_bg: dark_darker_0,
 		content_bg_tuta_bday: light_white,
-		content_border: dark_lighter_1,
-		content_message_bg: dark_lighter_2,
-		header_bg: dark,
-		header_box_shadow_bg: dark_darker_0,
-		header_button: light_lighter_0,
-		header_button_selected: light_red,
-		list_bg: dark_darker_0,
-		list_alternate_bg: dark_lighter_0,
-		list_accent_fg: light_red,
-		list_message_bg: dark_lighter_2,
-		list_border: dark_lighter_1,
-		modal_bg: dark_darker_0,
-		elevated_bg: dark_lighter_0,
-		navigation_bg: dark_lighter_0,
-		navigation_border: dark_lighter_1,
-		navigation_button: light_lighter_0,
-		navigation_button_icon_bg: dark_lighter_2,
-		navigation_button_icon: light_lighter_1,
-		navigation_button_selected: light_red,
-		navigation_button_icon_selected: light_lighter_0,
-		navigation_menu_bg: dark_darker_0,
-		navigation_menu_icon: light_grey,
-		error_color: SONNE_70,
-		tuta_color_nota: red_nota,
 
 		// New color tokens
 		primary: light_red,
@@ -204,11 +170,9 @@ export const themes = (): Themes => {
 
 		surface_dim: dark_lighter_2,
 		surface: dark_darker_0,
-
 		surface_container_low: dark_lighter_0,
 		surface_container: dark_lighter_0, // !!
 		surface_container_high: dark_lighter_2,
-
 		on_surface: light_lighter_1,
 		on_surface_variant: light_lighter_0,
 
@@ -220,44 +184,14 @@ export const themes = (): Themes => {
 		themeId: isCalendarApp ? "light" : "light_secondary",
 		// blue is not really our brand color, treat blue like whitelabel color
 		logo: getLogo(false, isCalendarApp),
-		button_bubble_bg: grey_lighter_3,
-		button_bubble_fg: grey_darker_1,
-		content_fg: grey_darker_1,
-		content_button: grey_darker_0,
-		content_button_selected: blue,
-		content_button_icon: light_white,
-		content_button_icon_selected: light_white,
-		content_accent: blue,
+		// Campaign colors
+		tuta_color_nota: red_nota,
 		content_accent_tuta_bday: dark_purple,
 		content_accent_secondary_tuta_bday: light_purple,
-		content_bg: light_white,
 		content_bg_tuta_bday: dark,
-		content_border: grey_lighter_1,
-		content_message_bg: grey_lighter_0,
-		header_bg: light_white,
-		header_box_shadow_bg: grey_lighter_1,
-		header_button: grey_darker_0,
-		header_button_selected: blue,
-		list_bg: light_white,
-		list_alternate_bg: grey_lighter_4,
-		list_accent_fg: blue,
-		list_message_bg: grey_lighter_0,
-		list_border: grey_lighter_2,
-		modal_bg: grey_darker_1,
-		elevated_bg: light_white,
-		navigation_bg: grey_lighter_4,
-		navigation_border: grey_lighter_2,
-		navigation_button: grey_darker_0,
-		navigation_button_icon: light_white,
-		navigation_button_selected: blue,
-		navigation_button_icon_selected: light_white,
-		navigation_menu_bg: grey_lighter_3,
-		navigation_menu_icon: grey,
-		error_color: SONNE,
-		tuta_color_nota: blue_nota,
 
 		// New color tokens
-		primary: red,
+		primary: blue,
 		on_primary: light_white,
 		secondary: grey_lighter_3,
 		on_secondary: grey_darker_1,
@@ -265,11 +199,9 @@ export const themes = (): Themes => {
 
 		surface_dim: grey_lighter_0,
 		surface: light_white,
-
 		surface_container_low: grey_lighter_4,
 		surface_container: grey_lighter_3,
 		surface_container_high: grey_lighter_0,
-
 		on_surface: grey_darker_1,
 		on_surface_variant: grey_darker_0,
 
@@ -280,64 +212,30 @@ export const themes = (): Themes => {
 	const darkBlue = Object.freeze({
 		themeId: isCalendarApp ? "dark" : "dark_secondary",
 		logo: getLogo(true, isCalendarApp),
-		button_bubble_bg: dark_lighter_2,
-		button_bubble_fg: light_lighter_1,
-		content_fg: light_lighter_1,
-		content_button: light_lighter_0,
-		content_button_selected: light_blue,
-		content_button_icon_bg: dark_lighter_2,
-		content_button_icon: light_lighter_1,
-		content_button_icon_selected: dark_lighter_0,
-		content_accent: light_blue,
+		// Campaign colors
+		tuta_color_nota: red_nota,
 		content_accent_tuta_bday: light_purple,
 		content_accent_secondary_tuta_bday: dark_purple,
-		content_bg: dark_darker_0,
 		content_bg_tuta_bday: light_white,
-		content_border: dark_lighter_1,
-		content_message_bg: dark_lighter_2,
-		header_bg: dark,
-		header_box_shadow_bg: dark_darker_0,
-		header_button: light_lighter_0,
-		header_button_selected: light_blue,
-		list_bg: dark_darker_0,
-		list_alternate_bg: dark_lighter_0,
-		list_accent_fg: light_blue,
-		list_message_bg: dark_lighter_2,
-		list_border: dark_lighter_1,
-		modal_bg: dark_darker_0,
-		elevated_bg: dark_lighter_0,
-		navigation_bg: dark_lighter_0,
-		navigation_border: dark_lighter_1,
-		navigation_button: light_lighter_0,
-		navigation_button_icon_bg: dark_lighter_2,
-		navigation_button_icon: light_lighter_1,
-		navigation_button_selected: light_blue,
-		navigation_button_icon_selected: light_lighter_0,
-		navigation_menu_bg: dark_darker_0,
-		navigation_menu_icon: light_grey,
-		error_color: SONNE_70,
-		tuta_color_nota: blue_nota,
 
 		// New color tokens
-		primary: red,
-		on_primary: light_white,
-		secondary: grey_lighter_3,
-		on_secondary: grey_darker_1,
-		error: SONNE,
+		primary: light_blue,
+		on_primary: dark_lighter_0,
+		secondary: dark_lighter_2,
+		on_secondary: light_lighter_1,
+		error: SONNE_70,
 
-		surface_dim: grey_lighter_0,
-		surface: light_white,
+		surface_dim: dark_lighter_2,
+		surface: dark_darker_0,
+		surface_container_low: dark_lighter_0,
+		surface_container: dark_lighter_0, // !!
+		surface_container_high: dark_lighter_2,
+		on_surface: light_lighter_1,
+		on_surface_variant: light_lighter_0,
 
-		surface_container_low: grey_lighter_4,
-		surface_container: grey_lighter_3,
-		surface_container_high: grey_lighter_0,
-
-		on_surface: grey_darker_1,
-		on_surface_variant: grey_darker_0,
-
-		outline: grey_lighter_1,
-		outline_variant: grey_lighter_2,
-		shadow: grey_darker_1,
+		outline: dark_lighter_1,
+		outline_variant: dark_lighter_1,
+		shadow: dark_darker_0,
 	})
 
 	return {

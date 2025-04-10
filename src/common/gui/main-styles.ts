@@ -4,7 +4,7 @@ import { client } from "../misc/ClientDetector"
 import { lang } from "../misc/LanguageViewModel"
 import { noselect, position_absolute } from "./mixins"
 import { assertMainOrNode, isAdminClient, isApp, isElectronClient } from "../api/common/Env"
-import { getContentButtonIconBackground, getElevatedBackground, getNavigationMenuBg, theme } from "./theme"
+import { getElevatedBackground, getNavigationMenuBg, theme } from "./theme"
 import { stateBgActive, stateBgFocus, stateBgHover, stateBgLike } from "./builtinThemes.js"
 import { FontIcons } from "./base/icons/FontIcons.js"
 import { DefaultAnimationTime } from "./animation/Animations.js"
@@ -1317,7 +1317,7 @@ styles.registerStyle("main", () => {
 			"margin-bottom": px(size.vpad),
 		},
 		".wizard-breadcrumb": {
-			border: `1px solid ${getContentButtonIconBackground()}`,
+			border: `1px solid ${theme.on_surface_variant}`,
 			color: "inherit",
 			"transition-property": "border-width, border-color, color, background-color",
 			"transition-duration": `${DefaultAnimationTime - 70}ms`,

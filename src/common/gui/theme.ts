@@ -19,43 +19,6 @@ export type ThemePreference = ThemeId | "auto:light|dark"
 export type Theme = {
 	themeId: ThemeId
 	logo: string
-	button_bubble_bg: string
-	button_bubble_fg: string
-	content_bg: string
-	content_bg_tuta_bday: string
-	content_fg: string
-	content_button: string
-	content_button_selected: string
-	content_button_icon: string
-	content_button_icon_selected: string
-	content_button_icon_bg?: string
-	content_accent: string
-	content_accent_tuta_bday: string
-	content_accent_secondary_tuta_bday: string
-	content_border: string
-	content_message_bg: string
-	header_bg: string
-	header_box_shadow_bg: string
-	header_button: string
-	header_button_selected: string
-	list_bg: string
-	list_alternate_bg: string
-	list_accent_fg: string
-	list_message_bg: string
-	list_border: string
-	modal_bg: string
-	elevated_bg?: string
-	navigation_bg: string
-	navigation_border: string
-	navigation_button: string
-	navigation_button_icon_bg?: string
-	navigation_button_selected: string
-	navigation_button_icon: string
-	navigation_button_icon_selected: string
-	navigation_menu_bg?: string
-	navigation_menu_icon: string
-	error_color: string
-	tuta_color_nota: string
 	primary: string
 	on_primary: string
 	secondary: string
@@ -71,6 +34,11 @@ export type Theme = {
 	outline: string
 	outline_variant: string
 	shadow: string
+	// Campaign colors
+	content_bg_tuta_bday: string
+	content_accent_tuta_bday: string
+	content_accent_secondary_tuta_bday: string
+	tuta_color_nota: string
 }
 
 const themeSingleton = {}
@@ -105,10 +73,6 @@ export const themeOptions = (isCalendarApp: boolean) =>
 			value: "dark_secondary",
 		},
 	] as const
-
-export function getContentButtonIconBackground(): string {
-	return theme.content_button_icon_bg || theme.on_surface_variant // fallback for the new color content_button_icon_bg
-}
 
 export function getElevatedBackground(): string {
 	return isColorLight(theme.surface) ? theme.surface : theme.surface_container
