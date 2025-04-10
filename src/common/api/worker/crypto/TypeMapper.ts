@@ -31,15 +31,15 @@ export class TypeMapper {
 	async applyJsTypes(typeModel: TypeModel, instance: ServerModelUntypedInstance): Promise<ServerModelEncryptedParsedInstance> {
 		let parsedInstance: ServerModelEncryptedParsedInstance = {} as ServerModelEncryptedParsedInstance
 		for (const [attrIdStr, modelValue] of Object.entries(typeModel.values)) {
-			let attrId: number
+			let attrId: number = parseInt(attrIdStr) // used to access parsedInstance which has number keys
+			let attrIdUntypedInstance: string = attrIdStr // used to access untypedInstance which has string keys (attrId:attrName in case of networkDebugging)
 			if (env.networkDebugging) {
 				// keys are in the format attributeId:attributeName when networkDebugging is enabled
-				attrId = parseInt(attrIdStr.split(":")[0])
-			} else {
-				attrId = parseInt(attrIdStr)
+				attrIdUntypedInstance += ":" + modelValue.name
 			}
+
 			// values at this stage are only strings, the other types are only possible for associations.
-			const untypedValue = instance[attrIdStr] as UntypedValue
+			const untypedValue = instance[attrIdUntypedInstance] as UntypedValue
 
 			if (modelValue.encrypted) {
 				// will be decrypted and mapped at a later stage
@@ -50,15 +50,14 @@ export class TypeMapper {
 		}
 
 		for (const [attrIdStr, modelAssociation] of Object.entries(typeModel.associations)) {
-			let attrId: number
+			let attrId: number = parseInt(attrIdStr) // used to access parsedInstance which has number keys
+			let attrIdUntypedInstance: string = attrIdStr // used to access untypedInstance which has string keys (attrId:attrName in case of networkDebugging)
 			if (env.networkDebugging) {
 				// keys are in the format attributeId:attributeName when networkDebugging is enabled
-				attrId = parseInt(attrIdStr.split(":")[0])
-			} else {
-				attrId = parseInt(attrIdStr)
+				attrIdUntypedInstance += ":" + modelAssociation.name
 			}
 
-			const values = instance[attrIdStr] as UntypedAssociation
+			const values = instance[attrIdUntypedInstance] as UntypedAssociation
 
 			if (modelAssociation.type === AssociationType.Aggregation) {
 				const appName = modelAssociation.dependency ?? typeModel.app
