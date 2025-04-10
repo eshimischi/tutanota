@@ -13,7 +13,7 @@ export default {
 		"other"
 	],
 	"created_at": "2015-01-13T20:10:13Z",
-	"updated_at": "2025-04-09T04:39:13Z",
+	"updated_at": "2025-04-10T09:47:05Z",
 	"source_locale": null,
 	"fallback_locale": null,
 	"keys": {
@@ -1609,6 +1609,7 @@ export default {
 		"selectTemplate_action": "Select",
 		"sendErrorReport_action": "Send error report",
 		"sender_label": "Sender",
+		"sendingEvaluation_msg": "Submitting feedback...",
 		"sendingUnencrypted_msg": "Your message is being sent.",
 		"sending_msg": "Your message is being encrypted and sent.",
 		"sendLogsInfo_msg": "Attach the log files to the error report. Click below to display the contents.",

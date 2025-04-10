@@ -45,17 +45,11 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 		},
 		androidPlayStore: {
 			content: m(AndroidPlayStorePage, { triggerType, dialog }),
-			onClose: () => {
-				dialog.close()
-				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
-			},
 		},
 		dissatisfaction: {
-			content: m(DissatisfactionPage),
-			onClose: () => {
-				dialog.close()
-				deviceConfig.setNextEvaluationDate(DateTime.now().plus({ months: 1 }).toJSDate())
-			},
+			content: m(DissatisfactionPage, {
+				dialog,
+			}),
 			leftAction: {
 				label: lang.makeTranslation("", "Contact support"),
 				click: () => {
@@ -67,9 +61,7 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 			},
 			rightAction: {
 				label: "notNow_label",
-				click: () => {
-					dialog.close()
-				},
+				click: () => dialog.close(),
 				title: "notNow_label",
 				type: ButtonType.Secondary,
 			},

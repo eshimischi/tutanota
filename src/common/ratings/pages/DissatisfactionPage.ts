@@ -5,7 +5,6 @@ import { LoginButton } from "../../gui/base/buttons/LoginButton.js"
 import { createSurveyData, createSurveyDataPostIn } from "../../api/entities/sys/TypeRefs.js"
 import { locator } from "../../api/main/CommonLocator.js"
 import { showProgressDialog } from "../../gui/dialogs/ProgressDialog.js"
-import { HtmlEditor } from "../../gui/editor/HtmlEditor.js"
 import { SurveyService } from "../../api/entities/sys/Services.js"
 import { px } from "../../gui/size.js"
 
@@ -15,12 +14,9 @@ interface DissatisfactionPageAttrs {
 
 export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> {
 	private dialog: Dialog | null = null
-	private htmlEditor: HtmlEditor | null = null
 	private textFieldInput: string = ""
 
 	oncreate(vnode: Vnode<DissatisfactionPageAttrs>): void {
-		this.htmlEditor = new HtmlEditor().setMinHeight(250).setEnabled(true)
-
 		this.dialog = vnode.attrs.dialog
 	}
 
@@ -41,8 +37,6 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 						this.textFieldInput = text
 					},
 				}),
-				// this.htmlEditor?.isEmpty() && !this.htmlEditor?.isActive() && m("span.text-editor-placeholder", "Whats on your mind?"),
-				// this.htmlEditor != null && m(this.htmlEditor),
 			),
 			m(
 				".flex.flex-column.gap-vpad.pb",
@@ -55,7 +49,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					".align-self-center.full-width",
 					m(LoginButton, {
 						label: "send_action",
-						disabled: false,
+						disabled: this.textFieldInput.trim() === "",
 						onclick: () => void this.onSendButtonClick(),
 					}),
 				),
@@ -77,11 +71,11 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					}),
 				}),
 			)
-
-			this.dialog?.close()
 		}
 
-		void showProgressDialog("sending_msg", send())
+		await showProgressDialog("sendingEvaluation_msg", send())
+
+		this.dialog?.close()
 	}
 }
 
