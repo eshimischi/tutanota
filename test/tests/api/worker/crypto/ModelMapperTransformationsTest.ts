@@ -6,7 +6,7 @@ import { TestAggregateRef, TestEntity } from "./InstancePipelineTestUtils"
 import { ClientModelParsedInstance, ServerModelParsedInstance, TypeModel } from "../../../../../src/common/api/common/EntityTypes"
 import { assertThrows } from "@tutao/tutanota-test-utils"
 import { ProgrammingError } from "../../../../../src/common/api/common/error/ProgrammingError"
-import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
+import { TypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
 
 o.spec("ModelMapperTransformations", function () {
 	o.spec("AddAssociation", function () {
@@ -82,10 +82,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [{ 2: "123", _finalIvs: {} } as any as ServerModelParsedInstance],
 				_finalIvs: {},
@@ -170,10 +167,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [{ 2: "123", _finalIvs: {} } as any as ServerModelParsedInstance],
 				_finalIvs: {},
@@ -264,10 +258,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [{ 2: "123", _finalIvs: {} } as any as ServerModelParsedInstance],
 				_finalIvs: {},
@@ -350,10 +341,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [["listId", "listElementId"]],
 				_finalIvs: {},
@@ -429,10 +417,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [["listId", "listElementId"]],
 				_finalIvs: {},
@@ -523,10 +508,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [["listId", "listElementId"]],
 				_finalIvs: {},
@@ -596,10 +578,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				1: "example",
 				_finalIvs: {},
@@ -667,10 +646,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				1: "example",
 				_finalIvs: {},
@@ -748,10 +724,7 @@ o.spec("ModelMapperTransformations", function () {
 				return clientModel[typeRef.typeId]
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 
 			// false
 			const falseParsedInstance: ServerModelParsedInstance = {
@@ -884,10 +857,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [
 					{
@@ -1000,10 +970,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [],
 				_finalIvs: {},
@@ -1098,10 +1065,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [],
 				_finalIvs: {},
@@ -1203,10 +1167,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [{ _finalIvs: {} } as any as ServerModelParsedInstance, { _finalIvs: {} } as any as ServerModelParsedInstance],
 				_finalIvs: {},
@@ -1301,10 +1262,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [],
 				_finalIvs: {},
@@ -1406,10 +1364,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [{ _finalIvs: {} } as any as ServerModelParsedInstance],
 				_finalIvs: {},
@@ -1512,10 +1467,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [["listId", "listElementId"]],
 				_finalIvs: {},
@@ -1619,10 +1571,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [],
 				_finalIvs: {},
@@ -1717,10 +1666,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [],
 				_finalIvs: {},
@@ -1824,10 +1770,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [
 					["listId", "listElementId1"],
@@ -1925,10 +1868,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [],
 				_finalIvs: {},
@@ -2030,10 +1970,7 @@ o.spec("ModelMapperTransformations", function () {
 
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				3: [["listId", "listElementId"]],
 				_finalIvs: {},
@@ -2108,10 +2045,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				1: "example",
 				_finalIvs: {},
@@ -2189,10 +2123,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				1: "example",
 				_finalIvs: {},
@@ -2270,10 +2201,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				1: null,
 				_finalIvs: {},
@@ -2340,10 +2268,7 @@ o.spec("ModelMapperTransformations", function () {
 				return clientModel[typeRef.typeId]
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 
 			const parsedInstance: ServerModelParsedInstance = {
 				1: "42",
@@ -2422,10 +2347,7 @@ o.spec("ModelMapperTransformations", function () {
 				return clientModel[typeRef.typeId]
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 
 			const wrongParsedInstance: ServerModelParsedInstance = {
 				1: "example",
@@ -2508,10 +2430,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -2590,10 +2509,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -2686,10 +2602,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -2774,10 +2687,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -2847,10 +2757,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -2943,10 +2850,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -3018,10 +2922,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance
@@ -3090,10 +2991,7 @@ o.spec("ModelMapperTransformations", function () {
 			}
 			const TestTypeRef = new TypeRef<TestEntity>("tutanota", 42)
 
-			const modelMapper: ModelMapper = new ModelMapper(
-				clientModelResolver as ClientTypeReferenceResolver,
-				serverModelResolver as ServerTypeReferenceResolver,
-			)
+			const modelMapper: ModelMapper = new ModelMapper(clientModelResolver as TypeReferenceResolver, serverModelResolver as TypeReferenceResolver)
 			const parsedInstance: ServerModelParsedInstance = {
 				_finalIvs: {},
 			} as any as ServerModelParsedInstance

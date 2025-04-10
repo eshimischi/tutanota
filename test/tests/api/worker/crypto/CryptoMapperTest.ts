@@ -8,11 +8,11 @@ import { createEncryptedValueType, dummyResolver, testTypeModel } from "./Instan
 import { assertThrows } from "@tutao/tutanota-test-utils"
 import { CryptoError } from "@tutao/tutanota-crypto/error.js"
 import { Type } from "cborg"
-import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
+import { TypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
 
 o.spec("CryptoMapper", function () {
 	let cryptoMapper: CryptoMapper
-	cryptoMapper = new CryptoMapper(dummyResolver as ClientTypeReferenceResolver, dummyResolver as ServerTypeReferenceResolver)
+	cryptoMapper = new CryptoMapper(dummyResolver as TypeReferenceResolver, dummyResolver as TypeReferenceResolver)
 
 	o.spec("decryptValue", function () {
 		o("decrypt string / number value without mac", function () {

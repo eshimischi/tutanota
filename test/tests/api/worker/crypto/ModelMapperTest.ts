@@ -15,10 +15,10 @@ import { dummyResolver, TestAggregate, TestAggregateRef, TestEntity, TestTypeRef
 import { ClientModelParsedInstance, ModelAssociation, ServerModelParsedInstance } from "../../../../../src/common/api/common/EntityTypes"
 import { assertThrows } from "@tutao/tutanota-test-utils"
 import { ProgrammingError } from "../../../../../src/common/api/common/error/ProgrammingError"
-import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
+import { TypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
 
 o.spec("ModelMapper", function () {
-	const modelMapper: ModelMapper = new ModelMapper(dummyResolver as ClientTypeReferenceResolver, dummyResolver as ServerTypeReferenceResolver)
+	const modelMapper: ModelMapper = new ModelMapper(dummyResolver as TypeReferenceResolver, dummyResolver as TypeReferenceResolver)
 
 	o.spec("convertDbToJsType", function () {
 		o("convert value to JS Date", function () {

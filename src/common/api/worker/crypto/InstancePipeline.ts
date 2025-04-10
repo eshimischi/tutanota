@@ -1,7 +1,7 @@
 import { TypeMapper } from "./TypeMapper"
 import { CryptoMapper } from "./CryptoMapper"
-import { ClientTypeReferenceResolver, resolveClientTypeReference, ServerTypeReferenceResolver } from "../../common/EntityFunctions"
-import { ClientModelParsedInstance, ClientModelUntypedInstance, Entity, ServerModelUntypedInstance, UntypedInstance } from "../../common/EntityTypes"
+import { resolveClientTypeReference, TypeReferenceResolver } from "../../common/EntityFunctions"
+import { ClientModelParsedInstance, ClientModelUntypedInstance, Entity, ServerModelUntypedInstance } from "../../common/EntityTypes"
 import { ModelMapper } from "./ModelMapper"
 import { downcast, TypeRef } from "@tutao/tutanota-utils"
 import { AesKey } from "@tutao/tutanota-crypto"
@@ -12,7 +12,7 @@ export class InstancePipeline {
 	readonly cryptoMapper: CryptoMapper
 	readonly modelMapper: ModelMapper
 
-	constructor(private readonly clientTypeModel: ClientTypeReferenceResolver, private readonly serverTypeModel: ServerTypeReferenceResolver) {
+	constructor(private readonly clientTypeModel: TypeReferenceResolver, private readonly serverTypeModel: TypeReferenceResolver) {
 		this.typeMapper = new TypeMapper(clientTypeModel, serverTypeModel)
 		this.cryptoMapper = new CryptoMapper(clientTypeModel, serverTypeModel)
 		this.modelMapper = new ModelMapper(clientTypeModel, serverTypeModel)

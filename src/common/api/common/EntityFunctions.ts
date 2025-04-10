@@ -37,9 +37,7 @@ export const enum MediaType {
 export type ApplicationTypesHash = string
 export type ApplicationVersionSum = number
 export type ApplicationVersion = number
-type TypeReferenceResolver = (typeref: TypeRef<any>) => Promise<TypeModel>
-export type ClientTypeReferenceResolver = Distinct<TypeReferenceResolver, ClientModelTypeSeparator>
-export type ServerTypeReferenceResolver = Distinct<TypeReferenceResolver, ServerModelTypeSeparator>
+export type TypeReferenceResolver = (typeref: TypeRef<any>) => Promise<TypeModel>
 
 export type ModelInfos = {
 	[knownApps in AppName]: { version: ApplicationVersion; compatibleSince: ApplicationVersion }
@@ -345,7 +343,7 @@ export function _verifyType(typeModel: TypeModel) {
 const clientModelInfo = new ClientModelInfo()
 
 const serverModelInfo = new ServerModelInfo(clientModelInfo)
-export const resolveClientTypeReference = ((typeRef: TypeRef<any>) => clientModelInfo.resolveTypeReference(typeRef)) as ClientTypeReferenceResolver
+export const resolveClientTypeReference = (typeRef: TypeRef<any>) => clientModelInfo.resolveTypeReference(typeRef)
 
-export const resolveServerTypeReference = ((typeRef: TypeRef<any>) => serverModelInfo.resolveTypeReference(typeRef)) as ServerTypeReferenceResolver
+export const resolveServerTypeReference = (typeRef: TypeRef<any>) => serverModelInfo.resolveTypeReference(typeRef)
 export const modelInfos = clientModelInfo.modelInfos

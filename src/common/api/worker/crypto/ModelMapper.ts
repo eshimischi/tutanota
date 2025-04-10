@@ -13,7 +13,7 @@ import { compress, uncompress } from "../Compression"
 import { ClientModelParsedInstance, Entity, ModelAssociation, ParsedAssociation, ParsedValue, ServerModelParsedInstance } from "../../common/EntityTypes"
 import { assertWorkerOrNode } from "../../common/Env"
 import { Nullable } from "@tutao/tutanota-utils/dist/Utils"
-import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../common/EntityFunctions"
+import { TypeReferenceResolver } from "../../common/EntityFunctions"
 import { random } from "@tutao/tutanota-crypto"
 
 assertWorkerOrNode()
@@ -135,9 +135,9 @@ function assertCompatibleModelTypesForApplyingClientModel(
 export class ModelMapper {
 	constructor(
 		/** resolves typerefs against the type models used by the clients business logic. */
-		private readonly clientTypes: ClientTypeReferenceResolver,
+		private readonly clientTypes: TypeReferenceResolver,
 		/** resolves typerefs against the current type models as used on the server the client connects to */
-		private readonly serverTypes: ServerTypeReferenceResolver,
+		private readonly serverTypes: TypeReferenceResolver,
 	) {}
 
 	async mapToInstance<T extends Entity>(typeRef: TypeRef<unknown>, parsedInstance: ServerModelParsedInstance): Promise<T> {
@@ -221,8 +221,6 @@ export class ModelMapper {
 		}
 
 		for (const [attrIdStr, modelValue] of Object.entries(clientTypeModel.values)) {
-			// fixme add network debugging
-
 			const attrId = parseInt(attrIdStr)
 			let clientValue = ((instance as any)[modelValue.name] as Nullable<ParsedValue>) ?? null
 

@@ -11,12 +11,11 @@ import { rolldown } from "rolldown"
 import { resolveLibs } from "../buildSrc/RollupConfig.js"
 import { nodeGypPlugin } from "../buildSrc/nodeGypPlugin.js"
 import { fileURLToPath } from "node:url"
-import { assertNotNull } from "@tutao/tutanota-utils"
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(path.join(currentDir, ".."))
 
-export async function runTestBuild({ networkDebugging = true, clean, fast = false }) {
+export async function runTestBuild({ networkDebugging = false, clean, fast = false }) {
 	if (clean) {
 		await runStep("Clean", async () => {
 			await fs.emptyDir("build")
