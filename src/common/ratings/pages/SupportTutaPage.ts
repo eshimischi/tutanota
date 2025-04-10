@@ -9,6 +9,8 @@ import stream from "mithril/stream"
 import { PlanType } from "../../api/common/TutanotaConstants.js"
 import { showUpgradeDialog } from "../../gui/nav/NavFunctions.js"
 import { windowFacade } from "../../misc/WindowFacade.js"
+import { progressIcon } from "../../gui/base/Icon.js"
+import { lang } from "../../misc/LanguageViewModel.js"
 
 interface SupportTutaPageAttrs {
 	dialog: Dialog
@@ -18,13 +20,24 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 	private readonly currentPlan: Stream<PlanType | null> = stream(null)
 	private dialog: Dialog | null = null
 
+	async oncreate(vnode: VnodeDOM<SupportTutaPageAttrs>) {
+		this.currentPlan(await this.getCurrentPlan())
+		this.dialog = vnode.attrs.dialog
+		m.redraw()
+	}
+
 	view(): Children {
 		if (!this.currentPlan()) {
-			return null
+			return m(
+				".full-width.full-height.flex.justify-center.items-center.flex-column",
+				m(".flex-center", progressIcon()),
+				m("p.m-0.mt-s.text-center", lang.getTranslationText("loading_msg")),
+			)
 		}
 
 		return m(ImageWithOptionsDialog, {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/rate-us-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
+			imageStyle: { "max-width": "300px" },
 			titleText: "ratingSupportTuta_title",
 			messageText: "emptyString_msg",
 			mainActionText: this.getMainAction().langKey,
@@ -51,7 +64,7 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 					langKey: "referralSettings_label",
 					onClick: () => {
 						this.dialog?.close()
-						windowFacade.openLink("/settings/referral")
+						m.route.set("/settings/referral")
 					},
 				}
 			}
@@ -75,10 +88,10 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 			}
 			case PlanType.Revolutionary: {
 				return {
-					langKey: "upgrade_action",
+					langKey: "referralSettings_label",
 					onClick: () => {
 						this.dialog?.close()
-						windowFacade.openLink("/settings/referral")
+						m.route.set("/settings/referral")
 					},
 				}
 			}
@@ -90,10 +103,5 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 
 	private async getCurrentPlan() {
 		return await locator.logins.getUserController().getPlanType()
-	}
-
-	async oncreate(vnode: VnodeDOM<SupportTutaPageAttrs>) {
-		this.currentPlan(await this.getCurrentPlan())
-		this.dialog = vnode.attrs.dialog
 	}
 }
