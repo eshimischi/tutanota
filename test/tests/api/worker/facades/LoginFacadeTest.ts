@@ -36,7 +36,12 @@ import { defer, DeferredObject, uint8ArrayToBase64 } from "@tutao/tutanota-utils
 import { AccountType, Const, DEFAULT_KDF_TYPE, KdfType } from "../../../../../src/common/api/common/TutanotaConstants"
 import { AccessExpiredError, ConnectionError, NotAuthenticatedError } from "../../../../../src/common/api/common/error/RestError"
 import { SessionType } from "../../../../../src/common/api/common/SessionType"
-import { HttpMethod, resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions"
+import {
+	HttpMethod,
+	resolveClientTypeReference,
+	resolveServerTypeReference,
+	ServerTypeReferenceResolver,
+} from "../../../../../src/common/api/common/EntityFunctions"
 import { ConnectMode, EventBusClient } from "../../../../../src/common/api/worker/EventBusClient"
 import { TutanotaPropertiesTypeRef } from "../../../../../src/common/api/entities/tutanota/TypeRefs"
 import { BlobAccessTokenFacade } from "../../../../../src/common/api/worker/facades/BlobAccessTokenFacade.js"
@@ -99,7 +104,7 @@ async function createSession(userId: string, accessKey: number[], instancePipeli
 		user: userId,
 		accessKey: bitArrayToUint8Array(accessKey),
 	})
-	const untypedSession = await instancePipeline.mapToServerAndEncrypt(SessionTypeRef, session, aes256RandomKey())
+	const untypedSession = await instancePipeline.mapAndEncrypt(SessionTypeRef, session, aes256RandomKey())
 	return untypedSession
 }
 
@@ -135,7 +140,7 @@ o.spec("LoginFacadeTest", function () {
 		when(entityClientMock.loadRoot(TutanotaPropertiesTypeRef, anything())).thenResolve(createTestEntity(TutanotaPropertiesTypeRef))
 
 		loginListener = object<LoginListener>()
-		instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+		instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 		cryptoFacadeMock = object<CryptoFacade>()
 		usingOfflineStorage = false
 		cacheStorageInitializerMock = object()
@@ -465,7 +470,11 @@ o.spec("LoginFacadeTest", function () {
 						calls.push("return")
 					})
 
-				o(result).deepEquals({ type: "error", reason: ResumeSessionErrorReason.OfflineNotAvailableForFree, asyncResumeCompleted: null })
+				o(result).deepEquals({
+					type: "error",
+					reason: ResumeSessionErrorReason.OfflineNotAvailableForFree,
+					asyncResumeCompleted: null,
+				})
 				o(calls).deepEquals(["sessionService", "return"])
 			})
 

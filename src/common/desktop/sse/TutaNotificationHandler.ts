@@ -15,10 +15,10 @@ import { DesktopAlarmStorage } from "./DesktopAlarmStorage.js"
 import { SseInfo } from "./SseInfo.js"
 import { SseStorage } from "./SseStorage.js"
 import { FetchImpl } from "../net/NetAgent"
-import { resolveTypeReference } from "../../api/common/EntityFunctions"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../api/common/EntityFunctions"
 import { StrippedEntity } from "../../api/common/utils/EntityUtils"
 import { TypeMapper } from "../../api/worker/crypto/TypeMapper"
-import { EncryptedParsedInstance, TypeModel, UntypedInstance } from "../../api/common/EntityTypes"
+import { EncryptedParsedInstance, ServerModelUntypedInstance, TypeModel } from "../../api/common/EntityTypes"
 import { AttributeModel } from "../../api/common/AttributeModel"
 
 const TAG = "[notifications]"
@@ -29,7 +29,7 @@ export type MailMetadata = {
 	id: IdTuple
 }
 
-const typeMapper = new TypeMapper(resolveTypeReference)
+const typeMapper = new TypeMapper(resolveClientTypeReference, resolveServerTypeReference)
 
 export class TutaNotificationHandler {
 	constructor(
@@ -114,10 +114,10 @@ export class TutaNotificationHandler {
 				throw handleRestError(neverNull(response.status), url.toString(), response.headers.get("Error-Id"), null)
 			}
 
-			const parsedResponse = (await response.json()) as UntypedInstance
+			const parsedResponse = (await response.json()) as ServerModelUntypedInstance
 
-			const mailModel = await resolveTypeReference(MailTypeRef)
-			const mailAddressModel = await resolveTypeReference(MailAddressTypeRef)
+			const mailModel = await resolveClientTypeReference(MailTypeRef)
+			const mailAddressModel = await resolveClientTypeReference(MailAddressTypeRef)
 			const mailEncryptedParsedInstance: EncryptedParsedInstance = await typeMapper.applyJsTypes(mailModel, parsedResponse)
 			return this.encryptedMailToMailMetaData(mailModel, mailAddressModel, mailEncryptedParsedInstance)
 		} catch (e) {

@@ -26,11 +26,11 @@ import {
 import { createTestEntity, mockFetchRequest, removeAggregateIds, removeFinalIvs } from "../../TestUtils.js"
 import { SseInfo } from "../../../../src/common/desktop/sse/SseInfo.js"
 import { OperationType } from "../../../../src/common/api/common/TutanotaConstants"
-import { resolveTypeReference } from "../../../../src/common/api/common/EntityFunctions"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../../../src/common/api/common/EntityFunctions"
 import { InstancePipeline } from "../../../../src/common/api/worker/crypto/InstancePipeline"
 import { aes256RandomKey } from "@tutao/tutanota-crypto"
 import { StrippedEntity } from "../../../../src/common/api/common/utils/EntityUtils"
-import { UntypedInstance } from "../../../../src/common/api/common/EntityTypes"
+import { ServerModelUntypedInstance, UntypedInstance } from "../../../../src/common/api/common/EntityTypes"
 import { DesktopAlarmStorage } from "../../../../src/common/desktop/sse/DesktopAlarmStorage"
 import { DesktopAlarmScheduler } from "../../../../src/common/desktop/sse/DesktopAlarmScheduler"
 import { EncryptedMissedNotification } from "../../../../src/common/native/common/EncryptedMissedNotification"
@@ -40,7 +40,7 @@ import { AttributeModel } from "../../../../src/common/api/common/AttributeModel
 
 const APP_V = env.versionNumber
 
-const instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+const instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 const { anything } = matchers
 
 o.spec("TutaSseFacade", () => {
@@ -85,8 +85,8 @@ o.spec("TutaSseFacade", () => {
 				sseClient.connect(
 					matchers.argThat(async (opts: SseConnectOptions) => {
 						const actualUrl = opts.url
-						const actualBody: UntypedInstance = JSON.parse(assertNotNull(actualUrl.searchParams.get("_body")))
-						const connectData = await instancePipeline.decryptAndMapToClient(SseConnectDataTypeRef, actualBody, null)
+						const actualBody: ServerModelUntypedInstance = JSON.parse(assertNotNull(actualUrl.searchParams.get("_body")))
+						const connectData = await instancePipeline.decryptAndMap(SseConnectDataTypeRef, actualBody, null)
 						return (
 							actualUrl.origin === expectedUrl.origin &&
 							connectData.identifier === "id" &&
@@ -175,7 +175,7 @@ o.spec("TutaSseFacade", () => {
 			})
 
 			const sk = aes256RandomKey()
-			const untypedInstance = await instancePipeline.mapToServerAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
+			const untypedInstance = await instancePipeline.mapAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
 			const strippedEncryptedNotificationInfo: StrippedEntity<NotificationInfo> = {
 				mailAddress: notificationInfo.mailAddress,
 				userId: notificationInfo.userId,
@@ -249,7 +249,12 @@ o.spec("TutaSseFacade", () => {
 					pushIdentifierSessionEncSessionKey: stringToUtf8Uint8Array("dummy"),
 				}),
 			})
-			const untypedInstance = await instancePipeline.mapToServerAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
+			// casting here is fine, since we just want to mimic server response data
+			const untypedInstance = (await instancePipeline.mapAndEncrypt(
+				MissedNotificationTypeRef,
+				missedNotification,
+				sk,
+			)) as unknown as ServerModelUntypedInstance
 			const encryptedMissedNotification = await EncryptedMissedNotification.from(untypedInstance)
 			await sseFacade.handleAlarmNotification(encryptedMissedNotification)
 			verify(alarmScheduler.handleDeleteAlarm("alarmId"))
@@ -281,7 +286,12 @@ o.spec("TutaSseFacade", () => {
 
 			const sk = aes256RandomKey()
 			when(alarmStorage.getNotificationSessionKey(anything())).thenResolve(null)
-			const untypedInstance = await instancePipeline.mapToServerAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
+			// casting here is fine, since we just want to mimic server response data
+			const untypedInstance = (await instancePipeline.mapAndEncrypt(
+				MissedNotificationTypeRef,
+				missedNotification,
+				sk,
+			)) as unknown as ServerModelUntypedInstance
 			const encryptedMissedNotification = await EncryptedMissedNotification.from(untypedInstance)
 
 			await assertThrows(CryptoError, () => sseFacade.handleAlarmNotification(encryptedMissedNotification))
@@ -324,9 +334,14 @@ o.spec("TutaSseFacade", () => {
 				when(alarmStorage.getNotificationSessionKey(anything())).thenResolve(null)
 			})
 
-			const untypedInstance = await instancePipeline.mapToServerAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
-			const missedNotificationTypeModel = await resolveTypeReference(MissedNotificationTypeRef)
-			const alarmNotificationTypeModel = await resolveTypeReference(AlarmNotificationTypeRef)
+			// casting here is fine, since we just want to mimic server response data
+			const untypedInstance = (await instancePipeline.mapAndEncrypt(
+				MissedNotificationTypeRef,
+				missedNotification,
+				sk,
+			)) as unknown as ServerModelUntypedInstance
+			const missedNotificationTypeModel = await resolveClientTypeReference(MissedNotificationTypeRef)
+			const alarmNotificationTypeModel = await resolveClientTypeReference(AlarmNotificationTypeRef)
 			const anAttrId = assertNotNull(AttributeModel.getAttributeId(missedNotificationTypeModel, "alarmNotifications"))
 			const eventStartAttrId = assertNotNull(AttributeModel.getAttributeId(alarmNotificationTypeModel, "eventStart"))
 			downcast<Array<UntypedInstance>>(untypedInstance[anAttrId])[0][eventStartAttrId] = stringToBase64("newDate")
@@ -359,7 +374,7 @@ o.spec("TutaSseFacade", () => {
 			})
 
 			const sk = aes256RandomKey()
-			const untypedInstance = await instancePipeline.mapToServerAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
+			const untypedInstance = await instancePipeline.mapAndEncrypt(MissedNotificationTypeRef, missedNotification, sk)
 
 			await sseFacade.connect()
 
@@ -438,7 +453,7 @@ o.spec("TutaSseFacade", () => {
 			const url = captor.values![1].url
 			const body = url.searchParams.get("_body")!
 
-			const instance = await instancePipeline.decryptAndMapToClient(SseConnectDataTypeRef, JSON.parse(body), null)
+			const instance = await instancePipeline.decryptAndMap(SseConnectDataTypeRef, JSON.parse(body), null)
 			o(instance.userIds.length).equals(1)
 			o(instance.userIds[0].value).equals("user1")
 		})

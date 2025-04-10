@@ -8,7 +8,7 @@ import { makeKeyStoreFacade } from "../../TestUtils.js"
 import { DesktopConfigKey } from "../../../../src/common/desktop/config/ConfigKeys.js"
 import { assertNotNull, uint8ArrayToBase64 } from "@tutao/tutanota-utils"
 import { InstancePipeline } from "../../../../src/common/api/worker/crypto/InstancePipeline"
-import { resolveTypeReference } from "../../../../src/common/api/common/EntityFunctions"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../../../src/common/api/common/EntityFunctions"
 import { uint8ArrayToBitArray } from "@tutao/tutanota-crypto"
 
 o.spec("DesktopAlarmStorageTest", function () {
@@ -21,7 +21,7 @@ o.spec("DesktopAlarmStorageTest", function () {
 	const key4 = new Uint8Array([4])
 	const decryptedKey = new Uint8Array([0, 1])
 	const encryptedKey = new Uint8Array([1, 0])
-	const instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+	const instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 
 	o.beforeEach(function () {
 		cryptoMock = instance(DesktopNativeCryptoFacade)

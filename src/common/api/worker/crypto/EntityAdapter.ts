@@ -1,6 +1,13 @@
 import { BucketKey, BucketKeyTypeRef } from "../../entities/sys/TypeRefs"
 import { assertNotNull, downcast, TypeRef } from "@tutao/tutanota-utils"
-import type { ClientModelParsedInstance, EncryptedParsedInstance, Entity, ServerModelParsedInstance, TypeModel } from "../../common/EntityTypes"
+import type {
+	ClientModelParsedInstance,
+	EncryptedParsedInstance,
+	Entity,
+	ServerModelEncryptedParsedInstance,
+	ServerModelParsedInstance,
+	TypeModel,
+} from "../../common/EntityTypes"
 import { AttributeModel } from "../../common/AttributeModel"
 import { InstancePipeline } from "./InstancePipeline"
 import { Nullable } from "@tutao/tutanota-utils/dist/Utils"
@@ -17,7 +24,7 @@ export class EntityAdapter implements Entity {
 	static async from(typeModel: TypeModel, encryptedParsedInstance: EncryptedParsedInstance, instancePipeline: InstancePipeline) {
 		let bucketKey: Nullable<BucketKey> = null
 		const bucketKeyParsedInstance = downcast<ServerModelParsedInstance>(
-			AttributeModel.getAttributeorNull<EncryptedParsedInstance>(encryptedParsedInstance, "bucketKey", typeModel)?.[0],
+			AttributeModel.getAttributeorNull<ServerModelEncryptedParsedInstance>(encryptedParsedInstance, "bucketKey", typeModel)?.[0],
 		)
 		if (bucketKeyParsedInstance) {
 			// since, bucket key is really not encrypted entity, we can just parse it to instance
@@ -78,6 +85,7 @@ export class EntityAdapter implements Entity {
 	get _listEncSessionKey(): null | Uint8Array {
 		return AttributeModel.getAttributeorNull<Uint8Array>(this.encryptedParsedInstance, "_listEncSessionKey", this.typeModel)
 	}
+
 	get _ownerPublicEncSessionKey(): null | Uint8Array {
 		return AttributeModel.getAttributeorNull<Uint8Array>(this.encryptedParsedInstance, "_ownerPublicEncSessionKey", this.typeModel)
 	}

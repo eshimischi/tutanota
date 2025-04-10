@@ -75,12 +75,12 @@ import {
 	X25519KeyPair,
 	X25519PublicKey,
 } from "@tutao/tutanota-crypto"
-import { TypeModel, UntypedInstance } from "../../../../../src/common/api/common/EntityTypes.js"
+import { ClientModelUntypedInstance, ServerModelUntypedInstance, TypeModel, UntypedInstance } from "../../../../../src/common/api/common/EntityTypes.js"
 import { IServiceExecutor } from "../../../../../src/common/api/common/ServiceRequest.js"
 import { matchers, object, verify, when } from "testdouble"
 import { UpdatePermissionKeyService } from "../../../../../src/common/api/entities/sys/Services.js"
 import { elementIdPart, getListId, isSameId, listIdPart } from "../../../../../src/common/api/common/utils/EntityUtils.js"
-import { HttpMethod, resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
+import { HttpMethod, resolveClientTypeReference, resolveServerTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { UserFacade } from "../../../../../src/common/api/worker/facades/UserFacade.js"
 import { SessionKeyNotFoundError } from "../../../../../src/common/api/common/error/SessionKeyNotFoundError.js"
 import { OwnerEncSessionKeysUpdateQueue } from "../../../../../src/common/api/worker/crypto/OwnerEncSessionKeysUpdateQueue.js"
@@ -134,7 +134,7 @@ async function prepareBucketKeyInstance(
 	protocolVersion: CryptoProtocolVersion,
 	asymmetricCryptoFacade: AsymmetricCryptoFacade,
 ) {
-	const MailTypeModel = await resolveTypeReference(MailTypeRef)
+	const MailTypeModel = await resolveClientTypeReference(MailTypeRef)
 
 	const mailInstanceSessionKey = createTestEntity(InstanceSessionKeyTypeRef, {
 		typeInfo: createTestEntity(TypeInfoTypeRef, {
@@ -145,7 +145,7 @@ async function prepareBucketKeyInstance(
 		instanceList: "mailListId",
 		instanceId: "mailId",
 	})
-	const FileTypeModel = await resolveTypeReference(FileTypeRef)
+	const FileTypeModel = await resolveClientTypeReference(FileTypeRef)
 	const bucketEncSessionKeys = fileSessionKeys.map((fileSessionKey, index) => {
 		return createTestEntity(InstanceSessionKeyTypeRef, {
 			typeInfo: createTestEntity(TypeInfoTypeRef, {
@@ -184,7 +184,7 @@ async function prepareBucketKeyInstance(
 o.spec("CryptoFacadeTest", function () {
 	let restClient: RestClient
 
-	let instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+	let instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 
 	let serviceExecutor: IServiceExecutor
 	let entityClient: EntityClient
@@ -1418,7 +1418,7 @@ o.spec("CryptoFacadeTest", function () {
 		when(userFacade.hasGroup(ownerGroup)).thenReturn(true)
 		when(userFacade.isFullyLoggedIn()).thenReturn(true)
 
-		const MailDetailsBlobTypeModel = await resolveTypeReference(MailDetailsBlobTypeRef)
+		const MailDetailsBlobTypeModel = await resolveClientTypeReference(MailDetailsBlobTypeRef)
 		const mailDetailsBlob = createTestEntity(MailDetailsBlobTypeRef, {
 			_id: ["mailDetailsArchiveId", "mailDetailsId"],
 			_ownerGroup: ownerGroup,
@@ -1499,7 +1499,7 @@ o.spec("CryptoFacadeTest", function () {
 			encryptionAuthStatus: null,
 			symKeyVersion: "0",
 		})
-		const FileTypeModel = await resolveTypeReference(FileTypeRef)
+		const FileTypeModel = await resolveClientTypeReference(FileTypeRef)
 		const bucketEncSessionKeys = fileSessionKeys.map((fileSessionKey, index) => {
 			return createInstanceSessionKey({
 				typeInfo: createTypeInfo({
@@ -1688,13 +1688,13 @@ o.spec("CryptoFacadeTest", function () {
 		let sk = aes256RandomKey()
 		let bk = aes256RandomKey()
 
-		const mailUntypedInstance = await createEncryptedUntypedMailInstance(null, sk, confidential, externalUser.mailGroup._id)
+		const mailUntypedInstance = await createUntypedMailInstance(null, sk, confidential, externalUser.mailGroup._id)
 
 		const groupKeyToEncryptBucketKey = externalUserGroupEncBucketKey ? externalUser.userGroupKey : externalUser.mailGroupKey
 		const groupEncBucketKey = encryptKey(groupKeyToEncryptBucketKey, bk)
 		const bucketEncMailSessionKey = encryptKey(bk, sk)
 
-		const MailTypeModel = await resolveTypeReference(MailTypeRef)
+		const MailTypeModel = await resolveClientTypeReference(MailTypeRef)
 
 		const mailInstanceSessionKey = createTestEntity(InstanceSessionKeyTypeRef, {
 			typeInfo: createTestEntity(TypeInfoTypeRef, {
@@ -1705,7 +1705,7 @@ o.spec("CryptoFacadeTest", function () {
 			instanceList: "mailListId",
 			instanceId: "mailId",
 		})
-		const FileTypeModel = await resolveTypeReference(FileTypeRef)
+		const FileTypeModel = await resolveClientTypeReference(FileTypeRef)
 		const bucketEncSessionKeys = fileSessionKeys.map((fileSessionKey, index) => {
 			return createTestEntity(InstanceSessionKeyTypeRef, {
 				typeInfo: createTestEntity(TypeInfoTypeRef, {
@@ -1726,13 +1726,13 @@ o.spec("CryptoFacadeTest", function () {
 			bucketEncSessionKeys: bucketEncSessionKeys,
 		})
 
-		const bucketKeyUntypedInstance: UntypedInstance = await instancePipeline.mapToServerAndEncrypt(BucketKeyTypeRef, bucketKey, null)
+		const bucketKeyUntypedInstance: UntypedInstance = await instancePipeline.mapAndEncrypt(BucketKeyTypeRef, bucketKey, null)
 
 		mailUntypedInstance[assertNotNull(AttributeModel.getAttributeId(MailTypeModel, "bucketKey"))] = [bucketKeyUntypedInstance]
 		const mailEncryptedParsedInstance = await instancePipeline.typeMapper.applyJsTypes(MailTypeModel, mailUntypedInstance)
 
 		return {
-			entityAdapter: await EntityAdapter.from(await resolveTypeReference(MailTypeRef), mailEncryptedParsedInstance, instancePipeline),
+			entityAdapter: await EntityAdapter.from(await resolveClientTypeReference(MailTypeRef), mailEncryptedParsedInstance, instancePipeline),
 			bucketKey,
 			sk,
 			bk,
@@ -1786,13 +1786,13 @@ o.spec("CryptoFacadeTest", function () {
 		let confidential = true
 		let sk = aes256RandomKey()
 		let bk = aes256RandomKey()
-		const untypedMailInstance = await createEncryptedUntypedMailInstance(null, sk, confidential, internalUser.mailGroup._id)
+		const untypedMailInstance = await createUntypedMailInstance(null, sk, confidential, internalUser.mailGroup._id)
 
 		const keyGroup = externalUser.mailGroup._id
 		const groupEncBucketKey = encryptKey(externalUser.mailGroupKey, bk)
 		const bucketEncMailSessionKey = encryptKey(bk, sk)
 
-		const MailTypeModel = await resolveTypeReference(MailTypeRef)
+		const MailTypeModel = await resolveClientTypeReference(MailTypeRef)
 		const mailInstanceSessionKey = createTestEntity(InstanceSessionKeyTypeRef, {
 			typeInfo: createTestEntity(TypeInfoTypeRef, {
 				application: MailTypeModel.app,
@@ -1816,7 +1816,7 @@ o.spec("CryptoFacadeTest", function () {
 			senderKeyVersion: null,
 		})
 
-		const bucketKeyUntypedInstance: UntypedInstance = await instancePipeline.mapToServerAndEncrypt(BucketKeyTypeRef, bucketKey, null)
+		const bucketKeyUntypedInstance: UntypedInstance = await instancePipeline.mapAndEncrypt(BucketKeyTypeRef, bucketKey, null)
 
 		untypedMailInstance[assertNotNull(AttributeModel.getAttributeId(MailTypeModel, "bucketKey"))] = [bucketKeyUntypedInstance]
 
@@ -1835,12 +1835,12 @@ o.spec("CryptoFacadeTest", function () {
 		}
 	}
 
-	async function createEncryptedUntypedMailInstance(
+	async function createUntypedMailInstance(
 		ownerGroupKey: AesKey | null,
 		sessionKey: AesKey,
 		confidential: boolean,
 		ownerGroupId: string,
-	): Promise<UntypedInstance> {
+	): Promise<ServerModelUntypedInstance> {
 		const mail = createMail({
 			_format: "0",
 			_ownerGroup: ownerGroupId,
@@ -1877,7 +1877,8 @@ o.spec("CryptoFacadeTest", function () {
 			sets: [],
 		})
 
-		return await instancePipeline.mapToServerAndEncrypt(MailTypeRef, mail, sessionKey)
+		// casting here is fine, since we just want to mimic server response data
+		return (await instancePipeline.mapAndEncrypt(MailTypeRef, mail, sessionKey)) as unknown as ServerModelUntypedInstance
 	}
 })
 

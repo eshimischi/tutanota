@@ -31,7 +31,7 @@ import { EntityClient } from "../../../../../src/common/api/common/EntityClient.
 import { createTestEntity } from "../../../TestUtils.js"
 import { EntityRestClient } from "../../../../../src/common/api/worker/rest/EntityRestClient"
 import { InstancePipeline } from "../../../../../src/common/api/worker/crypto/InstancePipeline"
-import { resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../../../../src/common/api/common/EntityFunctions"
 
 o.spec("CalendarFacadeTest", function () {
 	let userAlarmInfoListId: Id
@@ -121,7 +121,7 @@ o.spec("CalendarFacadeTest", function () {
 		serviceExecutor = object()
 		cryptoFacade = object()
 		infoMessageHandler = object()
-		instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+		instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 		calendarFacade = new CalendarFacade(
 			userFacade,
 			groupManagementFacade,

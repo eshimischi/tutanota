@@ -359,7 +359,7 @@ export class CalendarFacade {
 		const encryptedNotificationsWireFormat = JSON.stringify(
 			await Promise.all(
 				alarmNotifications.map(async (an) => {
-					return await this.instancePipeline.mapToServerAndEncrypt(AlarmNotificationTypeRef, an, sessionKey)
+					return await this.instancePipeline.mapAndEncrypt(AlarmNotificationTypeRef, an, sessionKey)
 				}),
 			),
 		)

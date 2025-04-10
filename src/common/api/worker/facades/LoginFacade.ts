@@ -52,7 +52,7 @@ import {
 	UserTypeRef,
 } from "../../entities/sys/TypeRefs.js"
 import { TutanotaPropertiesTypeRef } from "../../entities/tutanota/TypeRefs.js"
-import { HttpMethod, MediaType, resolveTypeReference } from "../../common/EntityFunctions"
+import { HttpMethod, MediaType, resolveClientTypeReference } from "../../common/EntityFunctions"
 import { assertWorkerOrNode, isAdminClient } from "../../common/Env"
 import { ConnectMode, EventBusClient } from "../EventBusClient"
 import { EntityRestClient, typeRefToRestPath } from "../rest/EntityRestClient"
@@ -589,7 +589,11 @@ export class LoginFacade {
 					return await this.finishResumeSession(credentials, externalUserKeyDeriver, cacheInfo).catch(
 						ofClass(ConnectionError, async () => {
 							await this.resetSession()
-							return { type: "error", reason: ResumeSessionErrorReason.OfflineNotAvailableForFree, asyncResumeCompleted: null }
+							return {
+								type: "error",
+								reason: ResumeSessionErrorReason.OfflineNotAvailableForFree,
+								asyncResumeCompleted: null,
+							}
 						}),
 					)
 				}
@@ -860,7 +864,7 @@ export class LoginFacade {
 	 */
 	async deleteSession(accessToken: Base64Url, pushIdentifier: string | null = null): Promise<void> {
 		let path = (await typeRefToRestPath(SessionTypeRef)) + "/" + this.getSessionListId(accessToken) + "/" + this.getSessionElementId(accessToken)
-		const sessionTypeModel = await resolveTypeReference(SessionTypeRef)
+		const sessionTypeModel = await resolveClientTypeReference(SessionTypeRef)
 
 		const headers = {
 			accessToken: neverNull(accessToken),
@@ -900,7 +904,7 @@ export class LoginFacade {
 		accessKey: AesKey | null
 	}> {
 		const path = (await typeRefToRestPath(SessionTypeRef)) + "/" + this.getSessionListId(accessToken) + "/" + this.getSessionElementId(accessToken)
-		const SessionTypeModel = await resolveTypeReference(SessionTypeRef)
+		const SessionTypeModel = await resolveClientTypeReference(SessionTypeRef)
 
 		let headers = {
 			accessToken: accessToken,

@@ -6,7 +6,7 @@ import type { DesktopKeyStoreFacade } from "../DesktopKeyStoreFacade.js"
 import { assertNotNull, Base64, base64ToUint8Array, findAllAndRemove, uint8ArrayToBase64 } from "@tutao/tutanota-utils"
 import { log } from "../DesktopLog"
 import { AesKey, decryptKey, uint8ArrayToBitArray } from "@tutao/tutanota-crypto"
-import { UntypedInstance } from "../../api/common/EntityTypes"
+import { ServerModelUntypedInstance, UntypedInstance } from "../../api/common/EntityTypes"
 import { AlarmNotification, AlarmNotificationTypeRef, NotificationSessionKey } from "../../api/entities/sys/TypeRefs"
 import { InstancePipeline } from "../../api/worker/crypto/InstancePipeline"
 import { hasError } from "../../api/common/utils/ErrorUtils"
@@ -153,7 +153,7 @@ export class DesktopAlarmStorage {
 		// excludedDates field.
 		// to be able to decrypt & map these we need to at least add a plausible value there
 		// we'll unschedule, redownload and reschedule the fixed instances after login.
-		const alarms: Array<UntypedInstance> = await this.conf.getVar(DesktopConfigKey.scheduledAlarms)
+		const alarms: Array<ServerModelUntypedInstance> = await this.conf.getVar(DesktopConfigKey.scheduledAlarms)
 		if (!alarms) {
 			return []
 		} else if (alarms.length > 0 && typeof alarms[0]["_format"] === "string") {
@@ -181,14 +181,14 @@ export class DesktopAlarmStorage {
 			sk = assertNotNull(notificationSessionKeyWrapper).sessionKey
 		}
 
-		return await this.instancePipeline.mapToServerAndEncrypt(AlarmNotificationTypeRef, an, sk)
+		return await this.instancePipeline.mapAndEncrypt(AlarmNotificationTypeRef, an, sk)
 	}
 
-	public async decryptAlarmNotification(an: UntypedInstance): Promise<AlarmNotification> {
+	public async decryptAlarmNotification(an: ServerModelUntypedInstance): Promise<AlarmNotification> {
 		const encryptedAlarmNotification = await EncryptedAlarmNotification.from(an)
 		const skResult = await this.getNotificationSessionKey(encryptedAlarmNotification.getNotificationSessionKeys())
 		if (skResult) {
-			const alarmNotification = await this.instancePipeline.decryptAndMapToClient(AlarmNotificationTypeRef, an, skResult.sessionKey)
+			const alarmNotification = await this.instancePipeline.decryptAndMap(AlarmNotificationTypeRef, an, skResult.sessionKey)
 			if (hasError(alarmNotification)) {
 				// some property of the AlarmNotification couldn't be decrypted with the selected key
 				// throw away the key that caused the error and try the next one

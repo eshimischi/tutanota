@@ -17,7 +17,7 @@ import {
 } from "@tutao/tutanota-utils"
 import { ArchiveDataType, MAX_BLOB_SIZE_BYTES } from "../../../common/TutanotaConstants.js"
 
-import { HttpMethod, MediaType, resolveTypeReference } from "../../../common/EntityFunctions.js"
+import { HttpMethod, MediaType, resolveClientTypeReference } from "../../../common/EntityFunctions.js"
 import { assertWorkerOrNode, isApp, isDesktop } from "../../../common/Env.js"
 import type { SuspensionHandler } from "../../SuspensionHandler.js"
 import { BlobService } from "../../../entities/storage/Services.js"
@@ -350,9 +350,9 @@ export class BlobFacade {
 	}
 
 	private async parseBlobPostOutResponse(jsonData: string): Promise<BlobReferenceTokenWrapper> {
-		const responseTypeModel = await resolveTypeReference(BlobPostOutTypeRef)
+		const responseTypeModel = await resolveClientTypeReference(BlobPostOutTypeRef)
 		const instance = JSON.parse(jsonData)
-		const { blobReferenceToken } = await this.instancePipeline.decryptAndMapToClient(BlobPostOutTypeRef, instance, null)
+		const { blobReferenceToken } = await this.instancePipeline.decryptAndMap(BlobPostOutTypeRef, instance, null)
 		// is null in case of post multiple to the BlobService, currently only supported in the rust-sdk
 		// post single always has a valid blobRefernceToken with cardinality one.
 		if (blobReferenceToken == null) {
@@ -392,7 +392,7 @@ export class BlobFacade {
 			blobId: null,
 			blobIds: blobs.map(({ blobId }) => createBlobId({ blobId: blobId })),
 		})
-		const untypedInstance = await this.instancePipeline.mapToServerAndEncrypt(BlobGetInTypeRef, getData, null)
+		const untypedInstance = await this.instancePipeline.mapAndEncrypt(BlobGetInTypeRef, getData, null)
 		const body = JSON.stringify(untypedInstance)
 		const queryParams = await this.blobAccessTokenFacade.createQueryParams(blobServerAccessInfo, {}, BlobGetInTypeRef)
 		const concatBinaryData = await tryServers(
@@ -420,7 +420,7 @@ export class BlobFacade {
 			blobId,
 			blobIds: [],
 		})
-		const untypedInstance = await this.instancePipeline.mapToServerAndEncrypt(BlobGetInTypeRef, getData, null)
+		const untypedInstance = await this.instancePipeline.mapAndEncrypt(BlobGetInTypeRef, getData, null)
 		const _body = JSON.stringify(untypedInstance)
 
 		const blobFilename = blobId + ".blob"

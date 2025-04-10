@@ -33,12 +33,12 @@ import { EntityRestCache } from "./rest/DefaultEntityRestCache.js"
 import { SleepDetector } from "./utils/SleepDetector.js"
 import sysModelInfo from "../entities/sys/ModelInfo.js"
 import tutanotaModelInfo from "../entities/tutanota/ModelInfo.js"
-import { ApplicationTypesHash, resolveTypeReference, ServerModelInfo } from "../common/EntityFunctions.js"
+import { ApplicationTypesHash, resolveClientTypeReference } from "../common/EntityFunctions.js"
 import { PhishingMarkerWebsocketDataTypeRef, ReportedMailFieldMarker } from "../entities/tutanota/TypeRefs"
 import { UserFacade } from "./facades/UserFacade"
 import { ExposedProgressTracker } from "../main/ProgressTracker.js"
 import { SyncTracker } from "../main/SyncTracker.js"
-import { Entity, UntypedInstance } from "../common/EntityTypes"
+import { Entity, ServerModelUntypedInstance, UntypedInstance } from "../common/EntityTypes"
 import { AppName } from "@tutao/tutanota-utils/dist/TypeRef"
 import { InstancePipeline } from "./crypto/InstancePipeline"
 import { ApplicationTypesFacade } from "./facades/ApplicationTypesFacade"
@@ -285,8 +285,8 @@ export class EventBusClient {
 		return p
 	}
 
-	private async decodeEntityEventValue<E extends Entity>(messageType: TypeRef<E>, untypedInstance: UntypedInstance): Promise<E> {
-		return await this.instancePipeline.decryptAndMapToClient(messageType, untypedInstance, null)
+	private async decodeEntityEventValue<E extends Entity>(messageType: TypeRef<E>, untypedInstance: ServerModelUntypedInstance): Promise<E> {
+		return await this.instancePipeline.decryptAndMap(messageType, untypedInstance, null)
 	}
 
 	private onError(error: any) {
@@ -351,7 +351,7 @@ export class EventBusClient {
 		return promiseFilter(eventBatch, async (entityUpdate) => {
 			const typeRef = new TypeRef(entityUpdate.application as AppName, parseInt(entityUpdate.typeId))
 			try {
-				await resolveTypeReference(typeRef)
+				await resolveClientTypeReference(typeRef)
 				return true
 			} catch (_error) {
 				console.warn("ignoring entityEventUpdate for unknown type with typeId", typeRef.toString())

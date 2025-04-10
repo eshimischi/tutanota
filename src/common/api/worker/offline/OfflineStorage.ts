@@ -19,7 +19,7 @@ import {
 	TypeRef,
 } from "@tutao/tutanota-utils"
 import { isDesktop, isOfflineStorageAvailable, isTest } from "../../common/Env.js"
-import { modelInfos, resolveTypeReference } from "../../common/EntityFunctions.js"
+import { modelInfos, resolveClientTypeReference } from "../../common/EntityFunctions.js"
 import { DateProvider } from "../../common/DateProvider.js"
 import { TokenOrNestedTokens } from "cborg/interface"
 import { CalendarEventTypeRef, MailTypeRef } from "../../entities/tutanota/TypeRefs.js"
@@ -171,29 +171,29 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async deleteIfExists(typeRef: TypeRef<SomeEntity>, listId: Id | null, elementId: Id): Promise<void> {
 		const type = getTypeId(typeRef)
-		const typeModel: TypeModel = await resolveTypeReference(typeRef)
+		const typeModel: TypeModel = await resolveClientTypeReference(typeRef)
 		const encodedElementId = ensureBase64Ext(typeModel, elementId)
 		let formattedQuery
 		switch (typeModel.type) {
 			case TypeId.Element:
 				formattedQuery = sql`DELETE
-									 FROM element_entities
-									 WHERE type = ${type}
-									   AND elementId = ${encodedElementId}`
+                                     FROM element_entities
+                                     WHERE type = ${type}
+                                       AND elementId = ${encodedElementId}`
 				break
 			case TypeId.ListElement:
 				formattedQuery = sql`DELETE
-									 FROM list_entities
-									 WHERE type = ${type}
-									   AND listId = ${listId}
-									   AND elementId = ${encodedElementId}`
+                                     FROM list_entities
+                                     WHERE type = ${type}
+                                       AND listId = ${listId}
+                                       AND elementId = ${encodedElementId}`
 				break
 			case TypeId.BlobElement:
 				formattedQuery = sql`DELETE
-									 FROM blob_element_entities
-									 WHERE type = ${type}
-									   AND listId = ${listId}
-									   AND elementId = ${encodedElementId}`
+                                     FROM blob_element_entities
+                                     WHERE type = ${type}
+                                       AND listId = ${listId}
+                                       AND elementId = ${encodedElementId}`
 				break
 			default:
 				throw new Error("must be a persistent type")
@@ -204,7 +204,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	async deleteAllOfType(typeRef: TypeRef<SomeEntity>): Promise<void> {
 		const type = getTypeId(typeRef)
 		let typeModel: TypeModel
-		typeModel = await resolveTypeReference(typeRef)
+		typeModel = await resolveClientTypeReference(typeRef)
 		let formattedQuery
 		switch (typeModel.type) {
 			case TypeId.Element:
@@ -248,7 +248,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async get<T extends SomeEntity>(typeRef: TypeRef<T>, listId: Id | null, elementId: Id): Promise<T | null> {
 		const type = getTypeId(typeRef)
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const encodedElementId = ensureBase64Ext(typeModel, elementId)
 		let formattedQuery
 		switch (typeModel.type) {
@@ -281,7 +281,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async provideMultiple<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, elementIds: Id[]): Promise<Array<T>> {
 		if (elementIds.length === 0) return []
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const encodedElementIds = elementIds.map((elementId) => ensureBase64Ext(typeModel, elementId))
 
 		const type = getTypeId(typeRef)
@@ -302,7 +302,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async getIdsInRange<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id): Promise<Array<Id>> {
 		const type = getTypeId(typeRef)
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const range = await this.getRange(typeRef, listId)
 		if (range == null) {
 			throw new Error(`no range exists for ${type} and list ${listId}`)
@@ -324,7 +324,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	async getRangeForList<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id): Promise<Range | null> {
 		let range = await this.getRange(typeRef, listId)
 		if (range == null) return range
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		return {
 			lower: customIdToBase64Url(typeModel, range.lower),
 			upper: customIdToBase64Url(typeModel, range.upper),
@@ -332,7 +332,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	}
 
 	async isElementIdInCacheRange<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, elementId: Id): Promise<boolean> {
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const encodedElementId = ensureBase64Ext(typeModel, elementId)
 
 		const range = await this.getRange(typeRef, listId)
@@ -340,7 +340,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	}
 
 	async provideFromRange<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, start: Id, count: number, reverse: boolean): Promise<T[]> {
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const encodedStartId = ensureBase64Ext(typeModel, start)
 		const type = getTypeId(typeRef)
 		let formattedQuery
@@ -372,7 +372,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 		const { listId, elementId } = expandId(originalEntity._id)
 		const type = getTypeId(originalEntity._type)
 		const ownerGroup = assertNotNull(originalEntity._ownerGroup)
-		const typeModel = await resolveTypeReference(originalEntity._type)
+		const typeModel = await resolveClientTypeReference(originalEntity._type)
 		const encodedElementId = ensureBase64Ext(typeModel, elementId)
 		let formattedQuery: FormattedQuery
 		switch (typeModel.type) {
@@ -412,7 +412,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	}
 
 	async setLowerRangeForList<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, lowerId: Id): Promise<void> {
-		lowerId = ensureBase64Ext(await resolveTypeReference(typeRef), lowerId)
+		lowerId = ensureBase64Ext(await resolveClientTypeReference(typeRef), lowerId)
 		const type = getTypeId(typeRef)
 		const { query, params } = sql`UPDATE ranges
 									  SET lower = ${lowerId}
@@ -422,7 +422,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	}
 
 	async setUpperRangeForList<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, upperId: Id): Promise<void> {
-		upperId = ensureBase64Ext(await resolveTypeReference(typeRef), upperId)
+		upperId = ensureBase64Ext(await resolveClientTypeReference(typeRef), upperId)
 		const type = getTypeId(typeRef)
 		const { query, params } = sql`UPDATE ranges
 									  SET upper = ${upperId}
@@ -432,7 +432,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	}
 
 	async setNewRangeForList<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, lower: Id, upper: Id): Promise<void> {
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		lower = ensureBase64Ext(typeModel, lower)
 		upper = ensureBase64Ext(typeModel, upper)
 
@@ -497,7 +497,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 									  WHERE type = ${getTypeId(typeRef)}`
 		const items = (await this.sqlCipherFacade.all(query, params)) ?? []
 
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		return promiseMap(
 			items,
 			async (item) => (await this.decodeCborEntity(item.entity.value as Uint8Array, typeRef)) as Record<string, unknown> & ListElementEntity,
@@ -509,7 +509,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 									  from element_entities
 									  WHERE type = ${getTypeId(typeRef)}`
 		const items = (await this.sqlCipherFacade.all(query, params)) ?? []
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		return promiseMap(
 			items,
 			async (item) => (await this.decodeCborEntity(item.entity.value as Uint8Array, typeRef)) as Record<string, unknown> & ElementEntity,
@@ -691,7 +691,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async deleteIn(typeRef: TypeRef<unknown>, listId: Id | null, elementIds: Id[]): Promise<void> {
 		if (elementIds.length === 0) return
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const encodedElementIds = elementIds.map((elementIds) => ensureBase64Ext(typeModel, elementIds))
 		switch (typeModel.type) {
 			case TypeId.Element:
@@ -746,7 +746,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 	}
 
 	async updateRangeForList<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id, rawCutoffId: Id): Promise<void> {
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const isCustomId = isCustomIdType(typeModel)
 		const encodedCutoffId = ensureBase64Ext(typeModel, rawCutoffId)
 
@@ -808,7 +808,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 			return null
 		}
 
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		return (await this.fixupTypeRefs(typeModel, deserialized)) as T
 	}
 
@@ -828,7 +828,7 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 			const associationName = associationModel.name
 			if (associationModel.type === AssociationType.Aggregation) {
 				const aggregateTypeRef = new TypeRef(associationModel.dependency ?? typeModel.app, associationModel.refTypeId)
-				const aggregateTypeModel = await resolveTypeReference(aggregateTypeRef)
+				const aggregateTypeModel = await resolveClientTypeReference(aggregateTypeRef)
 				switch (associationModel.cardinality) {
 					case Cardinality.One:
 					case Cardinality.ZeroOrOne: {

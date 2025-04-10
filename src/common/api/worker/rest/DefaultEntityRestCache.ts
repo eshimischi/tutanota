@@ -8,7 +8,7 @@ import {
 	getCacheModeBehavior,
 	OwnerEncSessionKeyProvider,
 } from "./EntityRestClient"
-import { resolveTypeReference } from "../../common/EntityFunctions"
+import { resolveClientTypeReference } from "../../common/EntityFunctions"
 import { OperationType } from "../../common/TutanotaConstants"
 import { assertNotNull, difference, getFirstOrThrow, getTypeId, groupBy, isSameTypeRef, lastThrow, TypeRef } from "@tutao/tutanota-utils"
 import {
@@ -416,7 +416,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 			return await customHandler.loadRange(this.storage, listId, start, count, reverse)
 		}
 
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const useCache = (await this.shouldUseCache(typeRef, opts)) && isCachedRangeType(typeModel, typeRef)
 
 		if (!useCache) {
@@ -610,7 +610,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		wasReverseRequest: boolean,
 		receivedEntities: T[],
 	) {
-		const isCustomId = isCustomIdType(await resolveTypeReference(typeRef))
+		const isCustomId = isCustomIdType(await resolveClientTypeReference(typeRef))
 		let elementsToAdd = receivedEntities
 		if (wasReverseRequest) {
 			// Ensure that elements are cached in ascending (not reverse) order
@@ -658,7 +658,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		const { lower, upper } = range
 		let indexOfStart = allRangeList.indexOf(start)
 
-		const typeModel = await resolveTypeReference(typeRef)
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const isCustomId = isCustomIdType(typeModel)
 		if (
 			(!reverse && (isCustomId ? upper === CUSTOM_MAX_ID : upper === GENERATED_MAX_ID)) ||

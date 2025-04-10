@@ -1,5 +1,5 @@
 import { assertNotNull, stringToUtf8Uint8Array, TypeRef, uint8ArrayToBase64, uint8ArrayToString } from "@tutao/tutanota-utils"
-import type { AttributeId, ModelAssociation, ModelValue, TypeModel } from "./EntityTypes"
+import type { AttributeId, ClientModelTypeSeparator, Distinct, ModelAssociation, ModelValue, ServerModelTypeSeparator, TypeModel } from "./EntityTypes"
 import { typeModels as baseTypeModels } from "../entities/base/TypeModels.js"
 import { typeModels as sysTypeModels } from "../entities/sys/TypeModels.js"
 import { typeModels as tutanotaTypeModels } from "../entities/tutanota/TypeModels.js"
@@ -37,7 +37,10 @@ export const enum MediaType {
 export type ApplicationTypesHash = string
 export type ApplicationVersionSum = number
 export type ApplicationVersion = number
-export type TypeReferenceResolver = (typeref: TypeRef<any>) => Promise<TypeModel>
+type TypeReferenceResolver = (typeref: TypeRef<any>) => Promise<TypeModel>
+export type ClientTypeReferenceResolver = Distinct<TypeReferenceResolver, ClientModelTypeSeparator>
+export type ServerTypeReferenceResolver = Distinct<TypeReferenceResolver, ServerModelTypeSeparator>
+
 export type ModelInfos = {
 	[knownApps in AppName]: { version: ApplicationVersion; compatibleSince: ApplicationVersion }
 }
@@ -312,7 +315,7 @@ export class ServerModelInfo {
 		}, {}) as ServerModels
 	}
 
-	public async resolveServerTypeReference(typeRef: TypeRef<any>): Promise<TypeModel> {
+	public async resolveTypeReference(typeRef: TypeRef<any>): Promise<TypeModel> {
 		const typeModel = this.typeModels[typeRef.app].types[typeRef.typeId]
 		if (typeModel == null) {
 			throw new Error("Cannot find TypeRef: " + JSON.stringify(typeRef))
@@ -340,5 +343,9 @@ export function _verifyType(typeModel: TypeModel) {
 }
 
 const clientModelInfo = new ClientModelInfo()
-export const resolveTypeReference = (typeRef: TypeRef<any>) => clientModelInfo.resolveTypeReference(typeRef)
+
+const serverModelInfo = new ServerModelInfo(clientModelInfo)
+export const resolveClientTypeReference = ((typeRef: TypeRef<any>) => clientModelInfo.resolveTypeReference(typeRef)) as ClientTypeReferenceResolver
+
+export const resolveServerTypeReference = ((typeRef: TypeRef<any>) => serverModelInfo.resolveTypeReference(typeRef)) as ServerTypeReferenceResolver
 export const modelInfos = clientModelInfo.modelInfos

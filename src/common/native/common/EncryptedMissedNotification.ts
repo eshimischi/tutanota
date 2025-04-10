@@ -1,5 +1,5 @@
-import { TypeModel, UntypedInstance } from "../../api/common/EntityTypes"
-import { resolveTypeReference } from "../../api/common/EntityFunctions"
+import { ServerModelUntypedInstance, TypeModel } from "../../api/common/EntityTypes"
+import { resolveClientTypeReference } from "../../api/common/EntityFunctions"
 import {
 	AlarmNotificationTypeRef,
 	createNotificationSessionKey,
@@ -13,25 +13,29 @@ import { Nullable } from "@tutao/tutanota-utils/dist/Utils"
 
 export class EncryptedMissedNotification {
 	private constructor(
-		public readonly notification: UntypedInstance,
+		public readonly notification: ServerModelUntypedInstance,
 		private readonly missedNotificationTypeModel: TypeModel,
 		private readonly alarmNotificationTypeModel: TypeModel,
 		private readonly notificationSessionKeyTypeModel: TypeModel,
 	) {}
 
-	public static async from(untypedInstance: UntypedInstance): Promise<EncryptedMissedNotification> {
-		const missedNotificationTypeModel = await resolveTypeReference(MissedNotificationTypeRef)
-		const alarmNotificationTypeModel = await resolveTypeReference(AlarmNotificationTypeRef)
-		const notificationSessionKeyTypeModel = await resolveTypeReference(NotificationSessionKeyTypeRef)
+	public static async from(untypedInstance: ServerModelUntypedInstance): Promise<EncryptedMissedNotification> {
+		const missedNotificationTypeModel = await resolveClientTypeReference(MissedNotificationTypeRef)
+		const alarmNotificationTypeModel = await resolveClientTypeReference(AlarmNotificationTypeRef)
+		const notificationSessionKeyTypeModel = await resolveClientTypeReference(NotificationSessionKeyTypeRef)
 
 		return new EncryptedMissedNotification(untypedInstance, missedNotificationTypeModel, alarmNotificationTypeModel, notificationSessionKeyTypeModel)
 	}
 
 	getNotificationSessionKeys(): Array<NotificationSessionKey> {
-		const alarmNotifications = AttributeModel.getAttribute<UntypedInstance[]>(this.notification, "alarmNotifications", this.missedNotificationTypeModel)
+		const alarmNotifications = AttributeModel.getAttribute<ServerModelUntypedInstance[]>(
+			this.notification,
+			"alarmNotifications",
+			this.missedNotificationTypeModel,
+		)
 		for (const alarmNotification of alarmNotifications) {
 			// all alarm notifications share the same keys (see CalendarFacade#encryptNotificationKeyForDevices)
-			const notificationSessionKeys = AttributeModel.getAttribute<UntypedInstance[]>(
+			const notificationSessionKeys = AttributeModel.getAttribute<ServerModelUntypedInstance[]>(
 				alarmNotification,
 				"notificationSessionKeys",
 				this.alarmNotificationTypeModel,
@@ -54,11 +58,11 @@ export class EncryptedMissedNotification {
 		return AttributeModel.getAttributeorNull<Id>(this.notification, "lastProcessedNotificationId", this.missedNotificationTypeModel)
 	}
 
-	get notificationInfos(): UntypedInstance[] {
-		return AttributeModel.getAttribute<UntypedInstance[]>(this.notification, "notificationInfos", this.missedNotificationTypeModel)
+	get notificationInfos(): ServerModelUntypedInstance[] {
+		return AttributeModel.getAttribute<ServerModelUntypedInstance[]>(this.notification, "notificationInfos", this.missedNotificationTypeModel)
 	}
 
-	get alarmNotifications(): UntypedInstance[] {
-		return AttributeModel.getAttribute<UntypedInstance[]>(this.notification, "alarmNotifications", this.missedNotificationTypeModel)
+	get alarmNotifications(): ServerModelUntypedInstance[] {
+		return AttributeModel.getAttribute<ServerModelUntypedInstance[]>(this.notification, "alarmNotifications", this.missedNotificationTypeModel)
 	}
 }

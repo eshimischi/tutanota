@@ -34,7 +34,7 @@ import { IndexerCore } from "../../../../../src/mail-app/workerUtils/index/Index
 import { elementIdPart, generatedIdToTimestamp, listIdPart, timestampToGeneratedId } from "../../../../../src/common/api/common/utils/EntityUtils.js"
 import { createTestEntity, makeCore } from "../../../TestUtils.js"
 import { Aes256Key, aes256RandomKey, aesEncrypt, fixedIv, IV_BYTE_LENGTH, random, unauthenticatedAesDecrypt } from "@tutao/tutanota-crypto"
-import { resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
+import { resolveClientTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { ElementDataOS, GroupDataOS, SearchIndexMetaDataOS, SearchIndexOS } from "../../../../../src/common/api/worker/search/IndexTables.js"
 import { AttributeModel } from "../../../../../src/common/api/common/AttributeModel"
 import { ModelValue, TypeModel } from "../../../../../src/common/api/common/EntityTypes"
@@ -64,7 +64,7 @@ function compareBinaryBlocks(actual: Uint8Array, expected: Uint8Array) {
 
 o.spec("IndexerCore test", () => {
 	o("createIndexEntriesForAttributes", async function () {
-		const ContactModel = await resolveTypeReference(ContactTypeRef)
+		const ContactModel = await resolveClientTypeReference(ContactTypeRef)
 
 		let core = makeCore()
 		let contact = createTestEntity(ContactTypeRef)

@@ -18,7 +18,7 @@ import { createTestEntity, makeCore } from "../../../TestUtils.js"
 import { assertNotNull, downcast } from "@tutao/tutanota-utils"
 import { isSameId } from "../../../../../src/common/api/common/utils/EntityUtils.js"
 import { fixedIv } from "@tutao/tutanota-crypto"
-import { resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
+import { resolveClientTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { GroupDataOS } from "../../../../../src/common/api/worker/search/IndexTables.js"
 import { spy } from "@tutao/tutanota-test-utils"
 import { AttributeModel } from "../../../../../src/common/api/common/AttributeModel"
@@ -94,7 +94,7 @@ o.spec("ContactIndexer test", () => {
 		let attributes = attributeHandlers.map((h) => {
 			return { attribute: h.attribute.id, value: h.value() }
 		})
-		const ContactModel = await resolveTypeReference(ContactTypeRef)
+		const ContactModel = await resolveClientTypeReference(ContactTypeRef)
 		o(attributes).deepEquals([
 			{ attribute: AttributeModel.getModelValue(ContactModel, "firstName").id, value: "FN" },
 			{ attribute: AttributeModel.getModelValue(ContactModel, "lastName").id, value: "LN" },

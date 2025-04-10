@@ -49,7 +49,13 @@ import type { BlobFacade } from "../../../common/api/worker/facades/lazy/BlobFac
 import { UserFacade } from "../../../common/api/worker/facades/UserFacade.js"
 import { OfflineStorage } from "../../../common/api/worker/offline/OfflineStorage.js"
 import { OFFLINE_STORAGE_MIGRATIONS, OfflineStorageMigrator } from "../../../common/api/worker/offline/OfflineStorageMigrator.js"
-import { ClientModelInfo, modelInfos, resolveTypeReference, ServerModelInfo } from "../../../common/api/common/EntityFunctions.js"
+import {
+	ClientModelInfo,
+	modelInfos,
+	resolveClientTypeReference,
+	resolveServerTypeReference,
+	ServerModelInfo,
+} from "../../../common/api/common/EntityFunctions.js"
 import { FileFacadeSendDispatcher } from "../../../common/native/common/generatedipc/FileFacadeSendDispatcher.js"
 import { NativePushFacadeSendDispatcher } from "../../../common/native/common/generatedipc/NativePushFacadeSendDispatcher.js"
 import { NativeCryptoFacadeSendDispatcher } from "../../../common/native/common/generatedipc/NativeCryptoFacadeSendDispatcher.js"
@@ -185,10 +191,15 @@ export async function initLocator(worker: WorkerImpl, browserData: BrowserData) 
 	const domainConfig = new DomainConfigProvider().getCurrentDomainConfig()
 	locator.restClient = new RestClient(suspensionHandler, domainConfig, () => locator.applicationTypesFacade)
 
-	locator.instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+	locator.instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 	locator.serviceExecutor = new ServiceExecutor(locator.restClient, locator.user, locator.instancePipeline, () => locator.crypto)
 	const clientModelInfo = new ClientModelInfo()
-	locator.applicationTypesFacade = await ApplicationTypesFacade.getInitialized(locator.serviceExecutor, fileFacadeSendDispatcher, new ServerModelInfo(clientModelInfo),clientModelInfo)
+	locator.applicationTypesFacade = await ApplicationTypesFacade.getInitialized(
+		locator.serviceExecutor,
+		fileFacadeSendDispatcher,
+		new ServerModelInfo(clientModelInfo),
+		clientModelInfo,
+	)
 	locator.entropyFacade = new EntropyFacade(locator.user, locator.serviceExecutor, random, () => locator.keyLoader)
 	locator.blobAccessToken = new BlobAccessTokenFacade(locator.serviceExecutor, locator.user, dateProvider)
 

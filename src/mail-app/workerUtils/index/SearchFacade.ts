@@ -1,6 +1,6 @@
 import { MailTypeRef } from "../../../common/api/entities/tutanota/TypeRefs.js"
 import { DbTransaction } from "../../../common/api/worker/search/DbFacade.js"
-import { resolveTypeReference } from "../../../common/api/common/EntityFunctions.js"
+import { resolveClientTypeReference } from "../../../common/api/common/EntityFunctions.js"
 import {
 	arrayHash,
 	asyncFind,
@@ -157,7 +157,7 @@ export class SearchFacade {
 
 	async _loadAndReduce(restriction: SearchRestriction, result: SearchResult, suggestionToken: string, minSuggestionCount: number): Promise<void> {
 		if (result.results.length > 0) {
-			const model = await resolveTypeReference(restriction.type)
+			const model = await resolveClientTypeReference(restriction.type)
 			// if we want the exact search order we try to find the complete sequence of words in an attribute of the instance.
 			// for other cases we only check that an attribute contains a word that starts with suggestion word
 			const suggestionQuery = result.matchWordOrder ? normalizeQuery(result.query) : suggestionToken
@@ -222,7 +222,7 @@ export class SearchFacade {
 				const modelAssociation = model.associations[attributeId]
 				if (modelAssociation && modelAssociation.type === AssociationType.Aggregation && entity[modelAssociation.name]) {
 					let aggregates = modelAssociation.cardinality === Cardinality.Any ? entity[modelAssociation.name] : [entity[modelAssociation.name]]
-					const refModel = await resolveTypeReference(new TypeRef(model.app, modelAssociation.refTypeId))
+					const refModel = await resolveClientTypeReference(new TypeRef(model.app, modelAssociation.refTypeId))
 					return asyncFind(aggregates, (aggregate) => {
 						return this._containsSuggestionToken(downcast<Record<string, any>>(aggregate), refModel, null, suggestionToken, matchWordOrder)
 					}).then((found) => found != null)

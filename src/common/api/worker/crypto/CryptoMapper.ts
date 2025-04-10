@@ -1,6 +1,7 @@
 import {
 	ClientModelEncryptedParsedInstance,
 	ClientModelParsedInstance,
+	EncryptedParsedAssociation,
 	ModelValue,
 	ParsedValue,
 	ServerModelEncryptedParsedInstance,
@@ -9,7 +10,7 @@ import {
 } from "../../common/EntityTypes"
 import { Base64, base64ToUint8Array, stringToUtf8Uint8Array, TypeRef, uint8ArrayToBase64, utf8Uint8ArrayToString } from "@tutao/tutanota-utils"
 import { AssociationType, Cardinality, ValueType } from "../../common/EntityConstants"
-import { TypeReferenceResolver } from "../../common/EntityFunctions"
+import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../common/EntityFunctions"
 import { CryptoError } from "@tutao/tutanota-crypto/error.js"
 import { Nullable } from "@tutao/tutanota-utils/dist/Utils"
 import { aesDecrypt, aesEncrypt, AesKey, ENABLE_MAC, extractIvFromCipherText, IV_BYTE_LENGTH, random } from "@tutao/tutanota-crypto"
@@ -59,9 +60,7 @@ export function decryptValue(
 }
 
 export class CryptoMapper {
-	// FIXME make types work again
-
-	constructor(private readonly clientTypeModel: TypeReferenceResolver, private readonly serverTypeModel: TypeReferenceResolver) {}
+	constructor(private readonly clientTypeModel: ClientTypeReferenceResolver, private readonly serverTypeModel: ServerTypeReferenceResolver) {}
 
 	public async decryptParsedInstance(
 		typeModel: TypeModel,
@@ -113,7 +112,7 @@ export class CryptoMapper {
 
 		for (const associationId of Object.keys(typeModel.associations).map(Number)) {
 			let associationType = typeModel.associations[associationId]
-			const encryptedInstanceValue = encryptedInstance[associationId] as EncryptedParsedAssociation
+			const encryptedInstanceValue = encryptedInstance[associationId]
 			if (associationType.type === AssociationType.Aggregation) {
 				const appName = associationType.dependency ?? typeModel.app
 				const associationTypeModel = await this.serverTypeModel(new TypeRef(appName, associationType.refTypeId))

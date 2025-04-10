@@ -41,7 +41,7 @@ import { InterWindowEventFacadeSendDispatcher } from "../../../../../src/common/
 import * as fs from "node:fs"
 import { untagSqlObject } from "../../../../../src/common/api/worker/offline/SqlValue.js"
 import { MailSetKind } from "../../../../../src/common/api/common/TutanotaConstants.js"
-import { resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { Type as TypeId } from "../../../../../src/common/api/common/EntityConstants.js"
 import { expandId } from "../../../../../src/common/api/worker/rest/DefaultEntityRestCache.js"
 import { GroupMembershipTypeRef, UserTypeRef } from "../../../../../src/common/api/entities/sys/TypeRefs.js"
@@ -138,7 +138,7 @@ o.spec("OfflineStorageDb", function () {
 		migratorMock = instance(OfflineStorageMigrator)
 		interWindowEventSenderMock = instance(InterWindowEventFacadeSendDispatcher)
 		offlineStorageCleanerMock = new MailOfflineCleaner()
-		modelMapper = new ModelMapper(resolveTypeReference, resolveTypeReference)
+		modelMapper = new ModelMapper(resolveClientTypeReference, resolveServerTypeReference)
 		when(dateProviderMock.now()).thenReturn(now.getTime())
 		storage = new OfflineStorage(dbFacade, interWindowEventSenderMock, dateProviderMock, migratorMock, offlineStorageCleanerMock, modelMapper)
 	})
@@ -151,7 +151,7 @@ o.spec("OfflineStorageDb", function () {
 	o.spec("Unit test", function () {
 		// fixme: can we use function from OfflineStorage:: itself?
 		async function getAllIdsForType(typeRef: TypeRef<unknown>): Promise<Id[]> {
-			const typeModel = await resolveTypeReference(typeRef)
+			const typeModel = await resolveClientTypeReference(typeRef)
 			let preparedQuery
 			switch (typeModel.type) {
 				case TypeId.Element.valueOf():
@@ -614,7 +614,7 @@ o.spec("OfflineStorageDb", function () {
 				await storage.clearExcludedData(timeRangeDays, userId)
 
 				const newRange = await dbFacade.get("select * from ranges", [])
-				const mailSetEntryTypeModel = await resolveTypeReference(MailSetEntryTypeRef)
+				const mailSetEntryTypeModel = await resolveClientTypeReference(MailSetEntryTypeRef)
 				o(mapNullable(newRange, untagSqlObject)).deepEquals({
 					type: mailSetEntryType,
 					listId: entriesListId,
@@ -645,7 +645,7 @@ o.spec("OfflineStorageDb", function () {
 				await storage.clearExcludedData(timeRangeDays, userId)
 
 				const newRange = await dbFacade.get("select * from ranges", [])
-				const mailSetEntryTypeModel = await resolveTypeReference(MailSetEntryTypeRef)
+				const mailSetEntryTypeModel = await resolveClientTypeReference(MailSetEntryTypeRef)
 				o(mapNullable(newRange, untagSqlObject)).deepEquals({
 					type: mailSetEntryType,
 					listId: entriesListId,
@@ -715,7 +715,7 @@ o.spec("OfflineStorageDb", function () {
 				await storage.clearExcludedData(timeRangeDays, userId)
 
 				const newRange = await dbFacade.get("select * from ranges", [])
-				const mailSetEntryTypeModel = await resolveTypeReference(MailSetEntryTypeRef)
+				const mailSetEntryTypeModel = await resolveClientTypeReference(MailSetEntryTypeRef)
 				o(mapNullable(newRange, untagSqlObject)).deepEquals({
 					type: mailSetEntryType,
 					listId: listIdPart(mailSetEntryId),
@@ -795,7 +795,7 @@ o.spec("OfflineStorageDb", function () {
 				await storage.clearExcludedData(timeRangeDays, userId)
 
 				const newRange = await dbFacade.get("select * from ranges", [])
-				const mailSetEntryTypeModel = await resolveTypeReference(MailSetEntryTypeRef)
+				const mailSetEntryTypeModel = await resolveClientTypeReference(MailSetEntryTypeRef)
 				o(mapNullable(newRange, untagSqlObject)).deepEquals({
 					type: mailSetEntryType,
 					listId: listIdPart(mailSetEntryId),
@@ -1152,7 +1152,7 @@ o.spec("OfflineStorageDb", function () {
 
 				// Here we clear the excluded data
 				await storage.clearExcludedData(timeRangeDays, userId)
-				const mailSetEntryTypeModel = await resolveTypeReference(MailSetEntryTypeRef)
+				const mailSetEntryTypeModel = await resolveClientTypeReference(MailSetEntryTypeRef)
 
 				o(await getAllIdsForType(MailFolderTypeRef)).deepEquals([inboxFolderId, spamFolderId, trashFolderId])
 				const allMailSetEntryIds = await getAllIdsForType(MailSetEntryTypeRef)

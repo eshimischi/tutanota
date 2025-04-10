@@ -25,7 +25,7 @@ import {
 	PublicKeyIdentifierType,
 	SYSTEM_GROUP_MAIL_ADDRESS,
 } from "../../common/TutanotaConstants"
-import { HttpMethod, resolveTypeReference } from "../../common/EntityFunctions"
+import { HttpMethod, resolveClientTypeReference } from "../../common/EntityFunctions"
 import type { BucketPermission, GroupMembership, InstanceSessionKey, Permission } from "../../entities/sys/TypeRefs.js"
 import {
 	BucketPermissionTypeRef,
@@ -53,7 +53,7 @@ import {
 import { LockedError, NotFoundError, PayloadTooLargeError, TooManyRequestsError } from "../../common/error/RestError"
 import { SessionKeyNotFoundError } from "../../common/error/SessionKeyNotFoundError"
 import { birthdayToIsoDate, oldBirthdayToBirthday } from "../../common/utils/BirthdayUtils"
-import type { Entity, SomeEntity, TypeModel } from "../../common/EntityTypes"
+import type { ClientModelEncryptedParsedInstance, Entity, ServerModelEncryptedParsedInstance, SomeEntity, TypeModel } from "../../common/EntityTypes"
 import { assertWorkerOrNode } from "../../common/Env"
 import type { EntityClient } from "../../common/EntityClient"
 import { RestClient } from "../rest/RestClient"
@@ -166,7 +166,7 @@ export class CryptoFacade {
 	 * @param instance The unencrypted (client-side) instance or encrypted (server-side) object literal
 	 */
 	async resolveSessionKey(instance: Entity): Promise<Nullable<AesKey>> {
-		const typeModel = await resolveTypeReference(instance._type)
+		const typeModel = await resolveClientTypeReference(instance._type)
 		if (!typeModel.encrypted) {
 			return null
 		}
@@ -220,7 +220,7 @@ export class CryptoFacade {
 	}
 
 	public async resolveWithBucketKey(instance: Entity): Promise<ResolvedSessionKeys> {
-		const typeModel = await resolveTypeReference(instance._type)
+		const typeModel = await resolveClientTypeReference(instance._type)
 		const bucketKey = assertNotNull(instance.bucketKey)
 
 		let decryptedBucketKey: AesKey
@@ -501,8 +501,8 @@ export class CryptoFacade {
 		if (decryptedInstance.isAdapter) {
 			const entityAdapter = downcast<EntityAdapter>(instance)
 			const parsedInstance = await this.instancePipeline.cryptoMapper.decryptParsedInstance(
-				await resolveTypeReference(instance._type),
-				entityAdapter.encryptedParsedInstance,
+				await resolveClientTypeReference(instance._type),
+				entityAdapter.encryptedParsedInstance as ServerModelEncryptedParsedInstance,
 				resolvedSessionKeyForInstance,
 			)
 			decryptedInstance = await this.instancePipeline.modelMapper.mapToInstance(instance._type, parsedInstance)
@@ -814,7 +814,10 @@ export class CryptoFacade {
 		const headers = this.userFacade.createAuthHeaders()
 		headers.v = typeModel.version
 
-		const untypedInstance = await this.instancePipeline.typeMapper.applyDbTypes(instance.typeModel, instance.encryptedParsedInstance)
+		const untypedInstance = await this.instancePipeline.typeMapper.applyDbTypes(
+			instance.typeModel,
+			instance.encryptedParsedInstance as ClientModelEncryptedParsedInstance,
+		)
 
 		await this.restClient
 			.request(path, HttpMethod.PUT, {

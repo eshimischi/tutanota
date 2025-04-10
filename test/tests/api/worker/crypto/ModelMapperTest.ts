@@ -11,13 +11,14 @@ import {
 } from "../../../../../src/common/api/worker/crypto/ModelMapper.js"
 import { AssociationType, Cardinality, ValueType } from "../../../../../src/common/api/common/EntityConstants.js"
 import { assertNotNull, downcast, uint8ArrayToBase64 } from "@tutao/tutanota-utils"
-import { dummyResolver, TestAggregate, TestAggregateRef, TestEntity, testTypeModel, TestTypeRef } from "./InstancePipelineTestUtils"
+import { dummyResolver, TestAggregate, TestAggregateRef, TestEntity, TestTypeRef } from "./InstancePipelineTestUtils"
 import { ClientModelParsedInstance, ModelAssociation, ServerModelParsedInstance } from "../../../../../src/common/api/common/EntityTypes"
 import { assertThrows } from "@tutao/tutanota-test-utils"
 import { ProgrammingError } from "../../../../../src/common/api/common/error/ProgrammingError"
+import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
 
 o.spec("ModelMapper", function () {
-	const modelMapper: ModelMapper = new ModelMapper(dummyResolver, dummyResolver)
+	const modelMapper: ModelMapper = new ModelMapper(dummyResolver as ClientTypeReferenceResolver, dummyResolver as ServerTypeReferenceResolver)
 
 	o.spec("convertDbToJsType", function () {
 		o("convert value to JS Date", function () {

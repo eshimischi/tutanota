@@ -1,15 +1,17 @@
 import {
-	ClientModelEncryptedParsedAssociation,
 	ClientModelEncryptedParsedInstance,
+	ClientModelUntypedInstance,
+	EncryptedParsedAssociation,
 	EncryptedParsedValue,
 	ServerModelEncryptedParsedInstance,
+	ServerModelUntypedInstance,
 	TypeModel,
 	UntypedAssociation,
 	UntypedInstance,
 	UntypedValue,
 } from "../../common/EntityTypes"
 import { AssociationType } from "../../common/EntityConstants"
-import { TypeReferenceResolver } from "../../common/EntityFunctions"
+import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../common/EntityFunctions"
 import { TypeRef, uint8ArrayToBase64 } from "@tutao/tutanota-utils"
 import { ProgrammingError } from "../../common/error/ProgrammingError"
 import { convertDbToJsType, convertJsToDbType } from "./ModelMapper"
@@ -24,11 +26,9 @@ import { convertDbToJsType, convertJsToDbType } from "./ModelMapper"
  * The objects are treated according to the server's model version.
  */
 export class TypeMapper {
-	// FIXME make types work again
+	constructor(private readonly clientTypeModel: ClientTypeReferenceResolver, private readonly serverTypeModel: ServerTypeReferenceResolver) {}
 
-	constructor(private readonly clientTypeModel: TypeReferenceResolver, private readonly serverTypeModel: TypeReferenceResolver) {}
-
-	async applyJsTypes(typeModel: TypeModel, instance: UntypedInstance): Promise<ServerModelEncryptedParsedInstance> {
+	async applyJsTypes(typeModel: TypeModel, instance: ServerModelUntypedInstance): Promise<ServerModelEncryptedParsedInstance> {
 		let parsedInstance: ServerModelEncryptedParsedInstance = {} as ServerModelEncryptedParsedInstance
 		for (const [attrIdStr, modelValue] of Object.entries(typeModel.values)) {
 			let attrId: number
@@ -65,7 +65,7 @@ export class TypeMapper {
 
 				const encryptedParsedAssociationValues: Array<ServerModelEncryptedParsedInstance> = []
 				for (const value of values) {
-					encryptedParsedAssociationValues.push(await this.applyJsTypes(associationTypeModel, value as UntypedInstance))
+					encryptedParsedAssociationValues.push(await this.applyJsTypes(associationTypeModel, value as ServerModelUntypedInstance))
 				}
 				parsedInstance[attrId] = encryptedParsedAssociationValues
 			} else {
@@ -76,8 +76,8 @@ export class TypeMapper {
 		return parsedInstance
 	}
 
-	async applyDbTypes(typeModel: TypeModel, instance: ClientModelEncryptedParsedInstance): Promise<UntypedInstance> {
-		let untypedInstance: UntypedInstance = {} as UntypedInstance
+	async applyDbTypes(typeModel: TypeModel, instance: ClientModelEncryptedParsedInstance): Promise<ClientModelUntypedInstance> {
+		let untypedInstance: ClientModelUntypedInstance = {} as ClientModelUntypedInstance
 		for (const [attrIdStr, modelValue] of Object.entries(typeModel.values)) {
 			const attrId = parseInt(attrIdStr)
 			const value = instance[attrId] as EncryptedParsedValue
@@ -102,7 +102,7 @@ export class TypeMapper {
 
 		for (const [attrIdStr, modelAssociation] of Object.entries(typeModel.associations)) {
 			const attrId = parseInt(attrIdStr)
-			const values = instance[attrId] as ClientModelEncryptedParsedAssociation
+			const values = instance[attrId] as EncryptedParsedAssociation
 
 			if (modelAssociation.type === AssociationType.Aggregation) {
 				const appName = modelAssociation.dependency ?? typeModel.app
@@ -110,7 +110,7 @@ export class TypeMapper {
 
 				const untypedAssociationValues: Array<UntypedInstance> = []
 				for (const value of values) {
-					untypedAssociationValues.push(await this.applyDbTypes(associationTypeModel, value))
+					untypedAssociationValues.push(await this.applyDbTypes(associationTypeModel, value as ClientModelEncryptedParsedInstance))
 				}
 				untypedInstance[attrId] = untypedAssociationValues
 			} else {

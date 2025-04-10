@@ -1,5 +1,5 @@
 import { TypeModel, UntypedInstance } from "../../api/common/EntityTypes"
-import { resolveTypeReference } from "../../api/common/EntityFunctions"
+import { resolveClientTypeReference } from "../../api/common/EntityFunctions"
 import {
 	AlarmInfoTypeRef,
 	AlarmNotificationTypeRef,
@@ -30,9 +30,9 @@ export class EncryptedAlarmNotification {
 	}
 
 	public static async from(untypedInstance: UntypedInstance): Promise<EncryptedAlarmNotification> {
-		const alarmNotificationTypeModel = await resolveTypeReference(AlarmNotificationTypeRef)
-		const notificationSessionKeyTypeModel = await resolveTypeReference(NotificationSessionKeyTypeRef)
-		const alarmInfoTypeModel = await resolveTypeReference(AlarmInfoTypeRef)
+		const alarmNotificationTypeModel = await resolveClientTypeReference(AlarmNotificationTypeRef)
+		const notificationSessionKeyTypeModel = await resolveClientTypeReference(NotificationSessionKeyTypeRef)
+		const alarmInfoTypeModel = await resolveClientTypeReference(AlarmInfoTypeRef)
 
 		return new EncryptedAlarmNotification(untypedInstance, alarmNotificationTypeModel, notificationSessionKeyTypeModel, alarmInfoTypeModel)
 	}

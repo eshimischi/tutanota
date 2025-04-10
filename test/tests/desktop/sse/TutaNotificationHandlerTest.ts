@@ -23,12 +23,12 @@ import { SseInfo } from "../../../../src/common/desktop/sse/SseInfo.js"
 import { SseStorage } from "../../../../src/common/desktop/sse/SseStorage.js"
 import { createSystemMail } from "../../api/common/mail/CommonMailUtilsTest"
 import { InstancePipeline } from "../../../../src/common/api/worker/crypto/InstancePipeline"
-import { resolveTypeReference } from "../../../../src/common/api/common/EntityFunctions"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../../../src/common/api/common/EntityFunctions"
 import { aes256RandomKey } from "@tutao/tutanota-crypto"
 
 type UndiciFetch = typeof undiciFetch
 
-const mapper = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+const mapper = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 
 o.spec("TutaNotificationHandler", () => {
 	let wm: WindowManager
@@ -183,7 +183,7 @@ o.spec("TutaNotificationHandler", () => {
 			})
 
 			const sk = aes256RandomKey()
-			const mailLiteral = await mapper.mapToServerAndEncrypt(MailTypeRef, mailMetadata, sk)
+			const mailLiteral = await mapper.mapAndEncrypt(MailTypeRef, mailMetadata, sk)
 
 			const requestDefer = mockFetchRequest(
 				fetch,

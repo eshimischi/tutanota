@@ -1,17 +1,18 @@
 import o from "@tutao/otest"
 import { aes256RandomKey, aesDecrypt, aesEncrypt, ENABLE_MAC, IV_BYTE_LENGTH, random } from "@tutao/tutanota-crypto"
 import { Cardinality, ValueType } from "../../../../../src/common/api/common/EntityConstants.js"
-import { ClientModelParsedInstance, EncryptedParsedInstance } from "../../../../../src/common/api/common/EntityTypes.js"
+import { ClientModelParsedInstance, EncryptedParsedInstance, ServerModelEncryptedParsedInstance } from "../../../../../src/common/api/common/EntityTypes.js"
 import { base64ToUint8Array, neverNull, stringToUtf8Uint8Array, uint8ArrayToBase64, utf8Uint8ArrayToString } from "@tutao/tutanota-utils"
 import { CryptoMapper, decryptValue, encryptValue } from "../../../../../src/common/api/worker/crypto/CryptoMapper"
 import { createEncryptedValueType, dummyResolver, testTypeModel } from "./InstancePipelineTestUtils"
 import { assertThrows } from "@tutao/tutanota-test-utils"
 import { CryptoError } from "@tutao/tutanota-crypto/error.js"
 import { Type } from "cborg"
+import { ClientTypeReferenceResolver, ServerTypeReferenceResolver } from "../../../../../src/common/api/common/EntityFunctions"
 
 o.spec("CryptoMapper", function () {
 	let cryptoMapper: CryptoMapper
-	cryptoMapper = new CryptoMapper(dummyResolver)
+	cryptoMapper = new CryptoMapper(dummyResolver as ClientTypeReferenceResolver, dummyResolver as ServerTypeReferenceResolver)
 
 	o.spec("decryptValue", function () {
 		o("decrypt string / number value without mac", function () {
@@ -216,13 +217,13 @@ o.spec("CryptoMapper", function () {
 
 	o("decryptParsedInstance happy path works", async function () {
 		const sk = [4136869568, 4101282953, 2038999435, 962526794, 1053028316, 3236029410, 1618615449, 3232287205]
-		const encryptedInstance: EncryptedParsedInstance = {
+		const encryptedInstance: ServerModelEncryptedParsedInstance = {
 			1: "AV1kmZZfCms1pNvUtGrdhOlnDAr3zb2JWpmlpWEhgG5zqYK3g7PfRsi0vQAKLxXmrNRGp16SBKBa0gqXeFw9F6l7nbGs3U8uNLvs6Fi+9IWj",
 			3: [{ 2: "123", 6: "someCustomId" }],
 			7: "AWBaC3ipyi9kxJn7USkbW1SLXPjgU8T5YqpIP/dmTbyRwtXFU9tQbYBm12gNpI9KJfwO14FN25hjC3SlngSBlzs=",
 			4: ["associatedListId"],
 			5: new Date("2025-01-01T13:00:00.000Z"),
-		}
+		} as any as ServerModelEncryptedParsedInstance
 		const expectedFinalIv = new Uint8Array([93, 100, 153, 150, 95, 10, 107, 53, 164, 219, 212, 180, 106, 221, 132, 233])
 		const decryptedInstance = await cryptoMapper.decryptParsedInstance(testTypeModel, encryptedInstance, sk)
 
@@ -264,12 +265,12 @@ o.spec("CryptoMapper", function () {
 	})
 
 	o("decryptParsedInstance with missing sk sets _errors", async function () {
-		const encryptedInstance: EncryptedParsedInstance = {
+		const encryptedInstance: ServerModelEncryptedParsedInstance = {
 			1: "AV1kmZZfCms1pNvUtGrdhOlnDAr3zb2JWpmlpWEhgG5zqYK3g7PfRsi0vQAKLxXmrNRGp16SBKBa0gqXeFw9F6l7nbGs3U8uNLvs6Fi+9IWj",
 			3: [{ 2: "123", 6: "someCustomId" }],
 			4: ["associatedListId"],
 			5: new Date("2025-01-01T13:00:00.000Z"),
-		}
+		} as any as ServerModelEncryptedParsedInstance
 		const instance = await cryptoMapper.decryptParsedInstance(testTypeModel, encryptedInstance, null)
 		o(instance[1]).equals("") // default value is assigned in case of crypto errors
 		o(typeof instance._errors?.[1]).equals("string")
@@ -290,12 +291,12 @@ o.spec("CryptoMapper", function () {
 	o("decrypting default values works correctly", async function () {
 		const sk = [4136869568, 4101282953, 2038999435, 962526794, 1053028316, 3236029410, 1618615449, 3232287205]
 
-		const encryptedInstance: EncryptedParsedInstance = {
+		const encryptedInstance: ServerModelEncryptedParsedInstance = {
 			1: "",
 			3: [{ 2: "123", 6: "someCustomId" }],
 			4: ["associatedListId"],
 			5: new Date("2025-01-01T13:00:00.000Z"),
-		}
+		} as any as ServerModelEncryptedParsedInstance
 
 		const decryptedInstance = await cryptoMapper.decryptParsedInstance(testTypeModel, encryptedInstance, sk)
 
@@ -320,12 +321,12 @@ o.spec("CryptoMapper", function () {
 
 	o("decryption errors are written to _errors field", async function () {
 		const sk = [4136869568, 4101282953, 2038999435, 962526794, 1053028316, 3236029410, 1618615449, 3232287205]
-		const encryptedInstance: EncryptedParsedInstance = {
+		const encryptedInstance: ServerModelEncryptedParsedInstance = {
 			1: "AV1kmZZfCms1pNvUtGrdhOlnDAr3zb2pmlpWEhgG5iwzqYK3g7PfRsi0vQAKLxXmrNRGp16SBKBa0gqXeFw9F6l7nbGs3U8uNLvs6Fi+9IWj",
 			3: [{ 2: "123", 6: "someCustomId" }],
 			4: ["associatedListId"],
 			5: new Date("2025-01-01T13:00:00.000Z"),
-		}
+		} as any as ServerModelEncryptedParsedInstance
 
 		const instanceWithErrors = await cryptoMapper.decryptParsedInstance(testTypeModel, encryptedInstance, sk)
 		console.log(instanceWithErrors._errors?.[1])

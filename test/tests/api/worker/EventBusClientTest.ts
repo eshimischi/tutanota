@@ -30,7 +30,7 @@ import { ExposedProgressTracker } from "../../../../src/common/api/main/Progress
 import { createTestEntity } from "../../TestUtils.js"
 import { SyncTracker } from "../../../../src/common/api/main/SyncTracker.js"
 import { InstancePipeline } from "../../../../src/common/api/worker/crypto/InstancePipeline"
-import { resolveTypeReference } from "../../../../src/common/api/common/EntityFunctions"
+import { resolveClientTypeReference, resolveServerTypeReference } from "../../../../src/common/api/common/EntityFunctions"
 import { ApplicationTypesFacade } from "../../../../src/common/api/worker/facades/ApplicationTypesFacade"
 
 const { anything } = matchers
@@ -52,7 +52,7 @@ o.spec("EventBusClientTest", function () {
 
 	function initEventBus() {
 		const entityClient = new EntityClient(restClient)
-		instancePipeline = new InstancePipeline(resolveTypeReference, resolveTypeReference)
+		instancePipeline = new InstancePipeline(resolveClientTypeReference, resolveServerTypeReference)
 		applicationTypesFacadeMock = object()
 
 		ebc = new EventBusClient(
@@ -437,7 +437,7 @@ o.spec("EventBusClientTest", function () {
 				}),
 			],
 		})
-		const eventData = await instancePipeline.mapToServerAndEncrypt(event._type, event, null)
+		const eventData = await instancePipeline.mapAndEncrypt(event._type, event, null)
 		return "entityUpdate;" + JSON.stringify(eventData)
 	}
 
@@ -457,7 +457,7 @@ o.spec("EventBusClientTest", function () {
 			],
 			applicationTypesHash: applicationTypesHash,
 		})
-		const instanceAsData = await instancePipeline.mapToServerAndEncrypt(event._type, event, null)
+		const instanceAsData = await instancePipeline.mapAndEncrypt(event._type, event, null)
 		return "entityUpdate;" + JSON.stringify(instanceAsData)
 	}
 
@@ -478,7 +478,7 @@ o.spec("EventBusClientTest", function () {
 	}
 
 	async function createCounterMessage(event: WebsocketCounterData): Promise<string> {
-		const instanceAsData = await instancePipeline.mapToServerAndEncrypt(event._type, event, null)
+		const instanceAsData = await instancePipeline.mapAndEncrypt(event._type, event, null)
 		return "unreadCounterUpdate;" + JSON.stringify(instanceAsData)
 	}
 })

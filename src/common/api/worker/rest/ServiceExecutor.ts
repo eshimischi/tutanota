@@ -1,4 +1,4 @@
-import { HttpMethod, MediaType, resolveTypeReference } from "../../common/EntityFunctions"
+import { HttpMethod, MediaType, resolveClientTypeReference } from "../../common/EntityFunctions"
 import {
 	DeleteService,
 	ExtraServiceParams,
@@ -10,7 +10,7 @@ import {
 	PutService,
 	ReturnTypeFromRef,
 } from "../../common/ServiceRequest.js"
-import { Entity, UntypedInstance } from "../../common/EntityTypes"
+import { Entity, ServerModelUntypedInstance } from "../../common/EntityTypes"
 import { isSameTypeRef, lazy, TypeRef } from "@tutao/tutanota-utils"
 import { RestClient } from "./RestClient"
 import { CryptoFacade } from "../crypto/CryptoFacade"
@@ -75,7 +75,7 @@ export class ServiceExecutor implements IServiceExecutor {
 		if (
 			methodDefinition.return &&
 			params?.sessionKey == null &&
-			(await resolveTypeReference(methodDefinition.return)).encrypted &&
+			(await resolveClientTypeReference(methodDefinition.return)).encrypted &&
 			!this.authDataProvider.isFullyLoggedIn()
 		) {
 			// Short-circuit before we do an actual request which we can't decrypt
@@ -124,7 +124,7 @@ export class ServiceExecutor implements IServiceExecutor {
 		if (someTypeRef == null) {
 			throw new ProgrammingError("Need either data or return for the service method!")
 		}
-		const model = await resolveTypeReference(someTypeRef)
+		const model = await resolveClientTypeReference(someTypeRef)
 		return model.version
 	}
 
@@ -140,12 +140,12 @@ export class ServiceExecutor implements IServiceExecutor {
 				throw new ProgrammingError(`Invalid service data! ${service.name} ${method}`)
 			}
 
-			const requestTypeModel = await resolveTypeReference(methodDefinition.data)
+			const requestTypeModel = await resolveClientTypeReference(methodDefinition.data)
 			if (requestTypeModel.encrypted && params?.sessionKey == null) {
 				throw new ProgrammingError("Must provide a session key for an encrypted data transfer type!: " + service)
 			}
 
-			const encryptedUntypedInstance = await this.instancePipeline.mapToServerAndEncrypt(requestEntity._type, requestEntity, params?.sessionKey ?? null)
+			const encryptedUntypedInstance = await this.instancePipeline.mapAndEncrypt(requestEntity._type, requestEntity, params?.sessionKey ?? null)
 
 			return JSON.stringify(encryptedUntypedInstance)
 		} else {
@@ -155,12 +155,12 @@ export class ServiceExecutor implements IServiceExecutor {
 
 	private async decryptResponse<T extends Entity>(typeRef: TypeRef<T>, data: string, params: ExtraServiceParams | undefined): Promise<T> {
 		// Filter out __proto__ to avoid prototype pollution.
-		const instance: UntypedInstance = JSON.parse(data, (k, v) => (k === "__proto__" ? undefined : v))
-		const typeModel = await resolveTypeReference(typeRef)
+		const instance: ServerModelUntypedInstance = JSON.parse(data, (k, v) => (k === "__proto__" ? undefined : v))
+		const typeModel = await resolveClientTypeReference(typeRef)
 		const encryptedParsedInstance = await this.instancePipeline.typeMapper.applyJsTypes(typeModel, instance)
 		const entityAdapter = await EntityAdapter.from(typeModel, encryptedParsedInstance, this.instancePipeline)
 		const sessionKey = (await this.cryptoFacade().resolveServiceSessionKey(entityAdapter)) ?? params?.sessionKey ?? null
 
-		return await this.instancePipeline.decryptAndMapToClient(typeRef, instance, sessionKey)
+		return await this.instancePipeline.decryptAndMap(typeRef, instance, sessionKey)
 	}
 }

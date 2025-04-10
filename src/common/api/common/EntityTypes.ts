@@ -4,7 +4,6 @@ import type { BlobElement, Element, ListElement } from "./utils/EntityUtils.js"
 import { Nullable } from "@tutao/tutanota-utils/dist/Utils"
 import { AppName } from "@tutao/tutanota-utils/dist/TypeRef"
 import { BucketKey } from "../entities/sys/TypeRefs"
-import { ClientModels } from "./EntityFunctions"
 
 /**
  * Tuta Metamodel Entity Types
@@ -158,12 +157,6 @@ export type UntypedInstance = Record<string, UntypedValue | UntypedAssociation>
  * entity.
  */
 
-/** simple number separator to distinguish between ClientModelParsedInstance and ServerModelParsedInstance */
-export type ClientModelTypeSeparator = 1
-
-/** simple number separator to distinguish between ServerModelParsedInstance and ClientModelParsedInstance */
-export type ServerModelTypeSeparator = 2
-
 export type EncryptedParsedValue =
 	| Id // element association or list association or _id
 	| IdTuple // list element association
@@ -173,44 +166,44 @@ export type EncryptedParsedValue =
 	| string // unencrypted
 	| Uint8Array // Either Bytes or encrypted value fixme: is this rather Base64
 
-export type ClientModelEncryptedParsedAssociation =
+export type EncryptedParsedAssociation =
 	| Array<Id> // element references / list references
 	| Array<IdTuple> // list element ref, card any
-	| Array<ClientModelEncryptedParsedInstance> // aggregate
+	| Array<EncryptedParsedInstance> // aggregate
 
-export type ServerModelEncryptedParsedAssociation =
-	| Array<Id> // element references / list references
-	| Array<IdTuple> // list element ref, card any
-	| Array<ServerModelEncryptedParsedInstance> // aggregate
-
-// this contains client model JS values except in encrypted fields, those are kept as a base64 string.
-export type ClientModelEncryptedParsedInstance = Record<AttributeId, Nullable<EncryptedParsedValue> | ClientModelEncryptedParsedAssociation>
-
-// this contains server model JS values except in encrypted fields, those are kept as a base64 string.
-export type ServerModelEncryptedParsedInstance = Record<AttributeId, Nullable<EncryptedParsedValue> | ServerModelEncryptedParsedAssociation>
+// this contains JS values except in encrypted fields, those are kept as a base64 string.
+export type EncryptedParsedInstance = Record<AttributeId, Nullable<EncryptedParsedValue> | EncryptedParsedAssociation>
 
 /** only defined here for documentation purposes */
 export type ParsedValue = EncryptedParsedValue
 /** only defined here for documentation purposes */
-export type ParsedAssociation = ClientModelEncryptedParsedAssociation | ServerModelEncryptedParsedAssociation
+export type ParsedAssociation = EncryptedParsedAssociation
 
-/** a client model parsed instance after before going through encryption */
-export type ClientModelParsedInstance = Record<AttributeId, Nullable<ParsedValue> | ParsedAssociation> &
-	ClientModelTypeSeparator & {
-		/** crypto errors that happened during serialization are stored here for debugging purposes */
-		_errors?: Record<AttributeId, string>
-		/** the ivs used to encrypt final fields on the instance */
-		_finalIvs: Record<AttributeId, Nullable<Uint8Array>>
-	}
+/** a parsed instance after/before going through decryption/encryption */
+export type ParsedInstance = Record<AttributeId, Nullable<ParsedValue> | ParsedAssociation> & {
+	/** crypto errors that happened during serialization are stored here for debugging purposes */
+	_errors?: Record<AttributeId, string>
+	/** the ivs used to encrypt final fields on the instance */
+	_finalIvs: Record<AttributeId, Nullable<Uint8Array>>
+}
 
-/** a server model parsed instance after going through decryption */
-export type ServerModelParsedInstance = Record<AttributeId, Nullable<ParsedValue> | ParsedAssociation> &
-	ServerModelTypeSeparator & {
-		/** crypto errors that happened during deserialization are stored here for debugging purposes */
-		_errors?: Record<AttributeId, string>
-		/** the ivs used to encrypt final fields on the instance */
-		_finalIvs: Record<AttributeId, Nullable<Uint8Array>>
-	}
+/** simple separator to distinguish between client model types and server model types */
+export type ClientModelTypeSeparator = "ClientModel"
+
+/** simple separator to distinguish between server model types and client model types */
+export type ServerModelTypeSeparator = "ServerModel"
+
+export type Distinct<T, ModelTypeSeparator> = T & { __MODEL_TYPE_SEPARATOR__: ModelTypeSeparator }
+
+export type ClientModelParsedInstance = Distinct<ParsedInstance, ClientModelTypeSeparator>
+
+export type ServerModelParsedInstance = Distinct<ParsedInstance, ServerModelTypeSeparator>
+export type ClientModelEncryptedParsedInstance = Distinct<EncryptedParsedInstance, ClientModelTypeSeparator>
+
+export type ServerModelEncryptedParsedInstance = Distinct<EncryptedParsedInstance, ServerModelTypeSeparator>
+export type ClientModelUntypedInstance = Distinct<UntypedInstance, ClientModelTypeSeparator>
+
+export type ServerModelUntypedInstance = Distinct<UntypedInstance, ServerModelTypeSeparator>
 
 // // //
 //

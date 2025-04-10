@@ -19,7 +19,7 @@ import { EntityUpdateTypeRef, GroupMembershipTypeRef, UserTypeRef } from "../../
 import { ContactTypeRef, MailTypeRef } from "../../../../../src/common/api/entities/tutanota/TypeRefs.js"
 import { GroupType, OperationType } from "../../../../../src/common/api/common/TutanotaConstants.js"
 import { aes256RandomKey, fixedIv, unauthenticatedAesDecrypt } from "@tutao/tutanota-crypto"
-import { resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
+import { resolveClientTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { createTestEntity } from "../../../TestUtils.js"
 import { containsEventOfType, entityUpateToUpdateData, EntityUpdateData } from "../../../../../src/common/api/common/utils/EntityUpdateUtils.js"
 
@@ -118,7 +118,7 @@ o.spec("Index Utils", () => {
 		// o(typeRefToTypeInfo(UserTypeRef).appId).equals(0)
 		// o(typeRefToTypeInfo(UserTypeRef).typeId).equals(UserTypeModel.id)
 		o(typeRefToTypeInfo(ContactTypeRef).appId).equals(1)
-		const ContactTypeModel = await resolveTypeReference(ContactTypeRef)
+		const ContactTypeModel = await resolveClientTypeReference(ContactTypeRef)
 		o(typeRefToTypeInfo(ContactTypeRef).typeId).equals(ContactTypeModel.id)
 	})
 	o("userIsGlobalAdmin", function () {

@@ -59,7 +59,7 @@ import { EntityRestClientMock } from "../rest/EntityRestClientMock.js"
 import type { DateProvider } from "../../../../../src/common/api/worker/DateProvider.js"
 import { LocalTimeDateProvider } from "../../../../../src/common/api/worker/DateProvider.js"
 import { aes256RandomKey, fixedIv } from "@tutao/tutanota-crypto"
-import { resolveTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
+import { resolveClientTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { matchers, object, verify, when } from "testdouble"
 import { InfoMessageHandler } from "../../../../../src/common/gui/InfoMessageHandler.js"
 import { ElementDataOS, GroupDataOS, Metadata as MetaData, MetaDataOS } from "../../../../../src/common/api/worker/search/IndexTables.js"
@@ -202,7 +202,7 @@ o.spec("MailIndexer test", () => {
 				value: h.value(),
 			}
 		})
-		const MailModel = await resolveTypeReference(MailTypeRef)
+		const MailModel = await resolveClientTypeReference(MailTypeRef)
 		o(JSON.stringify(attributes)).equals(
 			JSON.stringify([
 				{
