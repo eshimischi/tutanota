@@ -370,10 +370,10 @@ crate::service_impl!(declare, SignOrderProcessingAgreementService, "sys/signorde
 crate::service_impl!(POST, SignOrderProcessingAgreementService, SignOrderProcessingAgreementData, ());
 
 
-pub struct SurveyDataService;
+pub struct SurveyService;
 
-crate::service_impl!(declare, SurveyDataService, "sys/surveydataservice", 126);
-crate::service_impl!(POST, SurveyDataService, SurveyDataPostIn, ());
+crate::service_impl!(declare, SurveyService, "sys/surveyservice", 126);
+crate::service_impl!(POST, SurveyService, SurveyDataPostIn, ());
 
 
 pub struct SwitchAccountTypeService;

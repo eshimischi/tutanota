@@ -463,9 +463,9 @@ export const SignOrderProcessingAgreementService = Object.freeze({
 	delete: null,
 } as const)
 
-export const SurveyDataService = Object.freeze({
+export const SurveyService = Object.freeze({
 	app: "sys",
-	name: "SurveyDataService",
+	name: "SurveyService",
 	get: null,
 	post: { data: SurveyDataPostInTypeRef, return: null },
 	put: null,

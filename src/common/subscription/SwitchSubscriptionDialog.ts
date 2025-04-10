@@ -160,6 +160,7 @@ async function onSwitchToFree(customer: Customer, dialog: Dialog, currentPlanInf
 					reason: reason.reason,
 					details: reason.details,
 					version: SURVEY_VERSION_NUMBER,
+					type: null, // Service will determine the type.
 			  })
 			: null
 	const newPlanType = await cancelSubscription(dialog, currentPlanInfo, customer, data)

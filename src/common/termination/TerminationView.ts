@@ -11,7 +11,7 @@ import { createSurveyData, CustomerAccountTerminationRequest } from "../api/enti
 import { BaseTopLevelView } from "../gui/BaseTopLevelView.js"
 import { TopLevelAttrs, TopLevelView } from "../../TopLevelView.js"
 import { LoginScreenHeader } from "../gui/LoginScreenHeader.js"
-import { LeavingUserSurveyData, showLeavingUserSurveyWizard } from "../subscription/LeavingUserSurveyWizard.js"
+import { LeavingUserSurveyData } from "../subscription/LeavingUserSurveyWizard.js"
 import { SURVEY_VERSION_NUMBER } from "../subscription/LeavingUserSurveyConstants.js"
 
 assertMainOrNode()
@@ -92,6 +92,7 @@ export class TerminationView extends BaseTopLevelView implements TopLevelView<Te
 				reason: surveyResult.reason,
 				details: surveyResult.details,
 				version: SURVEY_VERSION_NUMBER,
+				type: null, // Service will determine the type.
 			})
 			await showProgressDialog("pleaseWait_msg", this.model.createAccountTerminationRequest(data))
 		} else {

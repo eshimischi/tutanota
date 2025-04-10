@@ -215,6 +215,7 @@ export class AccountMaintenanceSettings implements Component<AccountMaintenanceS
 												details: reason.details,
 												reason: reason.reason,
 												version: SURVEY_VERSION_NUMBER,
+												type: null, // Service will determine the type.
 											})
 											showDeleteAccountDialog(surveyData)
 										} else {
