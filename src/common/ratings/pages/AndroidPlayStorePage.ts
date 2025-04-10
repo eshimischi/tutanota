@@ -16,6 +16,7 @@ export class AndroidPlayStorePage implements Component<AndroidPlayStorePageAttrs
 	view({ attrs: { dialog, triggerType } }: Vnode<AndroidPlayStorePageAttrs>): Children {
 		return m(ImageWithOptionsDialog, {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/rate-us-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
+			imageStyle: { "max-width": "300px" },
 			titleText: "ratingGooglePlay_title",
 			messageText: "ratingGooglePlay_msg",
 			mainActionText: "rateUs_action",

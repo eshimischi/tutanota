@@ -20,6 +20,7 @@ export class EvaluationPage implements Component<EvaluationPageAttrs> {
 	view({ attrs: { triggerType, dialog, navigate } }: Vnode<EvaluationPageAttrs>): Children {
 		return m(ImageWithOptionsDialog, {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/your-opinion-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
+			imageStyle: { "max-width": "300px" },
 			titleText: "ratingHowAreWeDoing_title",
 			messageText: "ratingExplanation_msg",
 			mainActionText: "ratingLoveIt_label",
