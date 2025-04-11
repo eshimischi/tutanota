@@ -7,6 +7,9 @@ import { locator } from "../../api/main/CommonLocator.js"
 import { showProgressDialog } from "../../gui/dialogs/ProgressDialog.js"
 import { SurveyService } from "../../api/entities/sys/Services.js"
 import { px } from "../../gui/size.js"
+import { writeSupportMail } from "../../../mail-app/mail/editor/MailEditor.js"
+import { showSnackBar } from "../../gui/base/SnackBar.js"
+import { lang } from "../../misc/LanguageViewModel.js"
 
 interface DissatisfactionPageAttrs {
 	dialog: Dialog
@@ -23,7 +26,29 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 	view({ attrs: { dialog } }: Vnode<DissatisfactionPageAttrs>): Children {
 		return m(
 			".flex.flex-column.pt.height-100p.gap-vpad",
-			m(Card, m("", m("p.h4.m-0", "Tell us why"), m("p.m-0.mt-s", "lorem ipsum dolor sit amet"))),
+			m(
+				Card,
+				m(
+					"",
+					m("p.h4.m-0", "Tell us why"),
+					m("p.m-0.mt-s", [
+						m("span", "lorem ipsum dolor sit amet. Maybe it's also an option to link to the "),
+						m(
+							"a",
+							{
+								href: "javascript:void(0)",
+								onclick: () => {
+									dialog.close()
+
+									void writeSupportMail("placeholder text")
+								},
+							},
+							"Contact Support",
+						),
+						m("span", " option?"),
+					]),
+				),
+			),
 			m(
 				Card,
 				{
@@ -76,6 +101,15 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 		await showProgressDialog("sendingEvaluation_msg", send())
 
 		this.dialog?.close()
+
+		void showSnackBar({
+			message: lang.makeTranslation("", "Thank you for your feedback!"),
+			button: {
+				label: "ok_action",
+				click: noOp,
+			},
+			waitingTime: 300,
+		})
 	}
 }
 
