@@ -718,7 +718,7 @@ o.spec("EntityRestClient", function () {
 					queryParams: undefined,
 					responseType: MediaType.Json,
 					body: argThat(async (json) => {
-						const untypedInstance = JSON.parse(json)
+						const untypedInstance = AttributeModel.removeNetworkDebuggingInfoIfNeeded(JSON.parse(json))
 						const ownerEncSk = base64ToUint8Array(
 							AttributeModel.getAttribute<Base64>(
 								untypedInstance,
@@ -836,7 +836,7 @@ o.spec("EntityRestClient", function () {
 					queryParams: undefined,
 					responseType: MediaType.Json,
 					body: argThat(async (json) => {
-						const untypedInstance = JSON.parse(json)
+						const untypedInstance = AttributeModel.removeNetworkDebuggingInfoIfNeeded(JSON.parse(json))
 						const ownerEncSk = base64ToUint8Array(
 							AttributeModel.getAttribute<Base64>(
 								untypedInstance,

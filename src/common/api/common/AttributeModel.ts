@@ -6,6 +6,7 @@ import {
 	ModelAssociation,
 	ModelValue,
 	ServerModelParsedInstance,
+	ServerModelUntypedInstance,
 	TypeId,
 	TypeModel,
 	UntypedInstance,
@@ -13,6 +14,7 @@ import {
 import { ProgrammingError } from "./error/ProgrammingError"
 import { assertNotNull, downcast } from "@tutao/tutanota-utils"
 import { Nullable } from "@tutao/tutanota-utils/dist/Utils"
+import { Server } from "node:net"
 
 export class AttributeModel {
 	private static readonly typeIdToAttributeNameMap: Record<AppName, Map<TypeId, Map<AttributeName, AttributeId>>> = {
@@ -24,6 +26,20 @@ export class AttributeModel {
 		accounting: new Map(),
 		sys: new Map(),
 		storage: new Map(),
+	}
+
+	static removeNetworkDebuggingInfoIfNeeded(untypedInstance: ServerModelUntypedInstance): ServerModelUntypedInstance {
+		let newUntypedInstance = {} as ServerModelUntypedInstance
+		if (env.networkDebugging) {
+			for (const [attrIdStr, attrData] of Object.entries(untypedInstance)) {
+				// keys are in the format attributeId:attributeName when networkDebugging is enabled
+				const attrId = attrIdStr.split(":")[0]
+				newUntypedInstance[attrId] = attrData
+			}
+			return newUntypedInstance
+		} else {
+			return untypedInstance
+		}
 	}
 
 	static getAttribute<T>(instance: EncryptedParsedInstance | ServerModelParsedInstance, attrName: string, typeModel: TypeModel): T {

@@ -39,7 +39,11 @@ export class TypeMapper {
 			}
 
 			// values at this stage are only strings, the other types are only possible for associations.
-			const untypedValue = instance[attrIdUntypedInstance] as UntypedValue
+			let untypedValue = instance[attrIdUntypedInstance] as UntypedValue
+			if (env.networkDebugging && untypedValue === undefined) {
+				// websocket messages do NOT support network debugging, we therefore retry reading with attrId
+				untypedValue = instance[attrId] as UntypedValue
+			}
 
 			if (modelValue.encrypted) {
 				// will be decrypted and mapped at a later stage
@@ -57,19 +61,23 @@ export class TypeMapper {
 				attrIdUntypedInstance += ":" + modelAssociation.name
 			}
 
-			const values = instance[attrIdUntypedInstance] as UntypedAssociation
+			let associationValues = instance[attrIdUntypedInstance] as UntypedAssociation
+			if (env.networkDebugging && associationValues === undefined) {
+				// websocket messages do NOT support network debugging, we therefore retry reading with attrId
+				associationValues = instance[attrId] as UntypedAssociation
+			}
 
 			if (modelAssociation.type === AssociationType.Aggregation) {
 				const appName = modelAssociation.dependency ?? typeModel.app
 				const associationTypeModel = await this.serverTypeModel(new TypeRef(appName, modelAssociation.refTypeId))
 
 				const encryptedParsedAssociationValues: Array<ServerModelEncryptedParsedInstance> = []
-				for (const value of values) {
+				for (const value of associationValues) {
 					encryptedParsedAssociationValues.push(await this.applyJsTypes(associationTypeModel, value as ServerModelUntypedInstance))
 				}
 				parsedInstance[attrId] = encryptedParsedAssociationValues
 			} else {
-				parsedInstance[attrId] = values as Array<Id> | Array<IdTuple>
+				parsedInstance[attrId] = associationValues as Array<Id> | Array<IdTuple>
 			}
 		}
 
