@@ -17,11 +17,10 @@ export function isWithinLastNDays(now: Date, date: Date, days: number) {
 }
 
 export enum RatingDisallowReason {
-	UNSUPPORTED_PLATFORM,
-	LAST_RATING_TOO_YOUNG,
-	APP_INSTALLATION_TOO_YOUNG,
-	ACCOUNT_TOO_YOUNG,
-	RATING_DISMISSED,
+	UNSUPPORTED_PLATFORM = 0,
+	APP_INSTALLATION_TOO_YOUNG = 2,
+	ACCOUNT_TOO_YOUNG = 3,
+	RATING_DISMISSED = 4,
 }
 
 /**
@@ -42,12 +41,6 @@ export async function evaluateRatingEligibility(now: Date, deviceConfig: DeviceC
 		disallowReasons.push(RatingDisallowReason.UNSUPPORTED_PLATFORM)
 	}
 
-	const lastRatingPromptedDate: Date | null = deviceConfig.getLastRatingPromptedDate()
-
-	if (lastRatingPromptedDate != null && DateTime.fromJSDate(now).diff(DateTime.fromJSDate(lastRatingPromptedDate), "years").years < 1) {
-		disallowReasons.push(RatingDisallowReason.LAST_RATING_TOO_YOUNG)
-	}
-
 	const appInstallationDate = await locator.systemFacade.getInstallationDate().then((rawDate) => new Date(Number(rawDate)))
 	if (isWithinLastNDays(now, appInstallationDate, 7)) {
 		disallowReasons.push(RatingDisallowReason.APP_INSTALLATION_TOO_YOUNG)
@@ -58,8 +51,8 @@ export async function evaluateRatingEligibility(now: Date, deviceConfig: DeviceC
 		disallowReasons.push(RatingDisallowReason.ACCOUNT_TOO_YOUNG)
 	}
 
-	const retryRatingPromptAfter = deviceConfig.getNextEvaluationDate()
-	if (retryRatingPromptAfter != null && now.getTime() < retryRatingPromptAfter.getTime()) {
+	const nextEvaluationDate = deviceConfig.getNextEvaluationDate()
+	if (nextEvaluationDate != null && now.getTime() < nextEvaluationDate?.getTime()) {
 		disallowReasons.push(RatingDisallowReason.RATING_DISMISSED)
 	}
 
