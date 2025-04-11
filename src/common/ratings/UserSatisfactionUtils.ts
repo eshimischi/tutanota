@@ -3,6 +3,7 @@ import { DateTime } from "luxon"
 import { locator } from "../api/main/CommonLocator.js"
 import { isAndroidApp } from "../api/common/Env.js"
 import { Stage } from "@tutao/tutanota-usagetests"
+import { PlanType, PlanTypeToName } from "../api/common/TutanotaConstants.js"
 
 export function createEvent(deviceConfig: DeviceConfig): void {
 	const retentionPeriod: number = 30
@@ -95,23 +96,35 @@ export function isEventHappyMoment(now: Date, deviceConfig: DeviceConfig): boole
 	return false
 }
 
+/*
+## Stages:
+
+- Trigger stage (Android & iOS)
+	Stage number: 0
+	What caused the "happy moment". Sending an email, creating a calendar event or doing an
+	account upgrade
+- Evaluation stage (Android & iOS)
+	Stage number: 1
+	We ask the user how they like the apps (Tuta Mail and Tuta Calendar)
+	We track whether they like the product or if they think they could use improvement
+- Rating stage (only for Android)
+	Stage number: 2
+	We track whether the user is willing to leave a rating on Google Play, or prefers to not do it now.
+- Support Tuta stage (Android & iOS)
+	Stage number:
+		- 2 on iOS
+		- 3 on Android
+	The user enters this stage when they already left a rating within the last year.
+	We track how and if the user would like to support Tuta.
+ */
+
 export type TriggerType = "Mail" | "Calendar" | "Upgrade"
-export type EvaluationButtonType = "LoveIt" | "NeedsWork" | "NotNow"
-export type RatingButtonType = "RateUs" | "MaybeLater"
-
-enum RatingUsageTestStage {
-	TRIGGER,
-	EVALUATION,
-	RATING,
-}
-
-export function getRatingUsageTestStage(stage: RatingUsageTestStage): Stage {
-	const test = locator.usageTestController.getTest(isAndroidApp() ? "rating.android" : "rating.ios")
-	return test.getStage(stage)
-}
+type EvaluationButtonType = "LoveIt" | "NeedsWork" | "NotNow"
+type RatingButtonType = "RateUs" | "MaybeLater"
+export type SupportTutaButtonType = "Upgrade" | "Donate" | "Refer"
 
 export function completeTriggerStage(triggerType: TriggerType) {
-	const stage = getRatingUsageTestStage(RatingUsageTestStage.TRIGGER)
+	const stage = getStage(0)
 
 	stage.setMetric({
 		name: "triggerType",
@@ -121,7 +134,7 @@ export function completeTriggerStage(triggerType: TriggerType) {
 }
 
 export function completeEvaluationStage(triggerType: TriggerType, buttonType: EvaluationButtonType) {
-	const stage = getRatingUsageTestStage(RatingUsageTestStage.EVALUATION)
+	const stage = getStage(1)
 
 	stage.setMetric({
 		name: "button",
@@ -131,11 +144,26 @@ export function completeEvaluationStage(triggerType: TriggerType, buttonType: Ev
 }
 
 export function completeRatingStage(triggerType: TriggerType, buttonType: RatingButtonType) {
-	const stage = getRatingUsageTestStage(RatingUsageTestStage.RATING)
+	const stage = getStage(2)
 
 	stage.setMetric({
 		name: "button",
 		value: buttonType + "_" + triggerType,
 	})
 	void stage.complete()
+}
+
+export function completeSupportTutaStage(buttonType: SupportTutaButtonType, planType: PlanType) {
+	const stage = getStage(isAndroidApp() ? 3 : 2)
+	stage.setMetric({
+		name: "button",
+		value: buttonType + "_" + PlanTypeToName[planType],
+	})
+	void stage.complete()
+}
+
+function getStage(stage: number): Stage {
+	const test = locator.usageTestController.getTest(isAndroidApp() ? "rating.android" : "rating.ios")
+	test.allowEarlyRestarts = true
+	return test.getStage(stage)
 }

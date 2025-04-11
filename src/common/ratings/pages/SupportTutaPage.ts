@@ -11,23 +11,24 @@ import { showUpgradeDialog } from "../../gui/nav/NavFunctions.js"
 import { windowFacade } from "../../misc/WindowFacade.js"
 import { progressIcon } from "../../gui/base/Icon.js"
 import { lang } from "../../misc/LanguageViewModel.js"
+import { completeSupportTutaStage, SupportTutaButtonType } from "../UserSatisfactionUtils.js"
 
 interface SupportTutaPageAttrs {
 	dialog: Dialog
 }
 
 export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
-	private readonly currentPlan: Stream<PlanType | null> = stream(null)
+	private currentPlan: PlanType | null = null
 	private dialog: Dialog | null = null
 
 	async oncreate(vnode: VnodeDOM<SupportTutaPageAttrs>) {
-		this.currentPlan(await this.getCurrentPlan())
+		this.currentPlan = await this.getCurrentPlan()
 		this.dialog = vnode.attrs.dialog
 		m.redraw()
 	}
 
 	view(): Children {
-		if (!this.currentPlan()) {
+		if (!this.currentPlan) {
 			return m(
 				".full-width.full-height.flex.justify-center.items-center.flex-column",
 				m(".flex-center", progressIcon()),
@@ -41,17 +42,26 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 			titleText: "ratingSupportTuta_title",
 			messageText: "emptyString_msg",
 			mainActionText: this.getMainAction().langKey,
-			mainActionClick: this.getMainAction().onClick,
+			mainActionClick: () => {
+				const mainAction = this.getMainAction()
+				completeSupportTutaStage(mainAction.buttonType, this.currentPlan!)
+				mainAction.onClick()
+			},
 			subActionText: this.getSubAction().langKey,
-			subActionClick: this.getSubAction().onClick,
+			subActionClick: () => {
+				const subAction = this.getSubAction()
+				completeSupportTutaStage(subAction.buttonType, this.currentPlan!)
+				subAction.onClick()
+			},
 		})
 	}
 
-	private getMainAction(): { langKey: TranslationKeyType; onClick: VoidFunction } {
-		switch (this.currentPlan()) {
+	private getMainAction(): Action {
+		switch (this.currentPlan) {
 			case PlanType.Free:
 			case PlanType.Revolutionary: {
 				return {
+					buttonType: "Upgrade",
 					langKey: "upgrade_action",
 					onClick: () => {
 						this.dialog?.close()
@@ -61,6 +71,7 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 			}
 			case PlanType.Legend: {
 				return {
+					buttonType: "Refer",
 					langKey: "referralSettings_label",
 					onClick: () => {
 						this.dialog?.close()
@@ -74,11 +85,12 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 		}
 	}
 
-	private getSubAction(): { langKey: TranslationKeyType; onClick: VoidFunction } {
-		switch (this.currentPlan()) {
+	private getSubAction(): Action {
+		switch (this.currentPlan) {
 			case PlanType.Free:
 			case PlanType.Legend: {
 				return {
+					buttonType: "Donate",
 					langKey: "donate_action",
 					onClick: () => {
 						this.dialog?.close()
@@ -88,6 +100,7 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 			}
 			case PlanType.Revolutionary: {
 				return {
+					buttonType: "Refer",
 					langKey: "referralSettings_label",
 					onClick: () => {
 						this.dialog?.close()
@@ -105,3 +118,5 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 		return await locator.logins.getUserController().getPlanType()
 	}
 }
+
+type Action = { buttonType: SupportTutaButtonType; langKey: TranslationKeyType; onClick: VoidFunction }
