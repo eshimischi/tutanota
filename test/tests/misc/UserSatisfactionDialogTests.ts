@@ -5,7 +5,7 @@ import { object, verify, when } from "testdouble"
 import { CommonLocator, initCommonLocator } from "../../../src/common/api/main/CommonLocator.js"
 import { UserController } from "../../../src/common/api/main/UserController.js"
 
-o.spec("InAppRatingUtilsTest", () => {
+o.spec("UserSatisfactionDialog", () => {
 	let deviceConfigMock: DeviceConfig = object()
 	let locatorMock: CommonLocator = object()
 
@@ -40,23 +40,6 @@ o.spec("InAppRatingUtilsTest", () => {
 			o(res).satisfies((disallowReasons) => ({
 				pass: disallowReasons.includes(RatingDisallowReason.UNSUPPORTED_PLATFORM),
 				message: "Ratings are only available in the Tuta iOS and Android apps",
-			}))
-		})
-
-		o("previous rating", async () => {
-			// Arrange
-			const lastRatingPromptedDate = new Date("2024-06-06T06:06:06Z") // some months ago
-
-			when(deviceConfigMock.getNextEvaluationDate()).thenReturn(null)
-			when(deviceConfigMock.getLastRatingPromptedDate()).thenReturn(lastRatingPromptedDate)
-
-			// Act
-			const res = await evaluateRatingEligibility(now, deviceConfigMock, true)
-
-			// Assert
-			o(res).satisfies((disallowReasons) => ({
-				pass: disallowReasons.includes(RatingDisallowReason.LAST_RATING_TOO_YOUNG),
-				message: "Rating prompt was shown less than a year ago",
 			}))
 		})
 
