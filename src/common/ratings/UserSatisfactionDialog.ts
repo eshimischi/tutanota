@@ -13,15 +13,14 @@ import m from "mithril"
 import { DateTime } from "luxon"
 import { ButtonType } from "../gui/base/Button.js"
 import { AndroidPlayStorePage } from "./pages/AndroidPlayStorePage.js"
-import { getCurrentDate } from "../api/common/TutanotaConstants.js"
-import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
-import { lang } from "../misc/LanguageViewModel.js"
-import { writeSupportMail } from "../../mail-app/mail/editor/MailEditor.js"
 import { SupportTutaPage } from "./pages/SupportTutaPage.js"
+import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
+import { SuggestionPage } from "./pages/SuggestionPage.js"
 import { isApp } from "../api/common/Env.js"
+import { getCurrentDate } from "../api/common/TutanotaConstants.js"
 import { isEmpty } from "@tutao/tutanota-utils"
 
-export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore" | "supportTuta"
+export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore" | "supportTuta" | "suggestion"
 
 export function showAppRatingDialog(triggerType: TriggerType): void {
 	completeTriggerStage(triggerType)
@@ -59,16 +58,8 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 		dissatisfaction: {
 			content: m(DissatisfactionPage, {
 				dialog,
+				navigate: navigateToPage,
 			}),
-			leftAction: {
-				label: lang.makeTranslation("", "Contact support"),
-				click: () => {
-					dialog.close()
-
-					void writeSupportMail("placeholder text")
-				},
-				type: ButtonType.Secondary,
-			},
 			rightAction: {
 				label: "notNow_label",
 				click: () => dialog.close(),
@@ -78,6 +69,14 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 		},
 		supportTuta: {
 			content: m(SupportTutaPage, { dialog }),
+			rightAction: {
+				label: "notNow_label",
+				type: ButtonType.Secondary,
+				click: () => dialog.close(),
+			},
+		},
+		suggestion: {
+			content: m(SuggestionPage, { dialog }),
 			rightAction: {
 				label: "notNow_label",
 				type: ButtonType.Secondary,
