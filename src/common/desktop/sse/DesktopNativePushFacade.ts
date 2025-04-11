@@ -5,7 +5,7 @@ import { ExtendedNotificationMode } from "../../native/common/generatedipc/Exten
 import { SseStorage } from "./SseStorage.js"
 import { TutaSseFacade } from "./TutaSseFacade.js"
 import { AlarmNotificationTypeRef } from "../../api/entities/sys/TypeRefs"
-import { UntypedInstance } from "../../api/common/EntityTypes"
+import { ServerModelUntypedInstance, UntypedInstance } from "../../api/common/EntityTypes"
 import { InstancePipeline } from "../../api/worker/crypto/InstancePipeline"
 import { Base64, base64ToUint8Array } from "@tutao/tutanota-utils"
 import { uint8ArrayToBitArray } from "@tutao/tutanota-crypto"
@@ -51,7 +51,7 @@ export class DesktopNativePushFacade implements NativePushFacade {
 	}
 
 	async scheduleAlarms(alarmNotificationWireFormat: string, newDeviceSessionKey: Base64): Promise<void> {
-		const alarms: UntypedInstance[] = JSON.parse(alarmNotificationWireFormat)
+		const alarms: ServerModelUntypedInstance[] = JSON.parse(alarmNotificationWireFormat)
 		for (const alarm of alarms) {
 			const sk = uint8ArrayToBitArray(base64ToUint8Array(newDeviceSessionKey))
 			const alarmNotification = await this.instancePipeline.decryptAndMap(AlarmNotificationTypeRef, alarm, sk)
