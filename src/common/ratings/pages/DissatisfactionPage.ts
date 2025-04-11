@@ -10,6 +10,7 @@ import { px } from "../../gui/size.js"
 import { writeSupportMail } from "../../../mail-app/mail/editor/MailEditor.js"
 import { showSnackBar } from "../../gui/base/SnackBar.js"
 import { lang } from "../../misc/LanguageViewModel.js"
+import { noOp } from "@tutao/tutanota-utils"
 
 interface DissatisfactionPageAttrs {
 	dialog: Dialog

@@ -56,7 +56,7 @@ export class EvaluationPage implements Component<EvaluationPageAttrs> {
 	}
 
 	private onSubActionClick({ triggerType, navigate }: EvaluationPageAttrs) {
-		completeEvaluationStage(triggerType, "NeedsWork") //Fixme
+		completeEvaluationStage(triggerType, "NeedsWork")
 
 		navigate("dissatisfaction")
 	}
