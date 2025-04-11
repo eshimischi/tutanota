@@ -39,7 +39,7 @@ export class EvaluationPage implements Component<EvaluationPageAttrs> {
 
 		// Did the user rate within the last year already?
 		const hasRated =
-			lastRatingPromptedDate != null && DateTime.fromJSDate(lastRatingPromptedDate).diff(DateTime.fromJSDate(getCurrentDate()), ["years"]).years <= 1
+			lastRatingPromptedDate != null && DateTime.fromJSDate(getCurrentDate()).diff(DateTime.fromJSDate(lastRatingPromptedDate), ["years"]).years <= 1
 
 		if (!hasRated || isBusinessUser) {
 			if (isIOSApp()) {
