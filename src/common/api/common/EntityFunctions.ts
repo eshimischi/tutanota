@@ -1,5 +1,5 @@
 import { assertNotNull, stringToUtf8Uint8Array, TypeRef, uint8ArrayToBase64, uint8ArrayToString } from "@tutao/tutanota-utils"
-import type { AttributeId, ClientModelTypeSeparator, Distinct, ModelAssociation, ModelValue, ServerModelTypeSeparator, TypeModel } from "./EntityTypes"
+import type { AttributeId, ModelAssociation, ModelValue, TypeModel } from "./EntityTypes"
 import { typeModels as baseTypeModels } from "../entities/base/TypeModels.js"
 import { typeModels as sysTypeModels } from "../entities/sys/TypeModels.js"
 import { typeModels as tutanotaTypeModels } from "../entities/tutanota/TypeModels.js"
@@ -146,24 +146,23 @@ export class ServerModelInfo {
 	}
 
 	public initFromJsonUint8Array(applicationTypesJsonData: Uint8Array) {
-		console.log("initializing server model from json string.")
+		console.log("initializing server model from json data")
 
 		const applicationTypesHashTruncatedBase64 = this.computeApplicationTypesHash(applicationTypesJsonData)
+		console.log(applicationTypesHashTruncatedBase64)
 
 		const applicationTypesJsonString = uint8ArrayToString("utf-8", applicationTypesJsonData)
-		const parsedJsonString = assertNotNull(JSON.parse(applicationTypesJsonString))
+		const parsedJsonData = assertNotNull(JSON.parse(applicationTypesJsonString))
 
 		let applicationVersionSum = 0
-		let parsedApplicationTypesJson: Record<string, any> = {}
-
-		Object.entries(parsedJsonString).map(([appName, { version, types }]: [any, any]) => {
+		Object.entries(parsedJsonData).map(([{ version }]: [any, any]) => {
 			applicationVersionSum += this.asNumber(version)
-			parsedApplicationTypesJson[appName] = { name: appName, version, types }
 		})
 
-		this.init(applicationVersionSum, applicationTypesHashTruncatedBase64, parsedApplicationTypesJson)
+		this.init(applicationVersionSum, applicationTypesHashTruncatedBase64, parsedJsonData)
 	}
 
+	// fixme probably delete this only used in test and return not actual file content
 	public getApplicationTypesJsonUint8Array(): Uint8Array {
 		return stringToUtf8Uint8Array(JSON.stringify(this.typeModels))
 	}

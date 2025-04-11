@@ -1,13 +1,15 @@
 export type AppName = Values<typeof AppNameEnum>
+
+// Important: Keep ASC order for application names
 export const AppNameEnum = Object.freeze({
+	Accounting: "accounting",
 	Base: "base",
+	Gossip: "gossip",
+	Monitor: "monitor",
+	Storage: "storage",
 	Sys: "sys",
 	Tutanota: "tutanota",
 	Usage: "usage",
-	Monitor: "monitor",
-	Accounting: "accounting",
-	Gossip: "gossip",
-	Storage: "storage",
 })
 
 /**

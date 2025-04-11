@@ -1,10 +1,11 @@
-import { assertWorkerOrNode, isApp, isDesktop, isTest } from "../../common/Env.js"
+import { assertWorkerOrNode, isApp, isDesktop } from "../../common/Env.js"
 import { IServiceExecutor } from "../../common/ServiceRequest.js"
 import { ApplicationTypesService } from "../../entities/base/Services"
 import { defer, DeferredObject } from "@tutao/tutanota-utils/dist/Utils"
 import { ApplicationTypesHash, ClientModelInfo, ServerModelInfo } from "../../common/EntityFunctions"
 import { ApplicationTypesGetOut } from "../../entities/base/TypeRefs"
 import { FileFacade } from "../../../native/common/generatedipc/FileFacade"
+import { stringToUtf8Uint8Array } from "@tutao/tutanota-utils"
 
 assertWorkerOrNode()
 
@@ -64,15 +65,16 @@ export class ApplicationTypesFacade {
 	private async overrideAndSaveApplicationTypes(applicationTypesGetOut: ApplicationTypesGetOut) {
 		const newApplicationVersionSum = parseInt(applicationTypesGetOut.applicationVersionSum)
 		const newApplicationTypesHash = applicationTypesGetOut.applicationTypesHash
-		const newApplicationTypesJsonString = JSON.parse(applicationTypesGetOut.applicationTypesJson)
+		const applicationTypesJsonString = applicationTypesGetOut.applicationTypesJson
+		const newApplicationTypesJsonData = JSON.parse(applicationTypesJsonString)
 
-		this.serverModelInfo.init(newApplicationVersionSum, newApplicationTypesHash, newApplicationTypesJsonString)
+		this.serverModelInfo.init(newApplicationVersionSum, newApplicationTypesHash, newApplicationTypesJsonData)
 
 		if (isDesktop() || isApp()) {
-			const fileContent = this.serverModelInfo.getApplicationTypesJsonUint8Array()
 			try {
+				const fileContent = stringToUtf8Uint8Array(applicationTypesJsonString)
 				// fixme: is it okay to not persist the model? we might cache an entity with a new server model that we then have to read with the previous server model
-
+				// probably its ok, as we also do not have the server model on the very first application start
 				await this.fileFacade.writeToAppDir(fileContent, this.persistenceFilePath)
 			} catch (err_to_ignore) {
 				console.error(`Failed to persist model: ${err_to_ignore}`)
