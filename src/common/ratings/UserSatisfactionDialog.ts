@@ -1,16 +1,25 @@
 import { deviceConfig } from "../misc/DeviceConfig.js"
-import { completeEvaluationStage, completeTriggerStage, createEvent, TriggerType } from "./UserSatisfactionUtils.js"
+import {
+	completeEvaluationStage,
+	completeTriggerStage,
+	createEvent,
+	evaluateRatingEligibility,
+	isEventHappyMoment,
+	TriggerType,
+} from "./UserSatisfactionUtils.js"
 import { MultiPageDialog } from "../gui/dialogs/MultiPageDialog.js"
 import { EvaluationPage } from "./pages/EvaluationPage.js"
 import m from "mithril"
 import { DateTime } from "luxon"
 import { ButtonType } from "../gui/base/Button.js"
 import { AndroidPlayStorePage } from "./pages/AndroidPlayStorePage.js"
-import { Const } from "../api/common/TutanotaConstants.js"
+import { getCurrentDate } from "../api/common/TutanotaConstants.js"
 import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
 import { lang } from "../misc/LanguageViewModel.js"
 import { writeSupportMail } from "../../mail-app/mail/editor/MailEditor.js"
 import { SupportTutaPage } from "./pages/SupportTutaPage.js"
+import { isApp } from "../api/common/Env.js"
+import { isEmpty } from "@tutao/tutanota-utils"
 
 export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore" | "supportTuta"
 
@@ -84,23 +93,17 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
  * If the client is on any app (Tuta Mail or Tuta Calendar), we save the current date as an event to determine if we want to trigger a "rate Tuta" dialog.
  */
 export async function handleRatingByEvent(triggerType: TriggerType) {
-	// FIXME
-	if (true) {
+	if (isApp()) {
 		createEvent(deviceConfig)
 	}
 
-	// Allow stubbing the current date via `Const` for testing purposes.
-	const currentDate = Const.CURRENT_DATE ?? new Date()
+	const disallowReasons = await evaluateRatingEligibility(getCurrentDate(), deviceConfig, isApp())
 
-	// FIXME
-	// const disallowReasons = await evaluateRatingEligibility(currentDate, deviceConfig, isApp())
-
-	// FIXME
-	if (false) {
+	if (!isEmpty(disallowReasons)) {
 		return
 	}
 
-	// if (isEventHappyMoment(currentDate, deviceConfig)) {
-	showAppRatingDialog(triggerType)
-	// }
+	if (isEventHappyMoment(getCurrentDate(), deviceConfig)) {
+		showAppRatingDialog(triggerType)
+	}
 }
