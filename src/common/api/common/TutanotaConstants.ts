@@ -1306,6 +1306,10 @@ export const TUTA_MAIL_APP_STORE_URL = "https://apps.apple.com/app/secure-mail-c
 export const TUTA_CALENDAR_GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=de.tutao.calendar"
 export const TUTA_CALENDAR_APP_STORE_URL = "https://apps.apple.com/app/tuta-calendar-planner-app/id6657977811"
 
+/**
+ * Gets the current date defined in the global `Const` object for testing purposes.
+ * If null, fall back to the given parameter which defaults to `new Date()`
+ */
 export function getCurrentDate(fallback = new Date()) {
 	return Const.CURRENT_DATE ?? fallback
 }
