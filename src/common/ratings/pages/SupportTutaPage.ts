@@ -4,14 +4,13 @@ import { ImageWithOptionsDialog } from "../../gui/dialogs/ImageWithOptionsDialog
 import { client } from "../../misc/ClientDetector.js"
 import { TranslationKeyType } from "../../misc/TranslationKey.js"
 import { locator } from "../../api/main/CommonLocator.js"
-import Stream from "mithril/stream"
-import stream from "mithril/stream"
 import { PlanType } from "../../api/common/TutanotaConstants.js"
 import { showUpgradeDialog } from "../../gui/nav/NavFunctions.js"
 import { windowFacade } from "../../misc/WindowFacade.js"
 import { progressIcon } from "../../gui/base/Icon.js"
 import { lang } from "../../misc/LanguageViewModel.js"
 import { completeSupportTutaStage, SupportTutaButtonType } from "../UserSatisfactionUtils.js"
+import { px } from "../../gui/size.js"
 
 interface SupportTutaPageAttrs {
 	dialog: Dialog
@@ -38,7 +37,7 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 
 		return m(ImageWithOptionsDialog, {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/rate-us-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
-			imageStyle: { "max-width": "300px" },
+			imageStyle: { maxWidth: px(300) },
 			titleText: "ratingSupportTuta_title",
 			messageText: "emptyString_msg",
 			mainActionText: this.getMainAction().langKey,

@@ -6,6 +6,7 @@ import { TUTA_CALENDAR_GOOGLE_PLAY_URL, TUTA_MAIL_GOOGLE_PLAY_URL } from "../../
 import { completeRatingStage, TriggerType } from "../UserSatisfactionUtils.js"
 import { deviceConfig } from "../../misc/DeviceConfig.js"
 import { ImageWithOptionsDialog } from "../../gui/dialogs/ImageWithOptionsDialog"
+import { px } from "../../gui/size.js"
 
 interface AndroidPlayStorePageAttrs {
 	triggerType: TriggerType
@@ -16,7 +17,7 @@ export class AndroidPlayStorePage implements Component<AndroidPlayStorePageAttrs
 	view({ attrs: { dialog, triggerType } }: Vnode<AndroidPlayStorePageAttrs>): Children {
 		return m(ImageWithOptionsDialog, {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/rate-us-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
-			imageStyle: { "max-width": "300px" },
+			imageStyle: { maxWidth: px(300) },
 			titleText: "ratingGooglePlay_title",
 			messageText: "ratingGooglePlay_msg",
 			mainActionText: "rateUs_action",

@@ -22,7 +22,7 @@ import { updatePaymentData } from "./InvoiceAndPaymentDataPage"
 import { SessionType } from "../api/common/SessionType"
 import { MobilePaymentError } from "../api/common/error/MobilePaymentError.js"
 import { evaluateRatingEligibility, RatingDisallowReason } from "../ratings/UserSatisfactionUtils.js"
-import { showAppRatingDialog } from "../ratings/UserSatisfactionDialog.js"
+import { showUserSatisfactionDialog } from "../ratings/UserSatisfactionDialog.js"
 import { deviceConfig } from "../misc/DeviceConfig.js"
 import { isApp, isIOSApp } from "../api/common/Env.js"
 import { client } from "../misc/ClientDetector.js"
@@ -93,9 +93,7 @@ export class UpgradeConfirmSubscriptionPage implements WizardPageN<UpgradeSubscr
 				)
 
 				if (isEmpty(disallowReasons)) {
-					setTimeout(async () => {
-						showAppRatingDialog("Upgrade")
-					}, 2000)
+					setTimeout(() => showUserSatisfactionDialog("Upgrade"), 2000)
 				}
 			})
 			.catch(

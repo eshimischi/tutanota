@@ -38,15 +38,15 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 						padding: "1em 0",
 					},
 				},
-				"We are all ears!",
+				"We are all ears!", // FIXME
 			),
 			m(Card, { shouldDivide: true }, [
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Bulb,
-						title: "ratingSupportTuta_title", // TODO
+						title: "ratingSupportTuta_title", // FIXME
 					},
-					text: lang.makeTranslation("", "Give suggestion"),
+					text: lang.makeTranslation("", "Give suggestion"), // FIXME
 					onclick: () => {
 						navigate("suggestion")
 					},
@@ -54,13 +54,13 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Warning,
-						title: "attachmentWarning_msg", // TODO
+						title: "attachmentWarning_msg", // FIXME
 					},
-					text: lang.makeTranslation("", "Need urgent help"),
+					text: lang.makeTranslation("", "Need urgent help"), // FIXME
 					rightIcon: { icon: Icons.Open, title: "sendMail_label" },
 					onclick: () => {
 						dialog.close()
-						void writeSupportMail("placeholder text")
+						void writeSupportMail("placeholder text") // FIXME
 					},
 				}),
 			]),

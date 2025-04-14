@@ -13,6 +13,7 @@ import {
 	ConversationType,
 	ExternalImageRule,
 	FeatureType,
+	getCurrentDate,
 	Keys,
 	MailAuthenticationStatus,
 	MailMethod,
@@ -91,11 +92,13 @@ import {
 	dialogTitleTranslationKey,
 	getEnabledMailAddressesWithUser,
 	getMailAddressDisplayText,
+	LINE_BREAK,
 	RecipientField,
 } from "../../../common/mailFunctionality/SharedMailUtils.js"
 import { mailLocator } from "../../mailLocator.js"
 
 import { handleRatingByEvent } from "../../../common/ratings/UserSatisfactionDialog.js"
+import { clientInfoString } from "../../../common/misc/ErrorReporter.js"
 
 export type MailEditorAttrs = {
 	model: SendMailModel
@@ -1221,14 +1224,11 @@ async function getMailboxDetailsAndProperties(
 }
 
 /**
- * Create and show a new mail editor with a support query, addressed to premium support,
- * or show an option to upgrade
- * @param subject
- * @param mailboxDetails
- * @returns true if sending support email is allowed, false if upgrade to premium is required (may have been ordered)
+ * Opens a new mail editor, pre-filled with the recipient `helpdesk@tutao.de`.
  */
-export async function writeSupportMail(subject: string = "", mailboxDetails?: MailboxDetail): Promise<boolean> {
+export async function writeSupportMail(subject: string = "", mailboxDetails?: MailboxDetail): Promise<void> {
 	const detailsProperties = await getMailboxDetailsAndProperties(mailboxDetails)
+
 	const recipients = {
 		to: [
 			{
@@ -1237,7 +1237,9 @@ export async function writeSupportMail(subject: string = "", mailboxDetails?: Ma
 			},
 		],
 	}
-	const dialog = await newMailEditorFromTemplate(detailsProperties.mailboxDetails, recipients, subject, "")
+
+	const customerId = (await locator.logins.getUserController().loadCustomerInfo()).customer
+	const metaData = `${LINE_BREAK}${LINE_BREAK}---${clientInfoString(getCurrentDate(), true, LINE_BREAK).message}Customer ID: ${customerId}`
+	const dialog = await newMailEditorFromTemplate(detailsProperties.mailboxDetails, recipients, subject, metaData)
 	dialog.show()
-	return true
 }

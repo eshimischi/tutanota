@@ -1,12 +1,5 @@
 import { deviceConfig } from "../misc/DeviceConfig.js"
-import {
-	completeEvaluationStage,
-	completeTriggerStage,
-	createEvent,
-	evaluateRatingEligibility,
-	isEventHappyMoment,
-	TriggerType,
-} from "./UserSatisfactionUtils.js"
+import { completeEvaluationStage, completeTriggerStage, createEvent, TriggerType } from "./UserSatisfactionUtils.js"
 import { MultiPageDialog } from "../gui/dialogs/MultiPageDialog.js"
 import { EvaluationPage } from "./pages/EvaluationPage.js"
 import m from "mithril"
@@ -17,12 +10,10 @@ import { SupportTutaPage } from "./pages/SupportTutaPage.js"
 import { DissatisfactionPage } from "./pages/DissatisfactionPage.js"
 import { SuggestionPage } from "./pages/SuggestionPage.js"
 import { isApp } from "../api/common/Env.js"
-import { getCurrentDate } from "../api/common/TutanotaConstants.js"
-import { isEmpty } from "@tutao/tutanota-utils"
 
 export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore" | "supportTuta" | "suggestion"
 
-export function showAppRatingDialog(triggerType: TriggerType): void {
+export function showUserSatisfactionDialog(triggerType: TriggerType): void {
 	completeTriggerStage(triggerType)
 
 	deviceConfig.setNextEvaluationDate(DateTime.now().plus({ month: 4 }).toJSDate())
@@ -101,13 +92,13 @@ export async function handleRatingByEvent(triggerType: TriggerType) {
 		createEvent(deviceConfig)
 	}
 
-	const disallowReasons = await evaluateRatingEligibility(getCurrentDate(), deviceConfig, isApp())
-
-	if (!isEmpty(disallowReasons)) {
-		return
-	}
-
-	if (isEventHappyMoment(getCurrentDate(), deviceConfig)) {
-		showAppRatingDialog(triggerType)
-	}
+	// const disallowReasons = await evaluateRatingEligibility(getCurrentDate(), deviceConfig, isApp())
+	//
+	// if (!isEmpty(disallowReasons)) {
+	// 	return
+	// }
+	//
+	// if (isEventHappyMoment(getCurrentDate(), deviceConfig)) {
+	showUserSatisfactionDialog(triggerType)
+	// }
 }

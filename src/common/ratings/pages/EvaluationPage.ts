@@ -9,6 +9,7 @@ import { DateTime } from "luxon"
 import { ImageWithOptionsDialog } from "../../gui/dialogs/ImageWithOptionsDialog"
 import { getCurrentDate } from "../../api/common/TutanotaConstants.js"
 import { UserSatisfactionDialogPage } from "../UserSatisfactionDialog.js"
+import { px } from "../../gui/size.js"
 
 interface EvaluationPageAttrs {
 	triggerType: TriggerType
@@ -20,7 +21,7 @@ export class EvaluationPage implements Component<EvaluationPageAttrs> {
 	view({ attrs }: Vnode<EvaluationPageAttrs>): Children {
 		return m(ImageWithOptionsDialog, {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/your-opinion-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
-			imageStyle: { "max-width": "300px" },
+			imageStyle: { maxWidth: px(300) },
 			titleText: "ratingHowAreWeDoing_title",
 			messageText: "ratingExplanation_msg",
 			mainActionText: "ratingLoveIt_label",

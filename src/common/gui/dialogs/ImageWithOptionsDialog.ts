@@ -13,7 +13,7 @@ interface ImageWithOptionsDialogAttrs {
 	mainActionClick: () => unknown
 	subActionText: TranslationKey | null
 	subActionClick: () => unknown
-	imageStyle?: Record<string, string>
+	imageStyle?: Partial<CSSStyleDeclaration>
 }
 
 // Returns the layout for this dialog type
