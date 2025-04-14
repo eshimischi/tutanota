@@ -5,6 +5,7 @@ import { lang } from "../../misc/LanguageViewModel.js"
 import { UserSatisfactionDialogPage } from "../UserSatisfactionDialog.js"
 import { writeSupportMail } from "../../../mail-app/mail/editor/MailEditor.js"
 import { Icons } from "../../gui/base/icons/Icons.js"
+import { Card } from "../../gui/base/Card.js"
 
 interface DissatisfactionPageAttrs {
 	dialog: Dialog
@@ -21,6 +22,16 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 	view({ attrs: { dialog, navigate } }: Vnode<DissatisfactionPageAttrs>): Children {
 		return [
 			m(
+				".mt-l.mb-s",
+				m("img.pb.block.full-width.height-100p", {
+					src: `${window.tutao.appState.prefixWithoutFile}/images/leaving-wizard/other.png`,
+					alt: "",
+					rel: "noreferrer",
+					loading: "lazy",
+					decoding: "async",
+				}),
+			),
+			m(
 				".text-center.h1",
 				{
 					style: {
@@ -29,10 +40,10 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 				},
 				"We are all ears!",
 			),
-			m("section", [
+			m(Card, { shouldDivide: true }, [
 				m(SectionButton, {
 					leftIcon: {
-						icon: Icons.Bell,
+						icon: Icons.Bulb,
 						title: "ratingSupportTuta_title", // TODO
 					},
 					text: lang.makeTranslation("", "Give suggestion"),
@@ -46,6 +57,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 						title: "attachmentWarning_msg", // TODO
 					},
 					text: lang.makeTranslation("", "Need urgent help"),
+					rightIcon: { icon: Icons.Open, title: "sendMail_label" },
 					onclick: () => {
 						dialog.close()
 						void writeSupportMail("placeholder text")
