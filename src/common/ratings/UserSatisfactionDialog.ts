@@ -27,7 +27,7 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 
 	deviceConfig.setNextEvaluationDate(DateTime.now().plus({ month: 4 }).toJSDate())
 
-	const dialog = new MultiPageDialog<UserSatisfactionDialogPage>("evaluation", (dialog, navigateToPage, _) => ({
+	const dialog = new MultiPageDialog<UserSatisfactionDialogPage>("evaluation", (dialog, navigateToPage, goBack) => ({
 		evaluation: {
 			content: m(EvaluationPage, {
 				triggerType,
@@ -77,6 +77,11 @@ export function showAppRatingDialog(triggerType: TriggerType): void {
 		},
 		suggestion: {
 			content: m(SuggestionPage, { dialog }),
+			leftAction: {
+				label: "back_action",
+				type: ButtonType.Secondary,
+				click: () => goBack(),
+			},
 			rightAction: {
 				label: "notNow_label",
 				type: ButtonType.Secondary,
