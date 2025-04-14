@@ -14,6 +14,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IADA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"13": {
 				"final": false,
@@ -50,7 +51,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"16": {
 		"name": "ReadCounterReturn",
@@ -60,6 +61,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAEA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"17": {
 				"final": false,
@@ -90,7 +92,7 @@ export const typeModels = {
 			}
 		},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"49": {
 		"name": "WriteCounterData",
@@ -100,6 +102,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAMQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"50": {
 				"final": false,
@@ -144,7 +147,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"221": {
 		"name": "ApprovalMail",
@@ -154,6 +157,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAAN0",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"223": {
 				"final": true,
@@ -224,7 +228,7 @@ export const typeModels = {
 			}
 		},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"300": {
 		"name": "CounterValue",
@@ -234,6 +238,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAASw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"301": {
 				"final": true,
@@ -262,7 +267,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"305": {
 		"name": "ErrorReportFile",
@@ -272,6 +277,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAATE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"306": {
 				"final": true,
@@ -300,7 +306,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"316": {
 		"name": "ErrorReportData",
@@ -310,6 +316,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAATw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"317": {
 				"final": true,
@@ -394,7 +401,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	},
 	"335": {
 		"name": "ReportErrorIn",
@@ -404,6 +411,7 @@ export const typeModels = {
 		"rootId": "B21vbml0b3IAAU8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"336": {
 				"final": false,
@@ -435,6 +443,6 @@ export const typeModels = {
 			}
 		},
 		"app": "monitor",
-		"version": "32"
+		"version": "33"
 	}
 }

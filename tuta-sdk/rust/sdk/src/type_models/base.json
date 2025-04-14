@@ -7,6 +7,7 @@
 		"rootId": "BGJhc2UAAA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1": {
 				"final": false,
@@ -45,6 +46,7 @@
 		"rootId": "BGJhc2UABA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"5": {
 				"final": false,

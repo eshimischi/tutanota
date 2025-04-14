@@ -40,7 +40,7 @@ export type ApplicationVersion = number
 export type TypeReferenceResolver = (typeref: TypeRef<any>) => Promise<TypeModel>
 
 export type ModelInfos = {
-	[knownApps in AppName]: { version: ApplicationVersion; compatibleSince: ApplicationVersion }
+	[knownApps in AppName]: { version: ApplicationVersion }
 }
 export type ServerModels = {
 	[knownApps in AppName]: { version: ApplicationVersion; types: Record<string, any> }

@@ -14,6 +14,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlAAg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"9": {
 				"final": true,
@@ -42,7 +43,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"12": {
 		"name": "UsageTestMetricConfig",
@@ -52,6 +53,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlAAw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"13": {
 				"final": true,
@@ -90,7 +92,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"17": {
 		"name": "UsageTestMetricData",
@@ -100,6 +102,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlABE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"18": {
 				"final": true,
@@ -128,7 +131,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"35": {
 		"name": "UsageTestStage",
@@ -138,6 +141,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlACM",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"36": {
 				"final": true,
@@ -184,7 +188,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"53": {
 		"name": "UsageTestAssignmentIn",
@@ -194,6 +198,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlADU",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"54": {
 				"final": false,
@@ -214,7 +219,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"56": {
 		"name": "UsageTestAssignment",
@@ -224,6 +229,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlADg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"57": {
 				"final": true,
@@ -278,7 +284,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"63": {
 		"name": "UsageTestAssignmentOut",
@@ -288,6 +294,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlAD8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"64": {
 				"final": false,
@@ -318,7 +325,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"80": {
 		"name": "UsageTestParticipationIn",
@@ -328,6 +335,7 @@ export const typeModels = {
 		"rootId": "BXVzYWdlAFA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"81": {
 				"final": false,
@@ -374,6 +382,6 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	}
 }

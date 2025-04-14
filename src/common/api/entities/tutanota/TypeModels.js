@@ -14,6 +14,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAs",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"12": {
 				"final": true,
@@ -46,6 +47,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAA0",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"15": {
 				"final": true,
@@ -168,6 +170,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhABw",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"30": {
 				"final": true,
@@ -240,6 +243,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhACw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"45": {
 				"final": true,
@@ -286,6 +290,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhADE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"50": {
 				"final": true,
@@ -332,6 +337,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhADY",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"55": {
 				"final": true,
@@ -378,6 +384,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhADs",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"60": {
 				"final": true,
@@ -424,6 +431,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAEA",
 		"versioned": true,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"66": {
 				"final": true,
@@ -714,6 +722,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAFQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"118": {
 				"final": true,
@@ -795,6 +804,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAFw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"93": {
 				"final": true,
@@ -843,6 +853,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAGE",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"99": {
 				"final": true,
@@ -1090,6 +1101,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAH0",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"127": {
 				"final": true,
@@ -1242,6 +1254,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAACK",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"139": {
 				"final": true,
@@ -1296,6 +1309,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAACR",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"146": {
 				"final": false,
@@ -1416,6 +1430,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAACZ",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"155": {
 				"final": true,
@@ -1497,6 +1512,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAC3",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"185": {
 				"final": true,
@@ -1561,6 +1577,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAC-",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"191": {
 				"final": true,
@@ -1617,6 +1634,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAADE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"198": {
 				"final": true,
@@ -1673,6 +1691,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAADR",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"210": {
 				"final": true,
@@ -1737,6 +1756,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAADY",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"218": {
 				"final": true,
@@ -1915,6 +1935,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAADf",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"224": {
 				"final": true,
@@ -1977,6 +1998,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAGj",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"420": {
 				"final": false,
@@ -2018,6 +2040,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAGt",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"431": {
 				"final": true,
@@ -2123,6 +2146,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAG4",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"441": {
 				"final": true,
@@ -2155,6 +2179,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAG9",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"446": {
 				"final": false,
@@ -2205,6 +2230,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHC",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"451": {
 				"final": false,
@@ -2269,6 +2295,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHH",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"456": {
 				"final": false,
@@ -2301,6 +2328,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHK",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"459": {
 				"final": false,
@@ -2333,6 +2361,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHZ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"474": {
 				"final": false,
@@ -2381,6 +2410,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHi",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"483": {
 				"final": true,
@@ -2419,6 +2449,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHm",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"487": {
 				"final": true,
@@ -2475,6 +2506,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHr",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"492": {
 				"final": true,
@@ -2532,6 +2564,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAHw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"497": {
 				"final": true,
@@ -2665,6 +2698,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAH8",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"509": {
 				"final": false,
@@ -2729,6 +2763,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"517": {
 				"final": false,
@@ -2761,6 +2796,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIH",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"520": {
 				"final": false,
@@ -2802,6 +2838,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIL",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"524": {
 				"final": false,
@@ -2834,6 +2871,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIP",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"528": {
 				"final": true,
@@ -2896,6 +2934,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIU",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"533": {
 				"final": true,
@@ -2990,6 +3029,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIe",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"543": {
 				"final": true,
@@ -3038,6 +3078,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIj",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"548": {
 				"final": false,
@@ -3162,6 +3203,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAIt",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"558": {
 				"final": false,
@@ -3219,6 +3261,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAI6",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"571": {
 				"final": false,
@@ -3249,6 +3292,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAI9",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"574": {
 				"final": true,
@@ -3297,6 +3341,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAJk",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"613": {
 				"final": true,
@@ -3335,6 +3380,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAJu",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"623": {
 				"final": true,
@@ -3533,6 +3579,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAKC",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"643": {
 				"final": true,
@@ -3645,6 +3692,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAKI",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"649": {
 				"final": false,
@@ -3808,6 +3856,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAKX",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"664": {
 				"final": false,
@@ -3857,6 +3906,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAKl",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"679": {
 				"final": true,
@@ -3911,6 +3961,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAK1",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"695": {
 				"final": true,
@@ -4012,6 +4063,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAALD",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"708": {
 				"final": false,
@@ -4068,6 +4120,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAALJ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"714": {
 				"final": false,
@@ -4108,6 +4161,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAANM",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"845": {
 				"final": true,
@@ -4154,6 +4208,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAANV",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"854": {
 				"final": true,
@@ -4186,6 +4241,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAANj",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"868": {
 				"final": false,
@@ -4234,6 +4290,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAOe",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"927": {
 				"final": true,
@@ -4315,6 +4372,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAOl",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"935": {
 				"final": true,
@@ -4494,6 +4552,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAOz",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"949": {
 				"final": true,
@@ -4584,6 +4643,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAO8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"957": {
 				"final": true,
@@ -4680,6 +4740,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"965": {
 				"final": false,
@@ -4712,6 +4773,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPI",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"969": {
 				"final": true,
@@ -4777,6 +4839,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPM",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"974": {
 				"final": true,
@@ -4873,6 +4936,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPW",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"983": {
 				"final": false,
@@ -4905,6 +4969,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPZ",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"986": {
 				"final": false,
@@ -4937,6 +5002,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"993": {
 				"final": true,
@@ -5031,6 +5097,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPq",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1003": {
 				"final": false,
@@ -5072,6 +5139,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPu",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1007": {
 				"final": false,
@@ -5122,6 +5190,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAPz",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1012": {
 				"final": false,
@@ -5186,6 +5255,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAP4",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1017": {
 				"final": false,
@@ -5218,6 +5288,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAP_",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1024": {
 				"final": true,
@@ -5256,6 +5327,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAQK",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1035": {
 				"final": false,
@@ -5312,6 +5384,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAQq",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1067": {
 				"final": false,
@@ -5360,6 +5433,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAQ8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1085": {
 				"final": true,
@@ -5400,6 +5474,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARF",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1095": {
 				"final": true,
@@ -5465,6 +5540,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARM",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1101": {
 				"final": true,
@@ -5497,6 +5573,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARQ",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1106": {
 				"final": true,
@@ -5577,6 +5654,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARZ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1114": {
 				"final": true,
@@ -5609,6 +5687,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARi",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1123": {
 				"final": false,
@@ -5647,6 +5726,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARm",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1127": {
 				"final": true,
@@ -5693,6 +5773,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAARr",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1133": {
 				"final": true,
@@ -5773,6 +5854,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAR7",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1148": {
 				"final": true,
@@ -5805,6 +5887,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAASC",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1155": {
 				"final": true,
@@ -5843,6 +5926,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAASG",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1160": {
 				"final": true,
@@ -5931,6 +6015,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAASQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1169": {
 				"final": true,
@@ -5961,6 +6046,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAST",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1173": {
 				"final": true,
@@ -6049,6 +6135,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAASd",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1183": {
 				"final": true,
@@ -6130,6 +6217,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAASm",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1191": {
 				"final": false,
@@ -6162,6 +6250,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAASr",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1197": {
 				"final": true,
@@ -6242,6 +6331,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAATB",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1218": {
 				"final": true,
@@ -6274,6 +6364,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAATd",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1246": {
 				"final": true,
@@ -6312,6 +6403,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAATo",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1257": {
 				"final": false,
@@ -6344,6 +6436,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAATr",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1260": {
 				"final": false,
@@ -6374,6 +6467,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAATv",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1264": {
 				"final": true,
@@ -6412,6 +6506,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAT1",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1270": {
 				"final": true,
@@ -6450,6 +6545,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAT5",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1274": {
 				"final": true,
@@ -6488,6 +6584,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAT9",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1278": {
 				"final": true,
@@ -6538,6 +6635,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAUC",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1283": {
 				"final": true,
@@ -6613,6 +6711,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAUK",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1292": {
 				"final": true,
@@ -6685,6 +6784,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAUS",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1300": {
 				"final": true,
@@ -6757,6 +6857,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAUf",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1312": {
 				"final": false,
@@ -6798,6 +6899,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAUj",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1316": {
 				"final": true,
@@ -6830,6 +6932,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAUt",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1327": {
 				"final": true,
@@ -6900,6 +7003,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAU1",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1335": {
 				"final": true,
@@ -6972,6 +7076,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAVD",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1348": {
 				"final": true,
@@ -7028,6 +7133,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAVM",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1357": {
 				"final": true,
@@ -7074,6 +7180,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAVR",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1362": {
 				"final": true,
@@ -7120,6 +7227,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAVW",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1367": {
 				"final": true,
@@ -7166,6 +7274,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAVb",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1372": {
 				"final": true,
@@ -7212,6 +7321,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAVg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1377": {
 				"final": true,
@@ -7250,6 +7360,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAWc",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1437": {
 				"final": false,
@@ -7280,6 +7391,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAWf",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1440": {
 				"final": false,
@@ -7318,6 +7430,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAWm",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1447": {
 				"final": true,
@@ -7348,6 +7461,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAWq",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1452": {
 				"final": true,
@@ -7404,6 +7518,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAW0",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1461": {
 				"final": true,
@@ -7436,6 +7551,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAW9",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1470": {
 				"final": false,
@@ -7476,6 +7592,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXC",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1475": {
 				"final": false,
@@ -7516,6 +7633,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXI",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1481": {
 				"final": true,
@@ -7554,6 +7672,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXM",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1485": {
 				"final": false,
@@ -7610,6 +7729,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXc",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1501": {
 				"final": false,
@@ -7642,6 +7762,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1505": {
 				"final": false,
@@ -7692,6 +7813,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXp",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1514": {
 				"final": true,
@@ -7722,6 +7844,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAXs",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1517": {
 				"final": true,
@@ -7794,6 +7917,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAX0",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1525": {
 				"final": true,
@@ -7851,6 +7975,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAX6",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1531": {
 				"final": false,
@@ -8039,6 +8164,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAYQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1554": {
 				"final": true,
@@ -8095,6 +8221,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAYX",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1561": {
 				"final": true,
@@ -8192,6 +8319,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAYi",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1571": {
 				"final": false,
@@ -8233,6 +8361,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAYr",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1580": {
 				"final": false,
@@ -8255,6 +8384,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAYu",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"1583": {
 				"final": false,
@@ -8327,6 +8457,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAYy",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1587": {
 				"final": true,
@@ -8365,6 +8496,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAY3",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1592": {
 				"final": false,
@@ -8397,6 +8529,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZF",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1606": {
 				"final": false,
@@ -8427,6 +8560,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZS",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1619": {
 				"final": true,
@@ -8497,6 +8631,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZa",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1627": {
 				"final": true,
@@ -8569,6 +8704,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZi",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1636": {
 				"final": true,
@@ -8625,6 +8761,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZp",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1642": {
 				"final": false,
@@ -8655,6 +8792,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZt",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1646": {
 				"final": false,
@@ -8687,6 +8825,7 @@ export const typeModels = {
 		"rootId": "CHR1dGFub3RhAAZw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1649": {
 				"final": false,

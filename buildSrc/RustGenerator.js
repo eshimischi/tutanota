@@ -131,7 +131,7 @@ crate::service_impl!(declare, ${s.name}, "${appName}/${s.name.toLowerCase()}", $
 			}
 
 			if (s.bodyTypes.DELETE_IN || s.bodyTypes.DELETE_OUT) {
-				serviceDefinition += makeImpl("DELETE", s.bodyTypes.DELETE_IN, s.bodyTypes.DELETE_OUt)
+				serviceDefinition += makeImpl("DELETE", s.bodyTypes.DELETE_IN, s.bodyTypes.DELETE_OUT)
 			}
 
 			return serviceDefinition

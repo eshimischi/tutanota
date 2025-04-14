@@ -14,6 +14,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAMg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"51": {
 				"final": false,
@@ -52,7 +53,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"73": {
 		"name": "BlobWriteData",
@@ -62,6 +63,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UASQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"74": {
 				"final": true,
@@ -82,7 +84,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"77": {
 		"name": "BlobAccessTokenPostIn",
@@ -92,6 +94,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UATQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"78": {
 				"final": false,
@@ -131,7 +134,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"81": {
 		"name": "BlobAccessTokenPostOut",
@@ -141,6 +144,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAUQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"82": {
 				"final": false,
@@ -163,7 +167,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"94": {
 		"name": "BlobReferencePutIn",
@@ -173,6 +177,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAXg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"95": {
 				"final": false,
@@ -219,7 +224,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"100": {
 		"name": "BlobReferenceDeleteIn",
@@ -229,6 +234,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAZA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"101": {
 				"final": false,
@@ -275,7 +281,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"125": {
 		"name": "BlobPostOut",
@@ -285,6 +291,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAfQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"126": {
 				"final": false,
@@ -315,7 +322,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"129": {
 		"name": "BlobArchiveRef",
@@ -325,6 +332,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAAIE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"131": {
 				"final": true,
@@ -371,7 +379,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"144": {
 		"name": "BlobId",
@@ -381,6 +389,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAAJA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"145": {
 				"final": true,
@@ -401,7 +410,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"154": {
 		"name": "BlobServerUrl",
@@ -411,6 +420,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAAJo",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"155": {
 				"final": true,
@@ -431,7 +441,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"157": {
 		"name": "BlobServerAccessInfo",
@@ -441,6 +451,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAAJ0",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"158": {
 				"final": true,
@@ -487,7 +498,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"172": {
 		"name": "InstanceId",
@@ -497,6 +508,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAAKw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"173": {
 				"final": true,
@@ -517,7 +529,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"175": {
 		"name": "BlobReadData",
@@ -527,6 +539,7 @@ export const typeModels = {
 		"rootId": "B3N0b3JhZ2UAAK8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"176": {
 				"final": true,
@@ -565,6 +578,6 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	}
 }

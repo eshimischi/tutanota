@@ -7,6 +7,7 @@
 		"rootId": "B3N0b3JhZ2UAMg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"51": {
 				"final": false,
@@ -45,7 +46,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"73": {
 		"name": "BlobWriteData",
@@ -55,6 +56,7 @@
 		"rootId": "B3N0b3JhZ2UASQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"74": {
 				"final": true,
@@ -75,7 +77,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"77": {
 		"name": "BlobAccessTokenPostIn",
@@ -85,6 +87,7 @@
 		"rootId": "B3N0b3JhZ2UATQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"78": {
 				"final": false,
@@ -124,7 +127,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"81": {
 		"name": "BlobAccessTokenPostOut",
@@ -134,6 +137,7 @@
 		"rootId": "B3N0b3JhZ2UAUQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"82": {
 				"final": false,
@@ -156,7 +160,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"94": {
 		"name": "BlobReferencePutIn",
@@ -166,6 +170,7 @@
 		"rootId": "B3N0b3JhZ2UAXg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"95": {
 				"final": false,
@@ -212,7 +217,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"100": {
 		"name": "BlobReferenceDeleteIn",
@@ -222,6 +227,7 @@
 		"rootId": "B3N0b3JhZ2UAZA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"101": {
 				"final": false,
@@ -268,7 +274,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"125": {
 		"name": "BlobPostOut",
@@ -278,6 +284,7 @@
 		"rootId": "B3N0b3JhZ2UAfQ",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"126": {
 				"final": false,
@@ -308,7 +315,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"129": {
 		"name": "BlobArchiveRef",
@@ -318,6 +325,7 @@
 		"rootId": "B3N0b3JhZ2UAAIE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"131": {
 				"final": true,
@@ -364,7 +372,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"144": {
 		"name": "BlobId",
@@ -374,6 +382,7 @@
 		"rootId": "B3N0b3JhZ2UAAJA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"145": {
 				"final": true,
@@ -394,7 +403,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"154": {
 		"name": "BlobServerUrl",
@@ -404,6 +413,7 @@
 		"rootId": "B3N0b3JhZ2UAAJo",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"155": {
 				"final": true,
@@ -424,7 +434,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"157": {
 		"name": "BlobServerAccessInfo",
@@ -434,6 +444,7 @@
 		"rootId": "B3N0b3JhZ2UAAJ0",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"158": {
 				"final": true,
@@ -480,7 +491,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"172": {
 		"name": "InstanceId",
@@ -490,6 +501,7 @@
 		"rootId": "B3N0b3JhZ2UAAKw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"173": {
 				"final": true,
@@ -510,7 +522,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	},
 	"175": {
 		"name": "BlobReadData",
@@ -520,6 +532,7 @@
 		"rootId": "B3N0b3JhZ2UAAK8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"176": {
 				"final": true,
@@ -558,6 +571,6 @@
 			}
 		},
 		"app": "storage",
-		"version": "11"
+		"version": "12"
 	}
 }

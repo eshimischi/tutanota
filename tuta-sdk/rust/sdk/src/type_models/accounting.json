@@ -7,6 +7,7 @@
 		"rootId": "CmFjY291bnRpbmcATw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"80": {
 				"final": true,
@@ -51,7 +52,7 @@
 		},
 		"associations": {},
 		"app": "accounting",
-		"version": "7"
+		"version": "8"
 	},
 	"86": {
 		"name": "CustomerAccountReturn",
@@ -61,6 +62,7 @@
 		"rootId": "CmFjY291bnRpbmcAVg",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"87": {
 				"final": false,
@@ -123,6 +125,6 @@
 			}
 		},
 		"app": "accounting",
-		"version": "7"
+		"version": "8"
 	}
 }

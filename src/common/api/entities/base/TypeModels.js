@@ -14,6 +14,7 @@ export const typeModels = {
 		"rootId": "BGJhc2UAAA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"1": {
 				"final": false,
@@ -52,6 +53,7 @@ export const typeModels = {
 		"rootId": "BGJhc2UABA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"5": {
 				"final": false,

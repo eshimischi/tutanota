@@ -14,6 +14,7 @@ export const typeModels = {
 		"rootId": "CmFjY291bnRpbmcATw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"80": {
 				"final": true,
@@ -58,7 +59,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "accounting",
-		"version": "7"
+		"version": "8"
 	},
 	"86": {
 		"name": "CustomerAccountReturn",
@@ -68,6 +69,7 @@ export const typeModels = {
 		"rootId": "CmFjY291bnRpbmcAVg",
 		"versioned": false,
 		"encrypted": true,
+		"isPublic": true,
 		"values": {
 			"87": {
 				"final": false,
@@ -130,6 +132,6 @@ export const typeModels = {
 			}
 		},
 		"app": "accounting",
-		"version": "7"
+		"version": "8"
 	}
 }

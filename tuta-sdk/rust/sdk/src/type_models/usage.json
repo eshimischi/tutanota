@@ -7,6 +7,7 @@
 		"rootId": "BXVzYWdlAAg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"9": {
 				"final": true,
@@ -35,7 +36,7 @@
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"12": {
 		"name": "UsageTestMetricConfig",
@@ -45,6 +46,7 @@
 		"rootId": "BXVzYWdlAAw",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"13": {
 				"final": true,
@@ -83,7 +85,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"17": {
 		"name": "UsageTestMetricData",
@@ -93,6 +95,7 @@
 		"rootId": "BXVzYWdlABE",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"18": {
 				"final": true,
@@ -121,7 +124,7 @@
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"35": {
 		"name": "UsageTestStage",
@@ -131,6 +134,7 @@
 		"rootId": "BXVzYWdlACM",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"36": {
 				"final": true,
@@ -177,7 +181,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"53": {
 		"name": "UsageTestAssignmentIn",
@@ -187,6 +191,7 @@
 		"rootId": "BXVzYWdlADU",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"54": {
 				"final": false,
@@ -207,7 +212,7 @@
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"56": {
 		"name": "UsageTestAssignment",
@@ -217,6 +222,7 @@
 		"rootId": "BXVzYWdlADg",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"57": {
 				"final": true,
@@ -271,7 +277,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"63": {
 		"name": "UsageTestAssignmentOut",
@@ -281,6 +287,7 @@
 		"rootId": "BXVzYWdlAD8",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"64": {
 				"final": false,
@@ -311,7 +318,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	},
 	"80": {
 		"name": "UsageTestParticipationIn",
@@ -321,6 +328,7 @@
 		"rootId": "BXVzYWdlAFA",
 		"versioned": false,
 		"encrypted": false,
+		"isPublic": true,
 		"values": {
 			"81": {
 				"final": false,
@@ -367,6 +375,6 @@
 			}
 		},
 		"app": "usage",
-		"version": "2"
+		"version": "3"
 	}
 }
