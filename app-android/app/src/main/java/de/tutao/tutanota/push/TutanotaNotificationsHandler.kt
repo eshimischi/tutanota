@@ -250,7 +250,7 @@ class TutanotaNotificationsHandler(
 			return null
 		}
 
-		val sdk = Sdk(sseInfo.sseOrigin, SdkRestClient()).login(unencryptedCredentials.toSdkCredentials())
+		val sdk = Sdk(sseInfo.sseOrigin, SdkRestClient(), FileClient()).login(unencryptedCredentials.toSdkCredentials())
 
 		val mailId = notificationInfo.mailId?.toSdkIdTupleGenerated()
 			?: throw IllegalArgumentException("Missing mailId for notification ${sseInfo.pushIdentifier}")
@@ -258,7 +258,7 @@ class TutanotaNotificationsHandler(
 		val mail = sdk.mailFacade().loadEmailByIdEncrypted(mailId)
 		if (unencryptedCredentials.databaseKey != null) {
 			Log.d(TAG, "Inserting mail $mailId into offline db")
-			val serializedMail = serializeMail(mail)
+			val serializedMail = sdk.serializeMail(mail)
 			val sqlCipherFacade = this.getSqlCipherFacade()
 			try {
 				sqlCipherFacade.openDb(

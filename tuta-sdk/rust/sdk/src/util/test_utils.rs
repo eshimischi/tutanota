@@ -2,8 +2,12 @@
 
 use mockall::Any;
 use rand::random;
+use std::collections::HashMap;
+use std::sync::Arc;
 use std::vec;
 
+use crate::bindings::file_client::MockFileClient;
+use crate::bindings::rest_client::MockRestClient;
 use crate::crypto::randomizer_facade::test_util::make_thread_rng_facade;
 use crate::crypto::Aes256Key;
 use crate::element_value::{ElementValue, ParsedEntity};
@@ -14,12 +18,14 @@ use crate::entities::generated::sys::{
 use crate::entities::Entity;
 use crate::instance_mapper::InstanceMapper;
 use crate::metamodel::ElementType::Aggregated;
-use crate::metamodel::{AssociationType, Cardinality, ElementType, ValueType};
+use crate::metamodel::{
+	AssociationType, Cardinality, ElementType, ModelValue, TypeModel, ValueType,
+};
 use crate::tutanota_constants::CryptoProtocolVersion;
 use crate::tutanota_constants::PublicKeyIdentifierType;
 use crate::type_model_provider::TypeModelProvider;
-use crate::CustomId;
 use crate::GeneratedId;
+use crate::{CustomId, TypeRef};
 use crate::{IdTupleCustom, IdTupleGenerated};
 
 /// Generates a URL-safe random string of length `Size`.
@@ -116,7 +122,7 @@ pub fn leak<T>(what: T) -> &'static T {
 /// ```
 #[must_use]
 pub fn create_test_entity<'a, T: Entity + serde::Deserialize<'a>>() -> T {
-	let mapper = InstanceMapper::new();
+	let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 	let entity = create_test_entity_dict::<T>();
 	let type_ref = T::type_ref();
 	match mapper.parse_entity(entity) {
@@ -139,7 +145,7 @@ pub fn create_test_entity<'a, T: Entity + serde::Deserialize<'a>>() -> T {
 /// **NOTE:** The resulting dictionary is unencrypted.
 #[must_use]
 pub fn create_test_entity_dict<'a, T: Entity + serde::Deserialize<'a>>() -> ParsedEntity {
-	let provider = TypeModelProvider::new();
+	let provider = Arc::new(mock_type_model_provider());
 	let type_ref = T::type_ref();
 	let entity = create_test_entity_dict_with_provider(&provider, type_ref.app, type_ref.type_id);
 	entity
@@ -157,7 +163,7 @@ pub fn create_test_entity_dict<'a, T: Entity + serde::Deserialize<'a>>() -> Pars
 #[must_use]
 #[allow(dead_code)]
 pub fn create_encrypted_test_entity_dict<'a, T: Entity + serde::Deserialize<'a>>() -> ParsedEntity {
-	let provider = TypeModelProvider::new();
+	let provider = Arc::new(mock_type_model_provider());
 	let type_ref = T::type_ref();
 	let entity =
 		create_encrypted_test_entity_dict_with_provider(&provider, type_ref.app, type_ref.type_id);
@@ -171,7 +177,7 @@ pub fn create_encrypted_test_entity_dict<'a, T: Entity + serde::Deserialize<'a>>
 /// Panics if the resulting entity is invalid and unable to be serialized.
 #[must_use]
 pub fn typed_entity_to_parsed_entity<T: Entity + serde::Serialize>(entity: T) -> ParsedEntity {
-	let mapper = InstanceMapper::new();
+	let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 	match mapper.serialize_entity(entity) {
 		Ok(n) => n,
 		Err(e) => panic!(
@@ -185,10 +191,10 @@ pub fn typed_entity_to_parsed_entity<T: Entity + serde::Serialize>(entity: T) ->
 
 fn create_test_entity_dict_with_provider(
 	provider: &TypeModelProvider,
-	app: &str,
+	app: &'static str,
 	type_id: u64,
 ) -> ParsedEntity {
-	let Some(model) = provider.get_type_model(app, type_id) else {
+	let Some(model) = provider.resolve_client_type_ref(&TypeRef::new(app, type_id)) else {
 		panic!("Failed to create test entity {app}/{type_id}: not in model")
 	};
 	let mut object = ParsedEntity::new();
@@ -295,10 +301,11 @@ fn create_test_entity_dict_with_provider(
 
 fn create_encrypted_test_entity_dict_with_provider(
 	provider: &TypeModelProvider,
-	app: &str,
+	app: &'static str,
 	type_id: u64,
 ) -> ParsedEntity {
-	let Some(model) = provider.get_type_model(app, type_id) else {
+	let type_ref = TypeRef::new(app, type_id);
+	let Some(model) = provider.resolve_client_type_ref(&type_ref) else {
 		panic!("Failed to create test entity {app}/{type_id}: not in model")
 	};
 	let mut object = ParsedEntity::new();
@@ -414,3 +421,99 @@ macro_rules! collection {
             core::convert::From::from([$($v,)*])
         }};
     }
+
+// note:
+// maybe we should have only one of this and test_services#extend_model_resolver
+pub fn mock_type_model_provider() -> TypeModelProvider {
+	let mut type_model_provider = TypeModelProvider::new(
+		Arc::new(MockRestClient::new()),
+		Arc::new(MockFileClient::new()),
+	);
+	let list_entity_generated_type_model: TypeModel = TypeModel {
+		id: 10,
+		since: 1,
+		app: "entityClientTestApp",
+		version: "1",
+		name: "TestListGeneratedElementIdEntity",
+		element_type: ElementType::ListElement,
+		versioned: false,
+		encrypted: true,
+		root_id: "",
+		values: str_map! {
+			101 => ModelValue {
+					id: 101,
+					name: "_id".to_string(),
+					value_type: ValueType::GeneratedId,
+					cardinality: Cardinality::One,
+					is_final: true,
+					encrypted: false,
+				},
+			102 =>
+				ModelValue {
+					id: 102,
+					name: "field".to_string(),
+					value_type: ValueType::String,
+					cardinality: Cardinality::One,
+					is_final: false,
+					encrypted: true,
+				},
+		},
+		associations: HashMap::default(),
+	};
+
+	let list_entity_custom_type_model: TypeModel = TypeModel {
+		id: 20,
+		since: 1,
+		app: "entityClientTestApp",
+		version: "1",
+		name: "TestListCustomElementIdEntity",
+		element_type: ElementType::ListElement,
+		versioned: false,
+		encrypted: true,
+		root_id: "",
+		values: str_map! {
+			201 => ModelValue {
+					id: 201,
+					name: "_id".to_string(),
+					value_type: ValueType::CustomId,
+					cardinality: Cardinality::One,
+					is_final: true,
+					encrypted: false,
+				},
+			202 =>
+				ModelValue {
+					id: 202,
+					name: "field".to_string(),
+					value_type: ValueType::String,
+					cardinality: Cardinality::One,
+					is_final: false,
+					encrypted: true,
+				},
+		},
+		associations: HashMap::default(),
+	};
+
+	let test_types = [
+		(
+			list_entity_generated_type_model.id,
+			list_entity_generated_type_model,
+		),
+		(
+			list_entity_custom_type_model.id,
+			list_entity_custom_type_model,
+		),
+	]
+	.into_iter()
+	.collect();
+
+	unsafe {
+		let app_models_mut = std::ptr::from_ref(type_model_provider.client_app_models)
+			.cast_mut()
+			.as_mut()
+			.expect("Should be Not null");
+
+		app_models_mut.insert("entityClientTestApp", test_types);
+	}
+
+	type_model_provider
+}

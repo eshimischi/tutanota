@@ -69,8 +69,9 @@ impl CryptoEntityClient {
 		key: Option<GenericAesKey>,
 	) -> Result<ParsedEntity, ApiCallError> {
 		let type_ref = &Instance::type_ref();
-		let type_model = self.entity_client.get_type_model(type_ref)?;
-		let parsed_instance = InstanceMapper::new()
+		let type_model = self.entity_client.resolve_client_type_ref(type_ref)?;
+		let parsed_instance = self
+			.instance_mapper
 			.serialize_entity(instance)
 			.map_err(|_e| {
 				ApiCallError::internal(format!("failed to serialize instance {type_ref}"))
@@ -106,7 +107,7 @@ impl CryptoEntityClient {
 			.instance_mapper
 			.serialize_entity(instance)
 			.map_err(|e| ApiCallError::internal_with_err(e, type_ref.to_string().as_str()))?;
-		let type_model = self.entity_client.get_type_model(&type_ref)?;
+		let type_model = self.entity_client.resolve_client_type_ref(&type_ref)?;
 
 		let parsed_instance = if type_model.is_encrypted() {
 			let session_key = self
@@ -141,7 +142,7 @@ impl CryptoEntityClient {
 		id: &ID,
 	) -> Result<T, ApiCallError> {
 		let type_ref = T::type_ref();
-		let type_model = self.entity_client.get_type_model(&type_ref)?;
+		let type_model = self.entity_client.resolve_server_type_ref(&type_ref)?;
 		let parsed_entity = self.entity_client.load(&type_ref, id).await?;
 
 		if type_model.marked_encrypted() {
@@ -335,7 +336,7 @@ impl CryptoEntityClient {
 		direction: ListLoadDirection,
 	) -> Result<Vec<T>, ApiCallError> {
 		let type_ref = T::type_ref();
-		let type_model = self.entity_client.get_type_model(&type_ref)?;
+		let type_model = self.entity_client.resolve_server_type_ref(&type_ref)?;
 		let parsed_entities = self
 			.entity_client
 			.load_range(&type_ref, list_id, start_id, count, direction)
@@ -372,6 +373,8 @@ mod tests {
 	use mockall::predicate::eq;
 	use rand::random;
 
+	use crate::bindings::file_client::MockFileClient;
+	use crate::bindings::rest_client::MockRestClient;
 	use crate::crypto::asymmetric_crypto_facade::MockAsymmetricCryptoFacade;
 	use crate::crypto::crypto_facade::{MockCryptoFacade, ResolvedSessionKey};
 	use crate::crypto::key::{AsymmetricKeyPair, GenericAesKey};
@@ -395,18 +398,18 @@ mod tests {
 	};
 	use crate::type_model_provider::TypeModelProvider;
 	use crate::util::entity_test_utils::generate_email_entity;
-	use crate::util::get_attribute_id_by_attribute_name;
-	use crate::util::test_utils::{create_test_entity, leak};
-	use crate::util::Versioned;
+	use crate::util::test_utils::{create_test_entity, leak, mock_type_model_provider};
+	use crate::util::{AttributeModel, Versioned};
 	use crate::{GeneratedId, IdTupleGenerated};
 
 	#[tokio::test]
 	async fn no_auth_for_encrypted_instances_except_mail() {
+		let type_model_provider = Arc::new(mock_type_model_provider());
 		let crypto_entity_client = CryptoEntityClient::new(
 			Arc::new(MockEntityClient::default()),
 			Arc::new(MockEntityFacade::default()),
 			Arc::new(MockCryptoFacade::default()),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(type_model_provider)),
 			Arc::new(MockAsymmetricCryptoFacade::default()),
 			Arc::new(MockKeyLoaderFacade::default()),
 		);
@@ -442,9 +445,12 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new());
+		let type_model_provider: &'static TypeModelProvider = leak(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
-		let mail_type_model: &'static TypeModel = my_favorite_leak
+		let mail_type_model: &'static TypeModel = type_model_provider
 			.resolve_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 		let raw_mail_id = encrypted_mail
@@ -481,7 +487,7 @@ mod tests {
 			});
 
 		// TODO: it would be nice to mock this
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(mock_type_model_provider());
 
 		// Use the real `EntityFacade` as it contains the actual decryption logic
 		let entity_facade = EntityFacadeImpl::new(
@@ -496,7 +502,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(&type_model_provider)),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);
@@ -554,7 +560,10 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new());
+		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
 			.resolve_type_ref(&Mail::type_ref())
@@ -605,7 +614,10 @@ mod tests {
 			});
 
 		// TODO: it would be nice to mock this
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		// Use the real `EntityFacade` as it contains the actual decryption logic
 		let entity_facade = EntityFacadeImpl::new(
@@ -619,7 +631,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(type_model_provider)),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);
@@ -684,16 +696,24 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new());
+		let type_model_provider: &'static TypeModelProvider = leak(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
+		let attribute_model = AttributeModel::new(type_model_provider);
 
 		let raw_mail_id = encrypted_mail
-			.get(&get_attribute_id_by_attribute_name(Mail::type_ref(), ID_FIELD).unwrap())
+			.get(
+				&attribute_model
+					.get_attribute_id_by_attribute_name(Mail::type_ref(), ID_FIELD)
+					.unwrap(),
+			)
 			.unwrap()
 			.assert_tuple_id_generated();
 		let mail_id =
 			IdTupleGenerated::new(raw_mail_id.list_id.clone(), raw_mail_id.element_id.clone());
-		let mail_type_model: &'static TypeModel = my_favorite_leak
-			.resolve_type_ref(&Mail::type_ref())
+		let mail_type_model: &'static TypeModel = type_model_provider
+			.resolve_server_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 
 		// Set up the mock of the plain unencrypted entity client
@@ -730,7 +750,10 @@ mod tests {
 			});
 
 		// TODO: it would be nice to mock this
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		// Use the real `EntityFacade` as it contains the actual decryption logic
 		let entity_facade = EntityFacadeImpl::new(
@@ -744,7 +767,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(type_model_provider)),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);
@@ -809,7 +832,10 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new());
+		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
 			.resolve_type_ref(&Mail::type_ref())
@@ -859,7 +885,10 @@ mod tests {
 			});
 
 		// TODO: it would be nice to mock this
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		// Use the real `EntityFacade` as it contains the actual decryption logic
 		let entity_facade = EntityFacadeImpl::new(
@@ -873,7 +902,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(type_model_provider)),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);
@@ -933,7 +962,10 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new());
+		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
 			.resolve_type_ref(&Mail::type_ref())
@@ -974,7 +1006,10 @@ mod tests {
 			});
 
 		// TODO: it would be nice to mock this
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		// Use the real `EntityFacade` as it contains the actual decryption logic
 		let entity_facade = EntityFacadeImpl::new(
@@ -1000,7 +1035,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(type_model_provider)),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);
@@ -1060,7 +1095,10 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new());
+		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
 			.resolve_type_ref(&Mail::type_ref())
@@ -1101,7 +1139,10 @@ mod tests {
 			});
 
 		// TODO: it would be nice to mock this
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 
 		// Use the real `EntityFacade` as it contains the actual decryption logic
 		let entity_facade = EntityFacadeImpl::new(
@@ -1128,7 +1169,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new()),
+			Arc::new(InstanceMapper::new(&type_model_provider)),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);

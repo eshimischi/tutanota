@@ -374,6 +374,8 @@ pub fn create_auth_verifier(user_passphrase_key: Aes256Key) -> String {
 
 #[cfg(test)]
 mod test {
+	use crate::bindings::file_client::MockFileClient;
+	use crate::bindings::rest_client::MockRestClient;
 	use crate::crypto::aes::{Aes256Key, Iv};
 	use crate::crypto::asymmetric_crypto_facade::{DecapsulatedAesKey, MockAsymmetricCryptoFacade};
 	use crate::crypto::crypto_facade::CryptoFacade;
@@ -539,10 +541,13 @@ mod test {
 	}
 
 	fn get_mail_type_model() -> TypeModel {
-		let provider = TypeModelProvider::new();
+		let provider = TypeModelProvider::new(
+			Arc::new(MockRestClient::default()),
+			Arc::new(MockFileClient::default()),
+		);
 		let mail_type_ref = Mail::type_ref();
 		provider
-			.resolve_type_ref(&mail_type_ref)
+			.resolve_server_type_ref(&mail_type_ref)
 			.unwrap()
 			.to_owned()
 	}
@@ -645,9 +650,13 @@ mod test {
 
 		let asymmetric_crypto_facade = asymmetric_crypto_facade.unwrap_or_default();
 
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::default()),
+			Arc::new(MockFileClient::default()),
+		));
 		CryptoFacade {
 			key_loader_facade: Arc::new(key_loader),
-			instance_mapper: Arc::new(InstanceMapper::new()),
+			instance_mapper: Arc::new(InstanceMapper::new(type_model_provider)),
 			randomizer_facade,
 			asymmetric_crypto_facade: Arc::new(asymmetric_crypto_facade),
 		}

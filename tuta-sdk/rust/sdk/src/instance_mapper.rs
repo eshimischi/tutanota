@@ -5,6 +5,7 @@ use serde::ser::{Error, Impossible, SerializeMap, SerializeSeq, SerializeStruct}
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
 use std::collections::HashMap;
 use std::fmt::Display;
+use std::sync::Arc;
 use thiserror::Error;
 
 use crate::date::DateTime;
@@ -16,17 +17,30 @@ use crate::type_model_provider::TypeModelProvider;
 use crate::{CustomId, GeneratedId, IdTupleCustom, IdTupleGenerated, TypeRef};
 
 /// Converter between untyped representations of API Entities and generated structures
-pub struct InstanceMapper {}
+pub struct InstanceMapper {
+	type_model_provider: Arc<TypeModelProvider>,
+}
 
 impl InstanceMapper {
-	pub fn new() -> Self {
-		InstanceMapper {}
+	pub fn new(type_model_provider: Arc<TypeModelProvider>) -> Self {
+		InstanceMapper {
+			type_model_provider,
+		}
 	}
+
 	pub fn parse_entity<'a, E: Entity + Deserialize<'a>>(
 		&self,
 		map: ParsedEntity,
 	) -> Result<E, DeError> {
-		let de = DictionaryDeserializer::<_>::from_iterable(map, E::type_ref());
+		let type_model = self
+			.type_model_provider
+			.resolve_server_type_ref(&E::type_ref())
+			.ok_or_else(|| DeError(format!("server type not found: {:?}", E::type_ref())))?;
+		let de = DictionaryDeserializer::<_>::from_iterable(
+			map,
+			type_model,
+			self.type_model_provider.as_ref(),
+		);
 		E::deserialize(de)
 	}
 
@@ -34,8 +48,15 @@ impl InstanceMapper {
 		&self,
 		entity: E,
 	) -> Result<ParsedEntity, SerError> {
+		let type_model = self
+			.type_model_provider
+			.resolve_client_type_ref(&E::type_ref())
+			.ok_or_else(|| SerError(format!("client type not found: {:?}", E::type_ref())))?;
 		entity
-			.serialize(ElementValueSerializer::new(Some(E::type_ref())))
+			.serialize(ElementValueSerializer::new(Some((
+				type_model,
+				self.type_model_provider.as_ref(),
+			))))
 			.map(|v| v.assert_dict())
 	}
 }
@@ -88,34 +109,40 @@ impl de::Error for DeError {
 /// This is a map/dictionary serializer.
 /// It is used for the top-level (because we have a map and not ElementValue as input), for
 /// nested aggregates and for "errors" map.
-struct DictionaryDeserializer<I>
+struct DictionaryDeserializer<'t, I>
 where
 	I: Iterator<Item = (String, ElementValue)>,
 {
 	iter: I,
 	value: Option<(String, ElementValue)>,
-	type_ref: TypeRef,
+	type_model: &'t TypeModel,
+	type_model_provider: &'t TypeModelProvider,
 }
 
-impl<I> DictionaryDeserializer<I>
+impl<'t, I> DictionaryDeserializer<'t, I>
 where
 	I: Iterator<Item = (String, ElementValue)>,
 {
 	// We accept iterable and not a map because we have to give iterator a specific type, but we
 	// need to let the compiler infer it from the signature.
-	fn from_iterable<II>(iterable: II, type_ref: TypeRef) -> DictionaryDeserializer<I>
+	fn from_iterable<II>(
+		iterable: II,
+		type_model: &'t TypeModel,
+		type_model_provider: &'t TypeModelProvider,
+	) -> DictionaryDeserializer<'t, I>
 	where
 		II: IntoIterator<Item = (String, ElementValue), IntoIter = I>,
 	{
 		DictionaryDeserializer {
 			iter: iterable.into_iter(),
 			value: None,
-			type_ref,
+			type_model,
+			type_model_provider,
 		}
 	}
 }
 
-impl<'de, I> Deserializer<'de> for DictionaryDeserializer<I>
+impl<'de, I> Deserializer<'de> for DictionaryDeserializer<'_, I>
 where
 	I: Iterator<Item = (String, ElementValue)>,
 {
@@ -147,7 +174,7 @@ where
 	}
 }
 
-impl<'de, I> MapAccess<'de> for DictionaryDeserializer<I>
+impl<'de, I> MapAccess<'de> for DictionaryDeserializer<'_, I>
 where
 	I: Iterator<Item = (String, ElementValue)>,
 {
@@ -175,7 +202,8 @@ where
 		let deserializer = ElementValueDeserializer {
 			attribute_id: key.as_str(),
 			value,
-			type_ref: self.type_ref.clone(),
+			type_model: self.type_model,
+			type_model_provider: self.type_model_provider,
 		};
 		seed.deserialize(deserializer)
 	}
@@ -195,7 +223,8 @@ where
 				let value_result = vseed.deserialize(ElementValueDeserializer {
 					attribute_id: key.as_str(),
 					value,
-					type_ref: self.type_ref.clone(),
+					type_model: self.type_model,
+					type_model_provider: self.type_model_provider,
 				})?;
 				Ok(Some((key_result, value_result)))
 			},
@@ -213,21 +242,22 @@ where
 }
 
 /// Deserializer for a single ElementValue.
-struct ElementValueDeserializer<'s> {
+struct ElementValueDeserializer<'t, 's> {
 	/// attribute_id for which we are deserializing the value. Useful for diagnostics.
 	attribute_id: &'s str,
 	/// The value being deserialized
 	value: ElementValue,
-	type_ref: TypeRef,
+	type_model: &'t TypeModel,
+	type_model_provider: &'t TypeModelProvider,
 }
 
-impl ElementValueDeserializer<'_> {
+impl ElementValueDeserializer<'_, '_> {
 	fn wrong_type_err(&self, expected: &str) -> DeError {
 		DeError::wrong_type(self.attribute_id, &self.value, expected)
 	}
 }
 
-impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
+impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 	type Error = DeError;
 
 	serde::forward_to_deserialize_any! {
@@ -322,12 +352,8 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 			// but empty arrays vec![] in case of Zero with cardinality ZeroOrOne
 			// i.e. all associations are now wrapped in an ElementValue::Array
 			ElementValue::Array(arr) => {
-				let is_association = TypeModelProvider::new()
-					.resolve_type_ref(&self.type_ref)
-					.ok_or(DeError(format!(
-						"could not load type model for type ref {:?}",
-						self.type_ref
-					)))?
+				let is_association = self
+					.type_model
 					.is_attribute_id_association(self.attribute_id.to_string());
 				// only associations are stored in arrays
 				if is_association.is_ok() && arr.is_empty() {
@@ -349,7 +375,8 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 			let array_deserializer = ArrayDeserializer {
 				attribute_id: self.attribute_id,
 				iter: arr.into_iter(),
-				type_ref: self.type_ref,
+				type_model: self.type_model,
+				type_model_provider: self.type_model_provider,
 			};
 			visitor.visit_seq(array_deserializer)
 		} else {
@@ -401,16 +428,9 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 			}
 		}
 
-		let type_model_provider = TypeModelProvider::new();
-
-		let type_model: &TypeModel =
-			type_model_provider
-				.resolve_type_ref(&self.type_ref)
-				.ok_or(DeError(format!(
-					"could not resolve type model for {}",
-					self.type_ref
-				)))?;
-		let is_association = type_model.is_attribute_id_association(self.attribute_id.to_string());
+		let is_association = self
+			.type_model
+			.is_attribute_id_association(self.attribute_id.to_string());
 
 		if name == crate::id::id_tuple::ID_TUPLE_GENERATED_NAME {
 			match self.value {
@@ -469,48 +489,74 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 				_ => Err(self.wrong_type_err(crate::id::id_tuple::ID_TUPLE_CUSTOM_NAME)),
 			}
 		} else if let ElementValue::Dict(dict) = self.value {
-			let attr_assoc = type_model
+			let attr_assoc = self.type_model
                 .get_association_by_attribute_id(self.attribute_id)
                 .map_err(|err| DeError(
                     format!(
                         "association for attribute id {} does not exist on type model with typeId {:?} {:?}",
                         self.attribute_id,
-                        type_model.id,
+                        self.type_model.id,
                         err
                     )
                 ))?;
 			let ref_type_ref = TypeRef {
-				app: attr_assoc.dependency.unwrap_or(type_model.app),
+				app: attr_assoc.dependency.unwrap_or(self.type_model.app),
 				type_id: attr_assoc.ref_type_id,
 			};
-			let deserializer = DictionaryDeserializer::from_iterable(dict, ref_type_ref);
+			let ref_type_model = self
+				.type_model_provider
+				.resolve_server_type_ref(&ref_type_ref)
+				.ok_or_else(|| {
+					DeError(format!(
+						"unmet dependency: {:?} -> {:?}",
+						self.type_model.type_ref(),
+						ref_type_ref
+					))
+				})?;
+			let deserializer = DictionaryDeserializer::from_iterable(
+				dict,
+				ref_type_model,
+				self.type_model_provider,
+			);
 			deserializer.deserialize_struct(name, fields, visitor)
 		} else if let ElementValue::Array(arr) = self.value {
-			let cardinality = type_model
+			let cardinality = self.type_model
                 .get_attribute_id_cardinality(self.attribute_id.to_string())
                 .map_err(|err| DeError(
                     format!(
                         "association for attribute id {} does not exist on type model with typeId {:?} {:?}",
                         self.attribute_id,
-                        type_model.id,
+                        self.type_model.id,
                         err
                     )
                 ))?;
 
-			let attr_assoc = type_model
+			let attr_assoc = self.type_model
                 .get_association_by_attribute_id(self.attribute_id)
                 .map_err(|err| DeError(
                     format!(
                         "association for attribute id {} does not exist on type model with typeId {:?} {:?}",
                         self.attribute_id,
-                        type_model.id,
+                        self.type_model.id,
                         err
                     )
                 ))?;
 			let ref_type_ref = TypeRef {
-				app: attr_assoc.dependency.unwrap_or(type_model.app),
+				app: attr_assoc.dependency.unwrap_or(self.type_model.app),
 				type_id: attr_assoc.ref_type_id,
 			};
+
+			let ref_type_model = self
+				.type_model_provider
+				.resolve_server_type_ref(&ref_type_ref)
+				.ok_or_else(|| {
+					DeError(format!(
+						"unmet dependency: {:?} -> {:?}",
+						self.type_model.type_ref(),
+						ref_type_ref
+					))
+				})?;
+
 			match cardinality {
 				Cardinality::One if arr.is_empty() => {
 					return Err(DeError(
@@ -524,8 +570,11 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 						.expect("there should be an element in the array")
 						.clone();
 					if let ElementValue::Dict(aggregated_entity) = element_value {
-						let deserializer =
-							DictionaryDeserializer::from_iterable(aggregated_entity, ref_type_ref);
+						let deserializer = DictionaryDeserializer::from_iterable(
+							aggregated_entity,
+							ref_type_model,
+							self.type_model_provider,
+						);
 						visitor.visit_map(deserializer)
 					} else {
 						unreachable!(
@@ -537,7 +586,8 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 					let array_deserializer = ArrayDeserializer {
 						attribute_id: self.attribute_id,
 						iter: arr.into_iter(),
-						type_ref: ref_type_ref,
+						type_model: ref_type_model,
+						type_model_provider: self.type_model_provider,
 					};
 					visitor.visit_seq(array_deserializer)
 				},
@@ -553,7 +603,11 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 		V: Visitor<'de>,
 	{
 		if let ElementValue::Dict(dict) = self.value {
-			let de = DictionaryDeserializer::from_iterable(dict, self.type_ref.clone());
+			let de = DictionaryDeserializer::from_iterable(
+				dict,
+				self.type_model,
+				self.type_model_provider,
+			);
 			visitor.visit_map(de)
 		} else {
 			Err(self.wrong_type_err("dict"))
@@ -580,7 +634,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_> {
 	}
 }
 
-impl<'de> EnumAccess<'de> for ElementValueDeserializer<'_> {
+impl<'de> EnumAccess<'de> for ElementValueDeserializer<'_, '_> {
 	type Error = DeError;
 	type Variant = Self;
 
@@ -594,7 +648,7 @@ impl<'de> EnumAccess<'de> for ElementValueDeserializer<'_> {
 	}
 }
 
-impl<'de> VariantAccess<'de> for ElementValueDeserializer<'_> {
+impl<'de> VariantAccess<'de> for ElementValueDeserializer<'_, '_> {
 	type Error = DeError;
 
 	fn unit_variant(self) -> Result<(), Self::Error> {
@@ -624,17 +678,18 @@ impl<'de> VariantAccess<'de> for ElementValueDeserializer<'_> {
 }
 
 /// Deserializer for sequence of elements (like an array or vec).
-struct ArrayDeserializer<'s, I>
+struct ArrayDeserializer<'t, 's, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
 	/// Key under which the entities are. Will be passed to the deserializer for elements.
 	attribute_id: &'s str,
 	iter: I,
-	type_ref: TypeRef,
+	type_model: &'t TypeModel,
+	type_model_provider: &'t TypeModelProvider,
 }
 
-impl<'de, I> Deserializer<'de> for ArrayDeserializer<'de, I>
+impl<'de, I> Deserializer<'de> for ArrayDeserializer<'_, 'de, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
@@ -661,7 +716,7 @@ where
 	}
 }
 
-impl<'de, I> de::SeqAccess<'de> for ArrayDeserializer<'_, I>
+impl<'de, I> de::SeqAccess<'de> for ArrayDeserializer<'_, '_, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
@@ -676,7 +731,8 @@ where
 				.deserialize(ElementValueDeserializer {
 					value,
 					attribute_id: self.attribute_id,
-					type_ref: self.type_ref.clone(),
+					type_model: self.type_model,
+					type_model_provider: self.type_model_provider,
 				})
 				.map(Some),
 			None => Ok(None),
@@ -694,20 +750,21 @@ where
 
 /// Serialize Entity into ElementValue variant.
 // See serde_json::value::ser for an example.
-struct ElementValueSerializer {
-	type_ref: Option<TypeRef>,
+struct ElementValueSerializer<'t> {
+	type_model: Option<(&'t TypeModel, &'t TypeModelProvider)>,
 }
 
-impl ElementValueSerializer {
-	pub fn new(type_ref: Option<TypeRef>) -> Self {
-		Self { type_ref }
+impl<'t> ElementValueSerializer<'t> {
+	pub fn new(type_model: Option<(&'t TypeModel, &'t TypeModelProvider)>) -> Self {
+		Self { type_model }
 	}
 }
 
-enum ElementValueStructSerializer {
+enum ElementValueStructSerializer<'t> {
 	Struct {
 		map: ParsedEntity,
-		type_ref: TypeRef,
+		type_model: &'t TypeModel,
+		type_model_provider: &'t TypeModelProvider,
 	},
 	IdTupleGenerated {
 		list_id: Option<GeneratedId>,
@@ -719,20 +776,21 @@ enum ElementValueStructSerializer {
 	},
 }
 
-struct ElementValueSeqSerializer {
+struct ElementValueSeqSerializer<'t> {
 	vec: Vec<ElementValue>,
-	type_ref: TypeRef,
+	type_model: &'t TypeModel,
+	type_model_provider: &'t TypeModelProvider,
 }
 
-impl Serializer for ElementValueSerializer {
+impl<'t> Serializer for ElementValueSerializer<'t> {
 	type Ok = ElementValue;
 	type Error = SerError;
-	type SerializeSeq = ElementValueSeqSerializer;
+	type SerializeSeq = ElementValueSeqSerializer<'t>;
 	type SerializeTuple = ser::Impossible<ElementValue, SerError>;
 	type SerializeTupleStruct = ser::Impossible<ElementValue, SerError>;
 	type SerializeTupleVariant = ser::Impossible<ElementValue, SerError>;
-	type SerializeMap = ElementValueMapSerializer;
-	type SerializeStruct = ElementValueStructSerializer;
+	type SerializeMap = ElementValueMapSerializer<'t>;
+	type SerializeStruct = ElementValueStructSerializer<'t>;
 	type SerializeStructVariant = ser::Impossible<ElementValue, SerError>;
 
 	fn serialize_bool(self, v: bool) -> Result<Self::Ok, Self::Error> {
@@ -875,9 +933,11 @@ impl Serializer for ElementValueSerializer {
 			Some(l) => Vec::with_capacity(l),
 		};
 
+		let (model, provider) = self.type_model.expect("should have type ref");
 		Ok(ElementValueSeqSerializer {
 			vec,
-			type_ref: self.type_ref.expect("should have type ref"),
+			type_model: model,
+			type_model_provider: provider,
 		})
 	}
 
@@ -904,10 +964,12 @@ impl Serializer for ElementValueSerializer {
 	}
 
 	fn serialize_map(self, _: Option<usize>) -> Result<Self::SerializeMap, Self::Error> {
+		let (model, provider) = self.type_model.expect("should have type model");
 		Ok(ElementValueMapSerializer {
 			map: HashMap::new(),
 			next_key: None,
-			type_ref: self.type_ref.expect("should have type ref"),
+			type_model: model,
+			type_model_provider: provider,
 		})
 	}
 
@@ -927,9 +989,11 @@ impl Serializer for ElementValueSerializer {
 				element_id: None,
 			})
 		} else {
+			let (model, provider) = self.type_model.expect("should have type model");
 			Ok(ElementValueStructSerializer::Struct {
 				map: HashMap::with_capacity(len),
-				type_ref: self.type_ref.expect("should have type ref"),
+				type_model: model,
+				type_model_provider: provider,
 			})
 		}
 	}
@@ -949,7 +1013,7 @@ fn unsupported(data_type: &str) -> ! {
 	panic!("Unsupported data type: {}", data_type)
 }
 
-impl SerializeSeq for ElementValueSeqSerializer {
+impl<'t> SerializeSeq for ElementValueSeqSerializer<'t> {
 	type Ok = ElementValue;
 	type Error = SerError;
 
@@ -957,8 +1021,11 @@ impl SerializeSeq for ElementValueSeqSerializer {
 	where
 		T: ?Sized + Serialize,
 	{
-		self.vec
-			.push(value.serialize(ElementValueSerializer::new(Some(self.type_ref.clone())))?);
+		let serialized = value.serialize(ElementValueSerializer::new(Some((
+			self.type_model,
+			self.type_model_provider,
+		))))?;
+		self.vec.push(serialized);
 		Ok(())
 	}
 
@@ -967,7 +1034,7 @@ impl SerializeSeq for ElementValueSeqSerializer {
 	}
 }
 
-impl SerializeStruct for ElementValueStructSerializer {
+impl<'t> SerializeStruct for ElementValueStructSerializer<'t> {
 	type Ok = ElementValue;
 	type Error = SerError;
 
@@ -976,19 +1043,16 @@ impl SerializeStruct for ElementValueStructSerializer {
 		T: ?Sized + Serialize,
 	{
 		match self {
-			Self::Struct { map, type_ref } => {
+			Self::Struct {
+				map,
+				type_model,
+				type_model_provider,
+			} => {
 				if key == "_errors" {
 					// Throw decryption errors away since they are not part of the actual type.
 					return Ok(());
 				}
 
-				let type_model_provider = TypeModelProvider::new();
-				let type_model = type_model_provider
-					.resolve_type_ref(type_ref)
-					.ok_or(SerError(format!(
-						"could not load type model for type ref {:?}",
-						type_ref
-					)))?;
 				let aggregation_info = type_model.get_association_by_attribute_id(key).ok();
 
 				if let Some(aggregation_info) = aggregation_info {
@@ -997,8 +1061,16 @@ impl SerializeStruct for ElementValueStructSerializer {
 						type_id: aggregation_info.ref_type_id,
 					};
 
-					let serialized_value =
-						value.serialize(ElementValueSerializer::new(Some(aggregation_type_ref)))?;
+					let aggregation_type_model = type_model_provider
+						.resolve_client_type_ref(&aggregation_type_ref)
+						.ok_or_else(|| {
+							SerError(format!("Type not found: {:?}", aggregation_type_ref))
+						})?;
+
+					let serialized_value = value.serialize(ElementValueSerializer::new(Some((
+						aggregation_type_model,
+						type_model_provider,
+					))))?;
 
 					let cardinality: Cardinality = type_model
 						.get_attribute_id_cardinality(key.to_string())
@@ -1016,7 +1088,7 @@ impl SerializeStruct for ElementValueStructSerializer {
 							if serialized_value == ElementValue::Null {
 								return Err(SerError(format!(
 									"null value for association with cardinality One for type {}",
-									type_ref
+									type_model.name
 								)));
 							} else {
 								map.insert(key.to_string(), Array(vec![serialized_value]));
@@ -1027,8 +1099,10 @@ impl SerializeStruct for ElementValueStructSerializer {
 						},
 					}
 				} else {
-					let serialized_value =
-						value.serialize(ElementValueSerializer::new(Some(type_ref.clone())))?;
+					let serialized_value = value.serialize(ElementValueSerializer::new(Some((
+						type_model,
+						type_model_provider,
+					))))?;
 					map.insert(key.to_string(), serialized_value);
 				}
 			},
@@ -1082,7 +1156,11 @@ impl SerializeStruct for ElementValueStructSerializer {
 
 	fn end(self) -> Result<Self::Ok, Self::Error> {
 		match self {
-			Self::Struct { map, type_ref: _ } => Ok(ElementValue::Dict(map)),
+			Self::Struct {
+				map,
+				type_model: _,
+				type_model_provider: _,
+			} => Ok(ElementValue::Dict(map)),
 			Self::IdTupleGenerated {
 				list_id,
 				element_id,
@@ -1102,13 +1180,14 @@ impl SerializeStruct for ElementValueStructSerializer {
 }
 
 /// Yet Another Serializer, this one serializes a map with dynamic keys.
-struct ElementValueMapSerializer {
+struct ElementValueMapSerializer<'t> {
 	next_key: Option<String>,
 	map: ParsedEntity,
-	type_ref: TypeRef,
+	type_model: &'t TypeModel,
+	type_model_provider: &'t TypeModelProvider,
 }
 
-impl SerializeMap for ElementValueMapSerializer {
+impl<'t> SerializeMap for ElementValueMapSerializer<'t> {
 	type Ok = ElementValue;
 	type Error = SerError;
 
@@ -1127,7 +1206,10 @@ impl SerializeMap for ElementValueMapSerializer {
 		let key = self.next_key.take().expect("key must be serialized first");
 		self.map.insert(
 			key,
-			value.serialize(ElementValueSerializer::new(Some(self.type_ref.clone())))?,
+			value.serialize(ElementValueSerializer::new(Some((
+				self.type_model,
+				self.type_model_provider,
+			))))?,
 		);
 		Ok(())
 	}
@@ -1330,6 +1412,8 @@ impl Serializer for MapKeySerializer {
 #[cfg(test)]
 mod tests {
 	use super::*;
+	use crate::bindings::file_client::MockFileClient;
+	use crate::bindings::rest_client::MockRestClient;
 	use crate::entities::entity_facade::{
 		FORMAT_FIELD, ID_FIELD, OWNER_GROUP_FIELD, PERMISSIONS_FIELD,
 	};
@@ -1343,17 +1427,22 @@ mod tests {
 	use crate::json_serializer::JsonSerializer;
 	use crate::tutanota_constants::CryptoProtocolVersion;
 	use crate::tutanota_constants::PublicKeyIdentifierType;
-	use crate::util::get_attribute_id_by_attribute_name;
-	use crate::util::test_utils::{create_test_entity, generate_random_group};
+	use crate::util::test_utils::{
+		create_test_entity, generate_random_group, mock_type_model_provider,
+	};
 	use crate::GeneratedId;
 	use crate::TypeRef;
 	use std::sync::Arc;
 
 	#[test]
 	fn test_de_group() {
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let json = include_str!("../test_data/group_response.json");
 		let parsed_entity = get_parsed_entity::<Group>(json);
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(type_model_provider);
 		let group: Group = mapper.parse_entity(parsed_entity).unwrap();
 		assert_eq!(5_i64, group.r#type);
 		assert_eq!(Some(0_i64), group.adminGroupKeyVersion);
@@ -1370,9 +1459,13 @@ mod tests {
 	/// Test for IdTupleCustom as LET reference (not as id)
 	#[test]
 	fn test_de_calendar_event_uid_index() {
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let json = include_str!("../test_data/calendar_event_uid_index_response.json");
 		let parsed_entity = get_parsed_entity::<CalendarEventUidIndex>(json);
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(type_model_provider);
 		let uid_index: CalendarEventUidIndex = mapper.parse_entity(parsed_entity).unwrap();
 		assert_eq!(
 			Some(IdTupleCustom {
@@ -1392,6 +1485,10 @@ mod tests {
 
 	#[test]
 	fn test_de_group_info() {
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let json = include_str!("../test_data/group_info_response.json");
 		let mut parsed_entity = get_parsed_entity::<GroupInfo>(json);
 		// this is encrypted, so we can't actually deserialize it without replacing it with a decrypted version
@@ -1399,7 +1496,7 @@ mod tests {
 			get_attribute_id_by_attribute_name(GroupInfo::type_ref(), "name").unwrap(),
 			ElementValue::String("some string".to_owned()),
 		);
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(type_model_provider);
 		let group_info: GroupInfo = mapper.parse_entity(parsed_entity).unwrap();
 		assert_eq!(DateTime::from_millis(1533116004052), group_info.created);
 	}
@@ -1411,7 +1508,7 @@ mod tests {
 			ElementValue::Number(2),
 		)]
 		.into();
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let group_result = mapper.parse_entity::<Group>(parsed_entity);
 		let err = group_result.unwrap_err();
 		assert!(
@@ -1427,7 +1524,7 @@ mod tests {
 			ElementValue::IdGeneratedId(GeneratedId("id".to_owned())),
 		)]
 		.into();
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let group_result = mapper.parse_entity::<Group>(parsed_entity);
 		assert!(group_result.is_err(), "result is an err");
 		let e = group_result.unwrap_err().to_string();
@@ -1441,7 +1538,7 @@ mod tests {
 	fn test_de_mailbox_group_root() {
 		let json = include_str!("../test_data/mailbox_group_root_response.json");
 		let parsed_entity = get_parsed_entity::<MailboxGroupRoot>(json);
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let _group_root: MailboxGroupRoot = mapper.parse_entity(parsed_entity).unwrap();
 	}
 
@@ -1518,7 +1615,9 @@ mod tests {
 			.map(|(k, v)| (k.to_owned(), v)),
 		);
 		let result: OutOfOfficeNotification =
-			InstanceMapper::new().parse_entity(parsed_entity).unwrap();
+			InstanceMapper::new(Arc::new(mock_type_model_provider()))
+				.parse_entity(parsed_entity)
+				.unwrap();
 		assert_eq!(Some(DateTime::from_millis(1723193495816)), result.endDate)
 	}
 
@@ -1555,7 +1654,10 @@ mod tests {
 				),
 			])),
 		)]);
-		let _deserialized: StructWithErrors = InstanceMapper::new().parse_entity(data).unwrap();
+		let _deserialized: StructWithErrors =
+			InstanceMapper::new(Arc::new(mock_type_model_provider()))
+				.parse_entity(data)
+				.unwrap();
 	}
 
 	#[test]
@@ -1575,7 +1677,7 @@ mod tests {
 			}),
 			serverProperties: GeneratedId::test_random(),
 		};
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let result = mapper.serialize_entity(group_root.clone()).unwrap();
 		assert_eq!(
 			&ElementValue::Number(0),
@@ -1591,7 +1693,7 @@ mod tests {
 	#[test]
 	fn test_ser_group() {
 		let group = generate_random_group(None, None);
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let result = mapper.serialize_entity(group.clone()).unwrap();
 		assert_eq!(
 			&group.groupInfo,
@@ -1678,7 +1780,7 @@ mod tests {
 			alteredInstances: vec![],
 			progenitor: Some(progenitor.clone()),
 		};
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let parsed_entity = mapper.serialize_entity(calendar_event_uid_index).unwrap();
 
 		assert_eq!(
@@ -1728,7 +1830,7 @@ mod tests {
 			_errors: Default::default(),
 			_finalIvs: Default::default(),
 		};
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let parsed_entity = mapper.serialize_entity(group_info).unwrap();
 
 		assert_eq!(
@@ -1763,7 +1865,7 @@ mod tests {
 		mail.sender = create_test_entity();
 		let sender_name = "Sender name".to_owned();
 		mail.sender.name = sender_name.clone();
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let serialized = mapper.serialize_entity(mail).unwrap();
 		assert_eq!(
 			&_id,
@@ -1815,7 +1917,7 @@ mod tests {
 		let _id = IdTupleGenerated::new(GeneratedId::test_random(), GeneratedId::test_random());
 		mail_details_blob._id = Some(_id.clone());
 
-		let mapper = InstanceMapper::new();
+		let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 		let serialized = mapper.serialize_entity(mail_details_blob).unwrap();
 		assert_eq!(
 			&_id,
@@ -1834,12 +1936,15 @@ mod tests {
 
 	fn get_parsed_entity<T: Entity>(email_string: &str) -> ParsedEntity {
 		let raw_entity: RawEntity = serde_json::from_str(email_string).unwrap();
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::default()),
+			Arc::new(MockFileClient::default()),
+		));
 		let json_serializer = JsonSerializer::new(type_model_provider.clone());
 		let type_ref = T::type_ref();
 		let mut parsed_entity = json_serializer.parse(&type_ref, raw_entity).unwrap();
 		let type_model = type_model_provider
-			.get_type_model(type_ref.app, type_ref.type_id)
+			.resolve_server_type_ref(&type_ref)
 			.unwrap();
 		if type_model.is_encrypted() {
 			parsed_entity.insert(

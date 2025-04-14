@@ -116,6 +116,7 @@ export class TutaNotificationHandler {
 
 			const parsedResponse = (await response.json()) as ServerModelUntypedInstance
 
+			// fixme: should this be the server model?
 			const mailModel = await resolveClientTypeReference(MailTypeRef)
 			const mailAddressModel = await resolveClientTypeReference(MailAddressTypeRef)
 			const mailEncryptedParsedInstance: EncryptedParsedInstance = await typeMapper.applyJsTypes(mailModel, parsedResponse)

@@ -1,7 +1,10 @@
-use std::collections::HashMap;
-
+use crate::bindings::file_client::FileClient;
+use crate::bindings::rest_client::RestClient;
 use crate::metamodel::TypeModel;
 use crate::TypeRef;
+use std::borrow::Cow;
+use std::collections::HashMap;
+use std::sync::Arc;
 
 // TODO: Change `AppName` into an enum of strings that is generated from the model
 /// The name of an app in the backend
@@ -44,40 +47,58 @@ static CLIENT_TYPE_MODEL: std::sync::LazyLock<HashMap<AppName, HashMap<TypeId, T
 
 /// Contains a map between backend apps and entity/instance types within them
 pub struct TypeModelProvider {
-	pub app_models: &'static HashMap<AppName, HashMap<TypeId, TypeModel>>,
+	pub client_app_models: &'static HashMap<AppName, HashMap<TypeId, TypeModel>>,
+	pub server_app_models: Cow<'static, HashMap<AppName, HashMap<TypeId, TypeModel>>>,
+	file_client: Arc<dyn FileClient>,
+	rest_client: Arc<dyn RestClient>,
 }
 
 impl TypeModelProvider {
-	pub fn new() -> TypeModelProvider {
+	pub fn new(
+		rest_client: Arc<dyn RestClient>,
+		file_client: Arc<dyn FileClient>,
+	) -> TypeModelProvider {
 		TypeModelProvider {
-			app_models: &CLIENT_TYPE_MODEL,
+			client_app_models: &CLIENT_TYPE_MODEL,
+			server_app_models: Cow::Borrowed(&CLIENT_TYPE_MODEL),
+			rest_client,
+			file_client,
 		}
 	}
 
-	/// Gets an entity/instance type with a specified name in a backend app
-	// FIXME: make this private and outside this file always use .resolve_type_ref instead
-	pub fn get_type_model(&self, app_name: &str, entity_id: TypeId) -> Option<&TypeModel> {
-		let app_map = self.app_models.get(app_name)?;
-		app_map.get(&entity_id)
+	pub fn resolve_client_type_ref(&self, type_ref: &TypeRef) -> Option<&TypeModel> {
+		let app_map = self.client_app_models.get(type_ref.app)?;
+		app_map.get(&type_ref.type_id)
 	}
 
-	pub fn resolve_type_ref(&self, type_ref: &TypeRef) -> Option<&TypeModel> {
-		self.get_type_model(type_ref.app, type_ref.type_id)
+	pub fn resolve_server_type_ref(&self, type_ref: &TypeRef) -> Option<&TypeModel> {
+		let app_map = self.client_app_models.get(type_ref.app)?;
+		app_map.get(&type_ref.type_id)
 	}
 }
 
 #[cfg(test)]
 mod tests {
+	use super::Arc;
+	use crate::bindings::test_file_client::TestFileClient;
+	use crate::bindings::test_rest_client::TestRestClient;
 	use crate::type_model_provider::TypeModelProvider;
 
 	#[test]
 	fn read_type_model_only_once() {
-		let first_type_model = TypeModelProvider::new();
-		let second_type_model = TypeModelProvider::new();
+		let first_type_model = TypeModelProvider::new(
+			Arc::new(TestRestClient::default()),
+			Arc::new(TestFileClient::default()),
+		);
+
+		let second_type_model = TypeModelProvider::new(
+			Arc::new(TestRestClient::default()),
+			Arc::new(TestFileClient::default()),
+		);
 
 		assert!(std::ptr::eq(
-			first_type_model.app_models,
-			second_type_model.app_models
+			first_type_model.client_app_models,
+			second_type_model.client_app_models
 		));
 	}
 }

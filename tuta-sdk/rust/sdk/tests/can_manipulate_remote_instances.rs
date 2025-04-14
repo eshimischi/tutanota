@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use tutasdk::bindings::test_file_client::TestFileClient;
 use tutasdk::crypto::aes::Iv;
 use tutasdk::crypto::key::GenericAesKey;
 use tutasdk::crypto::randomizer_facade::RandomizerFacade;
@@ -14,9 +15,13 @@ use tutasdk::{GeneratedId, IdTupleGenerated, ListLoadDirection, Sdk};
 )]
 #[tokio::test]
 async fn can_create_remote_instance() {
+	let rest_client = NativeRestClient::try_new().unwrap();
+	let file_client = TestFileClient::default();
+
 	let logged_in_sdk = Sdk::new(
 		"http://localhost:9000".to_string(),
-		Arc::new(NativeRestClient::try_new().unwrap()),
+		Arc::new(rest_client),
+		Arc::new(file_client),
 	)
 	.create_session("map-free@tutanota.de", "map")
 	.await
@@ -100,6 +105,7 @@ async fn can_update_remote_instance() {
 	let logged_in_sdk = Sdk::new(
 		"http://localhost:9000".to_string(),
 		Arc::new(NativeRestClient::try_new().unwrap()),
+		Arc::new(TestFileClient::default()),
 	)
 	.create_session("map-free@tutanota.de", "map")
 	.await

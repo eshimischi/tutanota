@@ -249,4 +249,8 @@ impl TypeModel {
 	pub fn is_same_type_by_attr_name(&self, app: &str, name: &str) -> bool {
 		self.app == app && self.name == name
 	}
+
+	pub fn type_ref(&self) -> TypeRef {
+		TypeRef::new(self.app, self.id)
+	}
 }

@@ -183,14 +183,29 @@ pub fn array_cast_slice<T: Copy + Clone, const SIZE: usize>(
 	}
 }
 
-/// Get the attribute id for the attribute name if it exists in the TypeModel for the given TypeRef
-pub fn get_attribute_id_by_attribute_name(
-	type_ref: TypeRef,
-	attribute_name: &str,
-) -> Result<String, TypeModelError> {
-	let type_model_provider = TypeModelProvider::new();
-	let type_model = type_model_provider.resolve_type_ref(&type_ref).unwrap();
-	type_model.get_attribute_id_by_attribute_name(attribute_name)
+pub struct AttributeModel<'a> {
+	type_model_provider: &'a TypeModelProvider,
+}
+
+impl<'a> AttributeModel<'a> {
+	pub fn new(type_model_provider: &'a TypeModelProvider) -> Self {
+		Self {
+			type_model_provider,
+		}
+	}
+
+	/// Get the attribute id for the attribute name if it exists in the TypeModel for the given TypeRef
+	pub fn get_attribute_id_by_attribute_name(
+		&self,
+		type_ref: TypeRef,
+		attribute_name: &str,
+	) -> Result<String, TypeModelError> {
+		let type_model = self
+			.type_model_provider
+			.resolve_client_type_ref(&type_ref)
+			.unwrap();
+		type_model.get_attribute_id_by_attribute_name(attribute_name)
+	}
 }
 
 /// Cast the array into an array of a fixed size.

@@ -220,7 +220,7 @@ impl Executor for ServiceExecutor {
 			let input_type_ref = I::type_ref();
 			let type_model = self
 				.type_model_provider
-				.get_type_model(input_type_ref.app, input_type_ref.type_id)
+				.resolve_client_type_ref(&input_type_ref)
 				.ok_or(ApiCallError::internal(format!(
 					"type {:?} does not exist",
 					input_type_ref
@@ -321,7 +321,7 @@ impl Executor for ServiceExecutor {
 			.parse(output_type_ref, response_entity)?;
 		let type_model: &TypeModel = self
 			.type_model_provider
-			.get_type_model(output_type_ref.app, output_type_ref.type_id)
+			.resolve_server_type_ref(output_type_ref)
 			.expect("invalid type ref!");
 
 		if type_model.marked_encrypted() {
@@ -376,6 +376,7 @@ impl Executor for ServiceExecutor {
 
 #[cfg(test)]
 mod tests {
+	use crate::bindings::file_client::MockFileClient;
 	use crate::bindings::rest_client::{HttpMethod, MockRestClient, RestResponse};
 	#[mockall_double::double]
 	use crate::crypto::crypto_facade::CryptoFacade;
@@ -396,7 +397,8 @@ mod tests {
 	};
 	use crate::services::{test_services, ExtraServiceParams};
 	use crate::type_model_provider::TypeModelProvider;
-	use crate::util::get_attribute_id_by_attribute_name;
+	use crate::util::test_utils::mock_type_model_provider;
+	use crate::util::AttributeModel;
 	use crate::{HeadersProvider, CLIENT_VERSION};
 	use base64::prelude::BASE64_STANDARD;
 	use base64::Engine;
@@ -589,7 +591,10 @@ mod tests {
 	}
 
 	fn setup() -> ResolvingServiceExecutor {
-		let mut type_model_provider: TypeModelProvider = TypeModelProvider::new();
+		let mut type_model_provider: TypeModelProvider = TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		);
 		let _ok_if_overwritten = test_services::extend_model_resolver(&mut type_model_provider);
 		let type_model_provider = Arc::new(type_model_provider);
 
@@ -597,7 +602,7 @@ mod tests {
 		let entity_facade = Arc::new(MockEntityFacade::default());
 		let auth_headers_provider =
 			Arc::new(HeadersProvider::new(Some("access_token".to_string())));
-		let instance_mapper = Arc::new(InstanceMapper::new());
+		let instance_mapper = Arc::new(InstanceMapper::new(type_model_provider.clone()));
 		let json_serializer = Arc::new(JsonSerializer::new(type_model_provider.clone()));
 		let rest_client = Arc::new(MockRestClient::new());
 
@@ -782,16 +787,18 @@ mod tests {
 				Ok(instance.clone())
 			});
 
+		let provider = mock_type_model_provider();
+		let attribute_model = AttributeModel::new(&provider);
 		let session_key_clone = session_key.clone();
 		entity_facade.expect_decrypt_and_map().return_once(
 			move |_, mut entity, resolved_session_key| {
 				assert_eq!(session_key_clone, resolved_session_key.session_key);
-				let timestamp_attribute_id =
-					&get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "timestamp")
-						.unwrap();
-				let answer_attribute_id =
-					&get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "answer")
-						.unwrap();
+				let timestamp_attribute_id = &attribute_model
+					.get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "timestamp")
+					.unwrap();
+				let answer_attribute_id = &attribute_model
+					.get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "answer")
+					.unwrap();
 				assert_eq!(
 					&ElementValue::Bytes(BASE64_STANDARD.decode(r#"MzAwMA=="#).unwrap()),
 					entity.get(timestamp_attribute_id).unwrap()

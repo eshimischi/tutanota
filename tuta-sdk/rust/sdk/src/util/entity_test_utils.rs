@@ -6,7 +6,9 @@ use crate::entities::generated::sys::BucketKey;
 use crate::entities::generated::tutanota::{Mail, MailAddress};
 use crate::entities::Entity;
 use crate::type_model_provider::TypeModelProvider;
-use crate::util::test_utils::{create_test_entity, typed_entity_to_parsed_entity};
+use crate::util::test_utils::{
+	create_test_entity, mock_type_model_provider, typed_entity_to_parsed_entity,
+};
 use crate::GeneratedId;
 use crate::{IdTupleGenerated, TypeRef};
 
@@ -60,7 +62,7 @@ fn typed_entity_to_encrypted_entity<T: Entity + serde::Serialize>(
 	session_key: &GenericAesKey,
 	iv: &Iv,
 ) -> ParsedEntity {
-	let provider = TypeModelProvider::new();
+	let provider = mock_type_model_provider();
 	let mut parsed = typed_entity_to_parsed_entity(entity);
 	let TypeRef {
 		app,
@@ -73,12 +75,13 @@ fn typed_entity_to_encrypted_entity<T: Entity + serde::Serialize>(
 fn encrypt_test_entity_dict_with_provider(
 	entity: &mut ParsedEntity,
 	provider: &TypeModelProvider,
-	app: &str,
+	app: &'static str,
 	type_id: u64,
 	session_key: &GenericAesKey,
 	iv: &Iv,
 ) {
-	let Some(model) = provider.get_type_model(app, type_id) else {
+	let type_ref = TypeRef::new(app, type_id);
+	let Some(model) = provider.resolve_client_type_ref(&type_ref) else {
 		panic!("Failed to create test entity {app}/{type_id}: not in model")
 	};
 

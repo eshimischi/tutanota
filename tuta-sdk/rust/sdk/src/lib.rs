@@ -51,6 +51,7 @@ use crate::type_model_provider::{AppName, TypeId, TypeModelProvider};
 use crate::typed_entity_client::TypedEntityClient;
 #[cfg_attr(test, mockall_double::double)]
 use crate::user_facade::UserFacade;
+use bindings::file_client::FileClient;
 use bindings::rest_client::{RestClient, RestClientError};
 
 pub mod crypto;
@@ -103,24 +104,15 @@ uniffi::setup_scaffolding!();
 
 /// A type for an instance/entity from the backend
 /// Definitions for them can be found inside the type model JSON files under `/test_data`
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct TypeRef {
 	pub app: AppName,
 	pub type_id: TypeId,
 }
 
-// Print type name as well when we debug print TypeRef
-impl Debug for TypeRef {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		let type_name = TypeModelProvider::new()
-			.get_type_model(self.app, self.type_id)
-			.map(|model| model.name)
-			.unwrap_or_default();
-		f.debug_struct("TypeRef")
-			.field("app", &self.app)
-			.field("type_id", &self.type_id)
-			.field("<type_name>", &type_name)
-			.finish()
+impl TypeRef {
+	pub fn new(app: AppName, type_id: TypeId) -> Self {
+		Self { app, type_id }
 	}
 }
 
@@ -179,16 +171,22 @@ pub struct Sdk {
 #[uniffi::export]
 impl Sdk {
 	#[uniffi::constructor]
-	pub fn new(base_url: String, raw_rest_client: Arc<dyn RestClient>) -> Sdk {
+	pub fn new(
+		base_url: String,
+		raw_rest_client: Arc<dyn RestClient>,
+		file_client: Arc<dyn FileClient>,
+	) -> Sdk {
 		logging::init_logger();
 		log::info!("Initializing SDK...");
 
-		let type_model_provider = Arc::new(TypeModelProvider::new());
-		// TODO validate parameters
-		let instance_mapper = Arc::new(InstanceMapper::new());
-		let json_serializer = Arc::new(JsonSerializer::new(type_model_provider.clone()));
 		let date_provider = Arc::new(SystemDateProvider);
 		let rest_client = Arc::new(SuspendableRestClient::new(raw_rest_client, date_provider));
+
+		let type_model_provider =
+			Arc::new(TypeModelProvider::new(rest_client.clone(), file_client));
+		// TODO validate parameters
+		let instance_mapper = Arc::new(InstanceMapper::new(type_model_provider.clone()));
+		let json_serializer = Arc::new(JsonSerializer::new(type_model_provider.clone()));
 
 		Sdk {
 			type_model_provider,
@@ -220,10 +218,12 @@ impl Sdk {
 			self.instance_mapper.clone(),
 		));
 
-		let login_facade =
-			LoginFacade::new(entity_client.clone(), typed_entity_client.clone(), |user| {
-				UserFacade::new(Arc::new(KeyCache::new()), user)
-			});
+		let login_facade = LoginFacade::new(
+			entity_client.clone(),
+			typed_entity_client.clone(),
+			|user| UserFacade::new(Arc::new(KeyCache::new()), user),
+			self.type_model_provider.clone(),
+		);
 		let user_facade = Arc::new(login_facade.resume_session(&credentials).await?);
 
 		let key_loader_facade = Arc::new(KeyLoaderFacade::new(
@@ -365,6 +365,15 @@ impl Sdk {
 }
 
 impl Sdk {
+	#[must_use]
+	pub fn serialize_mail(&self, mail: Mail) -> Vec<u8> {
+		let entity_map = self.instance_mapper.serialize_entity(mail).unwrap();
+		let mut vec = Vec::new();
+		let mut encoder = Encoder::new(&mut vec);
+		encoder.encode(&entity_map).unwrap();
+		vec
+	}
+
 	fn create_blob_facade(
 		&self,
 		auth_headers_provider: Arc<HeadersProvider>,
@@ -384,6 +393,7 @@ impl Sdk {
 			auth_headers_provider.clone(),
 			self.instance_mapper.clone(),
 			self.json_serializer.clone(),
+			Arc::clone(&self.type_model_provider),
 		);
 		Arc::new(blob_facade)
 	}
@@ -566,16 +576,6 @@ impl From<ParseFailureError> for ApiCallError {
 	}
 }
 
-#[uniffi::export]
-#[must_use]
-pub fn serialize_mail(mail: Mail) -> Vec<u8> {
-	let entity_map = InstanceMapper::new().serialize_entity(mail).unwrap();
-	let mut vec = Vec::new();
-	let mut encoder = Encoder::new(&mut vec);
-	encoder.encode(&entity_map).unwrap();
-	vec
-}
-
 impl<C> Encode<C> for ElementValue {
 	fn encode<W: Write>(
 		&self,
@@ -626,13 +626,22 @@ impl<C> Encode<C> for ElementValue {
 }
 #[cfg(test)]
 mod tests {
+	use super::Arc;
+	use crate::bindings::file_client::MockFileClient;
+	use crate::bindings::rest_client::MockRestClient;
 	use crate::entities::generated::tutanota::Mail;
-	use crate::serialize_mail;
 	use crate::util::test_utils::create_test_entity;
+	use crate::Sdk;
 
 	#[test]
 	fn test_serialize_mail_does_not_panic() {
+		let sdk = Sdk::new(
+			"localhost:9000".to_string(),
+			Arc::new(MockRestClient::default()),
+			Arc::new(MockFileClient::default()),
+		);
+
 		let mail = create_test_entity::<Mail>();
-		let _ = serialize_mail(mail);
+		let _ = sdk.serialize_mail(mail);
 	}
 }

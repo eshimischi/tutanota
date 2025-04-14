@@ -178,7 +178,7 @@ pub fn extend_model_resolver(type_model_provider: &mut TypeModelProvider) -> boo
 	.collect();
 
 	unsafe {
-		let app_models_mut = std::ptr::from_ref(type_model_provider.app_models)
+		let app_models_mut = std::ptr::from_ref(type_model_provider.client_app_models)
 			.cast_mut()
 			.as_mut()
 			.expect("Should be Not null");

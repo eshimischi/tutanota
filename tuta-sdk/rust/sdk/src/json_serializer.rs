@@ -54,7 +54,12 @@ impl JsonSerializer {
 		type_ref: &TypeRef,
 		mut raw_entity: RawEntity,
 	) -> Result<ParsedEntity, InstanceMapperError> {
-		let type_model = self.get_type_model(type_ref)?;
+		let type_model = self
+			.type_model_provider
+			.resolve_server_type_ref(type_ref)
+			.ok_or_else(|| InstanceMapperError::TypeNotFound {
+				type_ref: type_ref.clone(),
+			})?;
 		let mut mapped: ParsedEntity = HashMap::new();
 		for (&value_id, value_type) in &type_model.values {
 			let value_id_string = &value_id.to_string();
@@ -255,7 +260,12 @@ impl JsonSerializer {
 		type_ref: &TypeRef,
 		mut entity: ParsedEntity,
 	) -> Result<RawEntity, InstanceMapperError> {
-		let type_model = self.get_type_model(type_ref)?;
+		let type_model = self
+			.type_model_provider
+			.resolve_client_type_ref(type_ref)
+			.ok_or_else(|| InstanceMapperError::TypeNotFound {
+				type_ref: type_ref.clone(),
+			})?;
 		let mut mapped: RawEntity = HashMap::new();
 		for (&value_id, value_type) in &type_model.values {
 			let value_id_string = value_id.to_string();
@@ -355,16 +365,6 @@ impl JsonSerializer {
 			};
 		}
 		Ok(serialized_elements)
-	}
-
-	/// Returns the type model referenced by a `TypeRef`
-	/// from the `InstanceMapper`'s `TypeModelProvider`
-	fn get_type_model(&self, type_ref: &TypeRef) -> Result<&TypeModel, InstanceMapperError> {
-		self.type_model_provider
-			.get_type_model(type_ref.app, type_ref.type_id)
-			.ok_or_else(|| InstanceMapperError::TypeNotFound {
-				type_ref: type_ref.clone(),
-			})
 	}
 
 	/// Transforms an `ElementValue` into a JSON Value
@@ -610,6 +610,8 @@ impl JsonSerializer {
 #[cfg(test)]
 mod tests {
 	use super::*;
+	use crate::bindings::file_client::MockFileClient;
+	use crate::bindings::rest_client::MockRestClient;
 	use crate::crypto::key::GenericAesKey;
 	use crate::crypto::randomizer_facade::RandomizerFacade;
 	use crate::entities::entity_facade::EntityFacadeImpl;
@@ -618,12 +620,15 @@ mod tests {
 	use crate::entities::Entity;
 	use crate::instance_mapper::InstanceMapper;
 	use crate::services::test_services::{extend_model_resolver, HelloEncOutput};
-	use crate::util::get_attribute_id_by_attribute_name;
+	use crate::util::AttributeModel;
 
 	#[test]
 	fn test_parse_mail() {
 		// TODO: Expand this test to cover bucket keys in mail
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let json_serializer = JsonSerializer {
 			type_model_provider,
 		};
@@ -636,7 +641,10 @@ mod tests {
 
 	#[test]
 	fn test_parse_mail_empty_encrypted_boolean_defaults_to_false() {
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let json_serializer = JsonSerializer {
 			type_model_provider,
 		};
@@ -651,7 +659,11 @@ mod tests {
 
 	#[test]
 	fn test_parse_mail_with_attachments() {
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
+		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json_serializer = JsonSerializer {
 			type_model_provider,
 		};
@@ -667,14 +679,22 @@ mod tests {
 				)
 			)]),
 			parsed
-				.get(&get_attribute_id_by_attribute_name(Mail::type_ref(), "attachments").unwrap())
+				.get(
+					&attribute_model
+						.get_attribute_id_by_attribute_name(Mail::type_ref(), "attachments")
+						.unwrap()
+				)
 				.expect("has attachments")
 		)
 	}
 
 	#[test]
 	fn test_parse_user() {
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
+		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json_serializer = JsonSerializer {
 			type_model_provider,
 		};
@@ -683,18 +703,23 @@ mod tests {
 		let type_ref = User::type_ref();
 		let parsed = json_serializer.parse(&type_ref, raw_entity).unwrap();
 		let ship = parsed
-			.get(&get_attribute_id_by_attribute_name(User::type_ref(), "memberships").unwrap())
+			.get(
+				&attribute_model
+					.get_attribute_id_by_attribute_name(User::type_ref(), "memberships")
+					.unwrap(),
+			)
 			.unwrap()
 			.assert_array()
 			.iter()
 			.find(|m| {
 				m.assert_dict()
 					.get(
-						&get_attribute_id_by_attribute_name(
-							GroupMembership::type_ref(),
-							"groupType",
-						)
-						.unwrap(),
+						&attribute_model
+							.get_attribute_id_by_attribute_name(
+								GroupMembership::type_ref(),
+								"groupType",
+							)
+							.unwrap(),
 					)
 					.unwrap()
 					.assert_number()
@@ -704,7 +729,8 @@ mod tests {
 			.assert_dict();
 		assert!(!ship
 			.get(
-				&get_attribute_id_by_attribute_name(GroupMembership::type_ref(), "symEncGKey")
+				&attribute_model
+					.get_attribute_id_by_attribute_name(GroupMembership::type_ref(), "symEncGKey")
 					.unwrap()
 			)
 			.unwrap()
@@ -714,7 +740,11 @@ mod tests {
 
 	#[test]
 	fn test_parse_user_with_empty_group_key() {
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
+		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json_serializer = JsonSerializer {
 			type_model_provider,
 		};
@@ -723,18 +753,23 @@ mod tests {
 		let type_ref = User::type_ref();
 		let parsed = json_serializer.parse(&type_ref, raw_entity).unwrap();
 		let ship = parsed
-			.get(&get_attribute_id_by_attribute_name(User::type_ref(), "memberships").unwrap())
+			.get(
+				&attribute_model
+					.get_attribute_id_by_attribute_name(User::type_ref(), "memberships")
+					.unwrap(),
+			)
 			.unwrap()
 			.assert_array()
 			.iter()
 			.find(|m| {
 				m.assert_dict()
 					.get(
-						&get_attribute_id_by_attribute_name(
-							GroupMembership::type_ref(),
-							"groupType",
-						)
-						.unwrap(),
+						&attribute_model
+							.get_attribute_id_by_attribute_name(
+								GroupMembership::type_ref(),
+								"groupType",
+							)
+							.unwrap(),
 					)
 					.unwrap()
 					.assert_number()
@@ -744,7 +779,8 @@ mod tests {
 			.assert_dict();
 		assert_eq!(
 			ship.get(
-				&get_attribute_id_by_attribute_name(GroupMembership::type_ref(), "symEncGKey")
+				&attribute_model
+					.get_attribute_id_by_attribute_name(GroupMembership::type_ref(), "symEncGKey")
 					.unwrap()
 			)
 			.unwrap()
@@ -757,7 +793,10 @@ mod tests {
 	fn serialization_for_encrypted_works() {
 		use crate::entities::entity_facade::EntityFacade;
 
-		let mut type_provider = TypeModelProvider::new();
+		let mut type_provider = TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		);
 		let _ok_if_overwritten = extend_model_resolver(&mut type_provider);
 		let type_provider = Arc::new(type_provider);
 
@@ -767,7 +806,7 @@ mod tests {
 			_finalIvs: Default::default(),
 		};
 
-		let instance_mapper = InstanceMapper::new();
+		let instance_mapper = InstanceMapper::new(type_provider.clone());
 		let parsed_unencrypted = instance_mapper
 			.serialize_entity(entity_to_serialize)
 			.unwrap();
@@ -776,10 +815,7 @@ mod tests {
 			RandomizerFacade::from_core(rand_core::OsRng),
 		);
 		let type_model = type_provider
-			.get_type_model(
-				HelloEncOutput::type_ref().app,
-				HelloEncOutput::type_ref().type_id,
-			)
+			.resolve_client_type_ref(&HelloEncOutput::type_ref())
 			.unwrap();
 		let session_key = GenericAesKey::from_bytes(&[rand::random(); 32]).unwrap();
 		let parsed_encrypted = entity_facade
@@ -798,7 +834,10 @@ mod tests {
 	/// 3. Serialize: ParsedEntity -> jsonSerializer@serialize => RawEntity
 	#[test]
 	fn deserialize_serialize_round_trip_works() {
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let json_serializer = JsonSerializer {
 			type_model_provider,
 		};

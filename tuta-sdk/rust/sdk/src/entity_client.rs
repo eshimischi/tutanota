@@ -7,6 +7,7 @@ use crate::entities::Entity;
 use crate::id::id_tuple::{BaseIdType, IdTupleType, IdType};
 use crate::instance_mapper::InstanceMapper;
 use crate::json_element::{JsonElement, RawEntity};
+use crate::json_serializer::InstanceMapperError::TypeNotFound;
 use crate::json_serializer::JsonSerializer;
 use crate::metamodel::{ElementType, TypeModel};
 use crate::rest_error::HttpError;
@@ -48,7 +49,13 @@ impl EntityClient {
 		type_ref: &TypeRef,
 		id: &Id,
 	) -> Result<ParsedEntity, ApiCallError> {
-		let type_name = self.get_type_model(type_ref)?.name;
+		let type_name = self
+			.type_model_provider
+			.resolve_server_type_ref(type_ref)
+			.ok_or_else(|| TypeNotFound {
+				type_ref: type_ref.clone(),
+			})?
+			.name;
 
 		let url = format!(
 			"{}/rest/{}/{}/{}",
@@ -65,12 +72,23 @@ impl EntityClient {
 	}
 
 	/// Returns the definition of an entity/instance type using the internal `TypeModelProvider`
-	pub fn get_type_model(&self, type_ref: &TypeRef) -> Result<&TypeModel, ApiCallError> {
+	pub fn resolve_client_type_ref(&self, type_ref: &TypeRef) -> Result<&TypeModel, ApiCallError> {
 		self.type_model_provider
-			.resolve_type_ref(type_ref)
+			.resolve_client_type_ref(type_ref)
 			.ok_or_else(|| {
 				ApiCallError::internal(format!(
-					"Model {} not found in app {}",
+					"Model {} not found in client app {}",
+					type_ref.type_id, type_ref.app
+				))
+			})
+	}
+
+	pub fn resolve_server_type_ref(&self, type_ref: &TypeRef) -> Result<&TypeModel, ApiCallError> {
+		self.type_model_provider
+			.resolve_client_type_ref(type_ref)
+			.ok_or_else(|| {
+				ApiCallError::internal(format!(
+					"Model {} not found in server app {}",
 					type_ref.type_id, type_ref.app
 				))
 			})
@@ -98,7 +116,12 @@ impl EntityClient {
 		count: usize,
 		direction: ListLoadDirection,
 	) -> Result<Vec<ParsedEntity>, ApiCallError> {
-		let type_model = self.get_type_model(type_ref)?;
+		let type_model = self
+			.type_model_provider
+			.resolve_server_type_ref(type_ref)
+			.ok_or_else(|| TypeNotFound {
+				type_ref: type_ref.clone(),
+			})?;
 		assert_eq!(
 			type_model.element_type,
 			ElementType::ListElement,
@@ -128,7 +151,7 @@ impl EntityClient {
 		type_ref: &TypeRef,
 		request_type: HttpMethod,
 	) -> Result<RestResponse, ApiCallError> {
-		let type_model = self.get_type_model(type_ref)?;
+		let type_model = self.resolve_client_type_ref(type_ref)?;
 
 		let mut request_url = format!(
 			"{}/rest/{}/{}/",
@@ -311,7 +334,7 @@ impl EntityClient {
 		type_ref: &TypeRef,
 		url: String,
 	) -> Result<Option<Vec<u8>>, ApiCallError> {
-		let type_model = self.get_type_model(type_ref)?;
+		let type_model = self.resolve_client_type_ref(type_ref)?;
 		let model_version: u32 = type_model.version.parse().expect("invalid model_version");
 		let options = RestClientOptions {
 			body: None,
@@ -349,7 +372,8 @@ mockall::mock! {
 			type_model_provider: Arc<TypeModelProvider>,
 		) -> Self;
 		pub fn get_type_model_provider() -> Arc<TypeModelProvider>;
-		pub fn get_type_model(&self, type_ref: &TypeRef) -> Result<&'static TypeModel, ApiCallError>;
+		pub fn resolve_client_type_ref(&self, type_ref: &TypeRef) -> Result<&'static TypeModel, ApiCallError>;
+		pub fn resolve_server_type_ref(&self, type_ref: &TypeRef) -> Result<&'static TypeModel, ApiCallError>;
 		pub async fn load<Id: IdType>(
 			&self,
 			type_ref: &TypeRef,
@@ -394,10 +418,10 @@ mod tests {
 	use super::*;
 	use crate::bindings::rest_client::{MockRestClient, RestResponse};
 	use crate::entities::Entity;
-	use crate::metamodel::{Cardinality, ModelValue, ValueType};
-	use crate::util::get_attribute_id_by_attribute_name;
+	use crate::util::test_utils::mock_type_model_provider;
+	use crate::util::AttributeModel;
 	use crate::CustomId;
-	use crate::{collection, str_map, IdTupleCustom, IdTupleGenerated};
+	use crate::{collection, IdTupleCustom, IdTupleGenerated};
 	use mockall::predicate::{always, eq};
 	use serde::{Deserialize, Serialize};
 
@@ -437,19 +461,18 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_load_range_generated_element_id() {
-		let mut type_provider = TypeModelProvider::new();
-		mock_type_model_provider(&mut type_provider);
-		let type_model_provider = Arc::new(type_provider);
+		let type_provider = Arc::new(mock_type_model_provider());
+		let attribute_model = AttributeModel::new(type_provider.as_ref());
 
 		let list_id = GeneratedId("list_id".to_owned());
 		let entity_map: ParsedEntity = collection! {
-			get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleGeneratedElementId(IdTupleGenerated::new(list_id.clone(), GeneratedId("element_id".to_owned()))),
-			get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
+			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleGeneratedElementId(IdTupleGenerated::new(list_id.clone(), GeneratedId("element_id".to_owned()))),
+			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		println!("{}", serde_json::to_string_pretty(&entity_map).unwrap());
 		let mut rest_client = MockRestClient::new();
 		let url = "http://test.com/rest/entityClientTestApp/TestListGeneratedElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
-		let json_folder = JsonSerializer::new(type_model_provider.clone())
+		let json_folder = JsonSerializer::new(type_provider.clone())
 			.serialize(
 				&TestListGeneratedElementIdEntity::type_ref(),
 				entity_map.clone(),
@@ -469,10 +492,10 @@ mod tests {
 		let auth_headers_provider = HeadersProvider::new(Some("123".to_owned()));
 		let entity_client = EntityClient::new(
 			Arc::new(rest_client),
-			Arc::new(JsonSerializer::new(type_model_provider.clone())),
+			Arc::new(JsonSerializer::new(type_provider.clone())),
 			"http://test.com".to_owned(),
 			Arc::new(auth_headers_provider),
-			type_model_provider.clone(),
+			type_provider.clone(),
 		);
 
 		let result_entity = entity_client
@@ -490,14 +513,14 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_load_range_custom_element_id() {
-		let mut type_provider = TypeModelProvider::new();
-		mock_type_model_provider(&mut type_provider);
+		let type_provider = mock_type_model_provider();
 		let type_model_provider = Arc::new(type_provider);
+		let attribute_model = AttributeModel::new(type_provider.as_ref());
 
 		let list_id = GeneratedId("list_id".to_owned());
 		let entity_map: ParsedEntity = collection! {
-			get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleCustomElementId(IdTupleCustom::new(list_id.clone(), CustomId("element_id".to_owned()))),
-			get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
+			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleCustomElementId(IdTupleCustom::new(list_id.clone(), CustomId("element_id".to_owned()))),
+			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
 		let url = "http://test.com/rest/entityClientTestApp/TestListCustomElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
@@ -542,8 +565,7 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_load_range_asc_generated_element_id() {
-		let mut type_provider = TypeModelProvider::new();
-		mock_type_model_provider(&mut type_provider);
+		let type_provider = mock_type_model_provider();
 		let type_model_provider = Arc::new(type_provider);
 
 		let list_id = GeneratedId("list_id".to_owned());
@@ -594,8 +616,7 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_load_range_asc_custom_element_id() {
-		let mut type_provider = TypeModelProvider::new();
-		mock_type_model_provider(&mut type_provider);
+		let type_provider = mock_type_model_provider();
 		let type_model_provider = Arc::new(type_provider);
 
 		let list_id = GeneratedId("list_id".to_owned());
@@ -642,95 +663,5 @@ mod tests {
 			.await
 			.expect("success");
 		assert_eq!(result_entity, vec![entity_map]);
-	}
-
-	// note:
-	// maybe we should have only one of this and test_services#extend_model_resolver
-	fn mock_type_model_provider(type_model_provider: &mut TypeModelProvider) {
-		let list_entity_generated_type_model: TypeModel = TypeModel {
-			id: 10,
-			since: 1,
-			app: "entityClientTestApp",
-			version: "1",
-			name: "TestListGeneratedElementIdEntity",
-			element_type: ElementType::ListElement,
-			versioned: false,
-			encrypted: true,
-			root_id: "",
-			values: str_map! {
-				101 => ModelValue {
-						id: 101,
-						name: "_id".to_string(),
-						value_type: ValueType::GeneratedId,
-						cardinality: Cardinality::One,
-						is_final: true,
-						encrypted: false,
-					},
-				102 =>
-					ModelValue {
-						id: 102,
-						name: "field".to_string(),
-						value_type: ValueType::String,
-						cardinality: Cardinality::One,
-						is_final: false,
-						encrypted: true,
-					},
-			},
-			associations: HashMap::default(),
-		};
-
-		let list_entity_custom_type_model: TypeModel = TypeModel {
-			id: 20,
-			since: 1,
-			app: "entityClientTestApp",
-			version: "1",
-			name: "TestListCustomElementIdEntity",
-			element_type: ElementType::ListElement,
-			versioned: false,
-			encrypted: true,
-			root_id: "",
-			values: str_map! {
-				201 => ModelValue {
-						id: 201,
-						name: "_id".to_string(),
-						value_type: ValueType::CustomId,
-						cardinality: Cardinality::One,
-						is_final: true,
-						encrypted: false,
-					},
-				202 =>
-					ModelValue {
-						id: 202,
-						name: "field".to_string(),
-						value_type: ValueType::String,
-						cardinality: Cardinality::One,
-						is_final: false,
-						encrypted: true,
-					},
-			},
-			associations: HashMap::default(),
-		};
-
-		let test_types = [
-			(
-				list_entity_generated_type_model.id,
-				list_entity_generated_type_model,
-			),
-			(
-				list_entity_custom_type_model.id,
-				list_entity_custom_type_model,
-			),
-		]
-		.into_iter()
-		.collect();
-
-		unsafe {
-			let app_models_mut = std::ptr::from_ref(type_model_provider.app_models)
-				.cast_mut()
-				.as_mut()
-				.expect("Should be Not null");
-
-			app_models_mut.insert("entityClientTestApp", test_types);
-		}
 	}
 }

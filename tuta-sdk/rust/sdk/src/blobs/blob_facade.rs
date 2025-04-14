@@ -41,6 +41,7 @@ pub struct BlobFacade {
 	auth_headers_provider: Arc<HeadersProvider>,
 	instance_mapper: Arc<InstanceMapper>,
 	json_serializer: Arc<JsonSerializer>,
+	type_model_provider: Arc<TypeModelProvider>,
 }
 
 #[derive(PartialEq, Debug, Clone)]
@@ -57,6 +58,7 @@ impl BlobFacade {
 		auth_headers_provider: Arc<HeadersProvider>,
 		instance_mapper: Arc<InstanceMapper>,
 		json_serializer: Arc<JsonSerializer>,
+		type_model_provider: Arc<TypeModelProvider>,
 	) -> Self {
 		Self {
 			blob_access_token_facade,
@@ -65,6 +67,7 @@ impl BlobFacade {
 			auth_headers_provider,
 			instance_mapper,
 			json_serializer,
+			type_model_provider,
 		}
 	}
 
@@ -284,9 +287,9 @@ impl BlobFacade {
 		&self,
 		blob_access_token: String,
 	) -> Vec<(String, String)> {
-		let type_model_provider = TypeModelProvider::new();
-		let model_version = type_model_provider
-			.resolve_type_ref(&BlobGetIn::type_ref())
+		let model_version = self
+			.type_model_provider
+			.resolve_client_type_ref(&BlobGetIn::type_ref())
 			.expect("no type model for BlobGetIn?")
 			.version;
 		let model_version = model_version
@@ -461,9 +464,9 @@ impl BlobFacade {
 	) -> Vec<(String, String)> {
 		let short_hash: Vec<u8> = sha256(encrypted_blob).into_iter().take(6).collect();
 		let blob_hash_b64 = base64::prelude::BASE64_STANDARD.encode(short_hash.as_slice());
-		let type_model_provider = TypeModelProvider::new();
-		let model_version = type_model_provider
-			.resolve_type_ref(&BlobGetIn::type_ref())
+		let model_version = self
+			.type_model_provider
+			.resolve_client_type_ref(&BlobGetIn::type_ref())
 			.expect("no type model for BlobGetIn?")
 			.version;
 		let model_version = model_version
@@ -496,6 +499,7 @@ fn chunk_data<'slice>(
 #[cfg(test)]
 mod tests {
 	use super::*;
+	use crate::bindings::file_client::MockFileClient;
 	use crate::bindings::rest_client::RestClientOptions;
 	use crate::bindings::rest_client::RestResponse;
 	use crate::bindings::rest_client::{encode_query_params, MockRestClient};
@@ -550,7 +554,7 @@ mod tests {
 			blobReferenceTokens: expected_reference_tokens.clone(),
 			..create_test_entity()
 		};
-		let parsed = InstanceMapper::new()
+		let parsed = InstanceMapper::new(type_model_provider.clone())
 			.serialize_entity(blob_service_response)
 			.unwrap();
 		let raw = JsonSerializer::new(type_model_provider.clone())
@@ -634,7 +638,10 @@ mod tests {
 			fourth_attachment_token.clone(),
 		];
 
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let response_binary =
 			make_blob_service_response(expected_reference_tokens, &type_model_provider);
 
@@ -665,8 +672,9 @@ mod tests {
 			rest_client: Arc::new(rest_client),
 			randomizer_facade: randomizer_facade.clone(),
 			auth_headers_provider: Arc::new(HeadersProvider { access_token: None }),
-			instance_mapper: Arc::new(InstanceMapper::new()),
-			json_serializer: Arc::new(JsonSerializer::new(type_model_provider)),
+			instance_mapper: Arc::new(InstanceMapper::new(type_model_provider.clone())),
+			json_serializer: Arc::new(JsonSerializer::new(Arc::clone(&type_model_provider))),
+			type_model_provider,
 		};
 
 		let reference_tokens = blob_facade
@@ -766,8 +774,10 @@ mod tests {
 			third_attachment_token.clone(),
 			fourth_attachment_token.clone(),
 		];
-
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let binary1: Vec<u8> =
 			make_blob_service_response(expected_reference_tokens1, &type_model_provider);
 		let binary2: Vec<u8> =
@@ -818,8 +828,9 @@ mod tests {
 			rest_client: Arc::new(rest_client),
 			randomizer_facade: randomizer_facade.clone(),
 			auth_headers_provider: Arc::new(HeadersProvider { access_token: None }),
-			instance_mapper: Arc::new(InstanceMapper::new()),
-			json_serializer: Arc::new(JsonSerializer::new(type_model_provider)),
+			instance_mapper: Arc::new(InstanceMapper::new(type_model_provider.clone())),
+			json_serializer: Arc::new(JsonSerializer::new(Arc::clone(&type_model_provider))),
+			type_model_provider,
 		};
 
 		let reference_tokens = blob_facade
@@ -910,7 +921,10 @@ mod tests {
 		let expected_reference_tokens3 = vec![second_attachment_token.clone()];
 		let expected_reference_tokens4 = vec![third_attachment_token.clone()];
 
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let binary1: Vec<u8> =
 			make_blob_service_response(expected_reference_tokens1, &type_model_provider);
 		let binary2: Vec<u8> =
@@ -1010,8 +1024,9 @@ mod tests {
 			rest_client: Arc::new(rest_client),
 			randomizer_facade: randomizer_facade.clone(),
 			auth_headers_provider: Arc::new(HeadersProvider { access_token: None }),
-			instance_mapper: Arc::new(InstanceMapper::new()),
-			json_serializer: Arc::new(JsonSerializer::new(type_model_provider)),
+			instance_mapper: Arc::new(InstanceMapper::new(type_model_provider.clone())),
+			json_serializer: Arc::new(JsonSerializer::new(Arc::clone(&type_model_provider))),
+			type_model_provider,
 		};
 
 		let reference_tokens = blob_facade
@@ -1053,12 +1068,15 @@ mod tests {
 			_id: Some(CustomId("hello_aggregate".to_owned())),
 		}];
 
-		let type_model_provider = Arc::new(TypeModelProvider::new());
+		let type_model_provider = Arc::new(TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		));
 		let blob_service_response = BlobPostOut {
 			blobReferenceToken: Some(expected_reference_tokens[0].blobReferenceToken.clone()),
 			..create_test_entity()
 		};
-		let parsed = InstanceMapper::new()
+		let parsed = InstanceMapper::new(type_model_provider.clone())
 			.serialize_entity(blob_service_response)
 			.unwrap();
 		let raw = JsonSerializer::new(type_model_provider.clone())
@@ -1094,8 +1112,9 @@ mod tests {
 			rest_client: Arc::new(rest_client),
 			randomizer_facade: randomizer_facade.clone(),
 			auth_headers_provider: Arc::new(HeadersProvider { access_token: None }),
-			instance_mapper: Arc::new(InstanceMapper::new()),
-			json_serializer: Arc::new(JsonSerializer::new(type_model_provider)),
+			instance_mapper: Arc::new(InstanceMapper::new(type_model_provider.clone())),
+			json_serializer: Arc::new(JsonSerializer::new(Arc::clone(&type_model_provider))),
+			type_model_provider,
 		};
 
 		let reference_tokens = blob_facade

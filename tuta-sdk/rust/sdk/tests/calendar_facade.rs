@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use time::macros::datetime;
 use time::Date;
+use tutasdk::bindings::test_file_client::TestFileClient;
 use tutasdk::date::calendar_facade::{
 	CalendarFacade, DEFAULT_CALENDAR_COLOR, DEFAULT_CALENDAR_NAME, DEFAULT_LONG_EVENT_NAME,
 	DEFAULT_SORT_EVENT_NAME,
@@ -13,7 +14,13 @@ async fn create_calendar_facade() -> CalendarFacade {
 	const HOST: &str = "http://localhost:9000";
 
 	let rest_client = NativeRestClient::try_new().unwrap();
-	let sdk = Sdk::new(HOST.to_owned(), Arc::new(rest_client));
+	let file_client = TestFileClient::default();
+
+	let sdk = Sdk::new(
+		HOST.to_owned(),
+		Arc::new(rest_client),
+		Arc::new(file_client),
+	);
 	let session = sdk
 		.create_session("arm-free@tutanota.de", "arm")
 		.await
