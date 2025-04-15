@@ -7,12 +7,12 @@
 
 import WidgetKit
 import AppIntents
+import TutanotaSharedFramework
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
+    static var title: LocalizedStringResource { "Select an account and calendars" }
     static var description: IntentDescription { "This is an example widget." }
 
-    // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
-    var favoriteEmoji: String
+	@Parameter(title: "User", description: "User to load calendars from")
+	var account: Credential?
 }

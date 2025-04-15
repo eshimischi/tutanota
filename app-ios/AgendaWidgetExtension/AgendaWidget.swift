@@ -45,7 +45,6 @@ struct AgendaWidgetEntryView : View {
             Text(entry.date, style: .time)
 
             Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
 		}.containerBackground(for: .widget) { Color.clear }
     }
 }
@@ -60,20 +59,6 @@ struct AgendaWidget: Widget {
 		.configurationDisplayName("Agenda")
 		.description("See the upcoming events for the current day")
 		.supportedFamilies([.systemLarge])
-    }
-}
-
-extension ConfigurationAppIntent {
-    fileprivate static var smiley: ConfigurationAppIntent {
-        let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "😀"
-        return intent
-    }
-    
-    fileprivate static var starEyes: ConfigurationAppIntent {
-        let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "🤩"
-        return intent
     }
 }
 
