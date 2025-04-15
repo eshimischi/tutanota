@@ -280,6 +280,7 @@ export class MailRow implements VirtualRow<Mail> {
 						]),
 						m(".flex.mt-xxs", [
 							m(".smaller.text-ellipsis", {
+								"data-testid": "list-row:mail:subject",
 								oncreate: (vnode) => (this.subjectDom = vnode.dom as HTMLElement),
 							}),
 							m(".flex-grow"),
