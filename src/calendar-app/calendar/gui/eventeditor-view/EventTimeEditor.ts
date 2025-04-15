@@ -55,7 +55,7 @@ export class EventTimeEditor implements Component<EventTimeEditorAttrs> {
 					),
 				]),
 				m(".flex.col.full-width.flex-grow.gap-vpad-s", { style: { paddingLeft: px(size.icon_size_large + size.vpad_small) } }, [
-					m(Divider, { color: theme.on_surface_variant }),
+					m(Divider, { color: theme.outline_variant }),
 					m(".time-selection-grid.pr-vpad-s", [
 						m("", lang.get("dateFrom_label")),
 						m(

@@ -188,7 +188,7 @@ export class RepeatRuleEditor implements Component<RepeatRuleEditorAttrs> {
 			this.renderIntervalPicker(attrs),
 			this.repeatRuleType === RepeatPeriod.WEEKLY
 				? [
-						m(Divider, { color: theme.on_surface_variant }),
+						m(Divider, { color: theme.outline_variant }),
 						m(WeekdaySelector, {
 							items: this.weekdayItems,
 							selectedDays: this.byDayRules?.weekdays ?? [],
@@ -197,7 +197,7 @@ export class RepeatRuleEditor implements Component<RepeatRuleEditorAttrs> {
 				  ]
 				: this.repeatRuleType === RepeatPeriod.MONTHLY
 				? [
-						m(Divider, { color: theme.on_surface_variant }),
+						m(Divider, { color: theme.outline_variant }),
 						m(WeekRepetitionSelector, {
 							repetitionOptionsAndWeekday: createRepetitionValuesForWeekday(
 								DateTime.fromJSDate(attrs.model.startDate).weekday,

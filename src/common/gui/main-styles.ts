@@ -1317,7 +1317,7 @@ styles.registerStyle("main", () => {
 			"margin-bottom": px(size.vpad),
 		},
 		".wizard-breadcrumb": {
-			border: `1px solid ${theme.on_surface_variant}`,
+			border: `1px solid ${theme.outline}`,
 			color: "inherit",
 			"transition-property": "border-width, border-color, color, background-color",
 			"transition-duration": `${DefaultAnimationTime - 70}ms`,

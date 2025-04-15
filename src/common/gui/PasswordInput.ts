@@ -27,7 +27,7 @@ export class PasswordInput implements ClassComponent<PasswordInputAttributes> {
 						style: {
 							width: px(size.icon_size_medium),
 							height: px(size.icon_size_medium),
-							border: `1px solid ${theme.on_surface_variant}`,
+							border: `1px solid ${theme.outline}`,
 							borderRadius: "50%",
 							background: `conic-gradient(from .25turn, ${theme.on_surface} ${scaleToVisualPasswordStrength(
 								vnode.attrs.strength,

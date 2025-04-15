@@ -110,10 +110,10 @@ export const themes = (): Themes => {
 		surface: light_white,
 		surface_container: grey_lighter_4,
 		on_surface_fade: grey_lighter_0,
-		// optimised until here //
 		on_surface: grey_darker_1,
 		on_surface_variant: grey_darker_0,
 
+		// optimised until here //
 		outline: grey_lighter_1,
 		outline_variant: grey_lighter_3,
 		shadow: grey_darker_1, // Only used for modal now, there are other box shadow definition in main-style.ts

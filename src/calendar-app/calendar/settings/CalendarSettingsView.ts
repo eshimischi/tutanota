@@ -212,7 +212,7 @@ export class CalendarSettingsView extends BaseTopLevelView implements TopLevelVi
 					class: "flash flex justify-center center-vertically pt-s pb-s plr border-radius",
 					style: {
 						marginInline: "auto",
-						border: `1px solid ${theme.on_surface_variant}`,
+						border: `1px solid ${theme.outline}`,
 						color: theme.on_surface_variant,
 					},
 					label: "supportMenu_label",

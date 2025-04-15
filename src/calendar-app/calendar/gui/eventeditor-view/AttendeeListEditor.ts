@@ -341,7 +341,7 @@ export class AttendeeListEditor implements Component<AttendeeListEditorAttrs> {
 									},
 								},
 								m(Divider, {
-									color: theme.on_surface_variant,
+									color: theme.outline_variant,
 								}),
 							),
 							this.renderPasswordField(address, password, strength ?? 0, whoModel),
