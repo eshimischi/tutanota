@@ -3,7 +3,6 @@ use crate::entities::Entity;
 use crate::entity_client::EntityClient;
 use crate::id::id_tuple::{BaseIdType, IdType};
 use crate::instance_mapper::InstanceMapper;
-use crate::json_serializer::InstanceMapperError::TypeNotFound;
 use crate::metamodel::{ElementType, TypeModel};
 use crate::GeneratedId;
 use crate::{ApiCallError, ListLoadDirection};
@@ -66,13 +65,7 @@ impl TypedEntityClient {
 		count: usize,
 		direction: ListLoadDirection,
 	) -> Result<Vec<T>, ApiCallError> {
-		let type_model = self
-			.entity_client
-			.type_model_provider
-			.resolve_server_type_ref(&T::type_ref())
-			.ok_or_else(|| TypeNotFound {
-				type_ref: T::type_ref(),
-			})?;
+		let type_model = self.entity_client.resolve_server_type_ref(&T::type_ref())?;
 		Self::check_if_encrypted(type_model)?;
 		// TODO: enforce statically?
 		if type_model.element_type != ElementType::ListElement {

@@ -872,9 +872,8 @@ mod tests {
 			Arc::clone(&type_model_provider),
 			RandomizerFacade::from_core(rand_core::OsRng),
 		);
-		let type_ref = Mail::type_ref();
 		let type_model = type_model_provider
-			.get_type_model(type_ref.app, type_ref.type_id)
+			.resolve_server_type_ref(&Mail::type_ref())
 			.unwrap();
 		let decrypted_mail = entity_facade
 			.decrypt_and_map(
@@ -1257,14 +1256,13 @@ mod tests {
 
 		let iv = Iv::generate(&random);
 		let type_model_provider = Arc::new(TypeModelProvider::new(
-			Arc::new(MockFileClient::new()),
 			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
 		));
 		let attribute_model = AttributeModel::new(&type_model_provider);
 
-		let type_ref = Mail::type_ref();
 		let type_model = type_model_provider
-			.get_type_model(type_ref.app, type_ref.type_id)
+			.resolve_server_type_ref(&Mail::type_ref())
 			.unwrap();
 
 		let entity_facade = EntityFacadeImpl::new(
@@ -1306,7 +1304,11 @@ mod tests {
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					get_attribute_id_by_attribute_name(tutanota::MailAddress::type_ref(), ID_FIELD)
+					attribute_model
+						.get_attribute_id_by_attribute_name(
+							tutanota::MailAddress::type_ref(),
+							ID_FIELD,
+						)
 						.unwrap(),
 					expected_aggregate_id.clone(),
 				);
@@ -1331,7 +1333,11 @@ mod tests {
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					get_attribute_id_by_attribute_name(tutanota::MailAddress::type_ref(), ID_FIELD)
+					attribute_model
+						.get_attribute_id_by_attribute_name(
+							tutanota::MailAddress::type_ref(),
+							ID_FIELD,
+						)
 						.unwrap(),
 					expected_aggregate_id.clone(),
 				);
@@ -1350,7 +1356,11 @@ mod tests {
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					get_attribute_id_by_attribute_name(tutanota::MailAddress::type_ref(), ID_FIELD)
+					attribute_model
+						.get_attribute_id_by_attribute_name(
+							tutanota::MailAddress::type_ref(),
+							ID_FIELD,
+						)
 						.unwrap(),
 					ElementValue::Null,
 				);
@@ -1364,7 +1374,11 @@ mod tests {
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					get_attribute_id_by_attribute_name(tutanota::MailAddress::type_ref(), ID_FIELD)
+					attribute_model
+						.get_attribute_id_by_attribute_name(
+							tutanota::MailAddress::type_ref(),
+							ID_FIELD,
+						)
 						.unwrap(),
 					ElementValue::Null,
 				);
@@ -1390,11 +1404,12 @@ mod tests {
 					.assert_array_mut_ref()[0]
 					.assert_dict_mut_ref()
 					.insert(
-						get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
-							ID_FIELD,
-						)
-						.unwrap(),
+						attribute_model
+							.get_attribute_id_by_attribute_name(
+								tutanota::MailAddress::type_ref(),
+								ID_FIELD,
+							)
+							.unwrap(),
 						expected_aggregate_id.clone(),
 					);
 				original_mail
@@ -1407,11 +1422,12 @@ mod tests {
 					.assert_array_mut_ref()[0]
 					.assert_dict_mut_ref()
 					.insert(
-						get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
-							ID_FIELD,
-						)
-						.unwrap(),
+						attribute_model
+							.get_attribute_id_by_attribute_name(
+								tutanota::MailAddress::type_ref(),
+								ID_FIELD,
+							)
+							.unwrap(),
 						expected_aggregate_id.clone(),
 					);
 			}
@@ -1445,7 +1461,11 @@ mod tests {
 				),
 			);
 			decrypted_mail.insert(
-				get_attribute_id_by_attribute_name(Mail::type_ref(), OWNER_ENC_SESSION_KEY_FIELD)
+				attribute_model
+					.get_attribute_id_by_attribute_name(
+						Mail::type_ref(),
+						OWNER_ENC_SESSION_KEY_FIELD,
+					)
 					.unwrap(),
 				ElementValue::Null,
 			);
@@ -1463,7 +1483,8 @@ mod tests {
 				),
 			);
 			decrypted_mail.insert(
-				get_attribute_id_by_attribute_name(Mail::type_ref(), OWNER_KEY_VERSION_FIELD)
+				attribute_model
+					.get_attribute_id_by_attribute_name(Mail::type_ref(), OWNER_KEY_VERSION_FIELD)
 					.unwrap(),
 				ElementValue::Null,
 			);
@@ -1495,7 +1516,7 @@ mod tests {
 		);
 		let type_ref = CustomerAccountTerminationRequest::type_ref();
 		let type_model = type_model_provider
-			.get_type_model(type_ref.app, type_ref.type_id)
+			.resolve_server_type_ref(&type_ref)
 			.unwrap();
 		let sk = GenericAesKey::from_bytes(rand::random::<[u8; 32]>().as_slice()).unwrap();
 
@@ -1531,9 +1552,8 @@ mod tests {
 			Arc::clone(&type_model_provider),
 			RandomizerFacade::from_core(rng.clone()),
 		);
-		let type_ref = Mail::type_ref();
 		let type_model = type_model_provider
-			.get_type_model(type_ref.app, type_ref.type_id)
+			.resolve_server_type_ref(&Mail::type_ref())
 			.unwrap();
 		let sk = GenericAesKey::from_bytes(rand::random::<[u8; 32]>().as_slice()).unwrap();
 		let new_iv = Iv::from_bytes(&rand::random::<[u8; 16]>()).unwrap();
@@ -1554,7 +1574,8 @@ mod tests {
 
 		// set separate finalIv for some field
 		let final_iv_for_subject = [(
-			get_attribute_id_by_attribute_name(Mail::type_ref(), "subject")
+			attribute_model
+				.get_attribute_id_by_attribute_name(Mail::type_ref(), "subject")
 				.unwrap()
 				.to_string(),
 			ElementValue::Bytes(new_iv.get_inner().to_vec()),

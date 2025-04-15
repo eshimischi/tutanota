@@ -30,4 +30,4 @@ pub struct FinalIv(#[serde(with = "serde_bytes")] Vec<u8>);
 
 uniffi::custom_newtype!(FinalIv, Vec<u8>);
 
-type Errors = HashMap<String, ElementValue>;
+pub type Errors = HashMap<String, ElementValue>;

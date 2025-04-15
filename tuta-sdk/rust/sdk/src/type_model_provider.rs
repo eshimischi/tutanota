@@ -47,7 +47,7 @@ static CLIENT_TYPE_MODEL: std::sync::LazyLock<HashMap<AppName, HashMap<TypeId, T
 
 /// Contains a map between backend apps and entity/instance types within them
 pub struct TypeModelProvider {
-	pub client_app_models: &'static HashMap<AppName, HashMap<TypeId, TypeModel>>,
+	pub client_app_models: Cow<'static, HashMap<AppName, HashMap<TypeId, TypeModel>>>,
 	pub server_app_models: Cow<'static, HashMap<AppName, HashMap<TypeId, TypeModel>>>,
 	file_client: Arc<dyn FileClient>,
 	rest_client: Arc<dyn RestClient>,
@@ -59,7 +59,7 @@ impl TypeModelProvider {
 		file_client: Arc<dyn FileClient>,
 	) -> TypeModelProvider {
 		TypeModelProvider {
-			client_app_models: &CLIENT_TYPE_MODEL,
+			client_app_models: Cow::Borrowed(&CLIENT_TYPE_MODEL),
 			server_app_models: Cow::Borrowed(&CLIENT_TYPE_MODEL),
 			rest_client,
 			file_client,
@@ -67,13 +67,15 @@ impl TypeModelProvider {
 	}
 
 	pub fn resolve_client_type_ref(&self, type_ref: &TypeRef) -> Option<&TypeModel> {
-		let app_map = self.client_app_models.get(type_ref.app)?;
-		app_map.get(&type_ref.type_id)
+		self.client_app_models
+			.get(type_ref.app)?
+			.get(&type_ref.type_id)
 	}
 
 	pub fn resolve_server_type_ref(&self, type_ref: &TypeRef) -> Option<&TypeModel> {
-		let app_map = self.client_app_models.get(type_ref.app)?;
-		app_map.get(&type_ref.type_id)
+		self.client_app_models
+			.get(type_ref.app)?
+			.get(&type_ref.type_id)
 	}
 }
 
@@ -83,6 +85,7 @@ mod tests {
 	use crate::bindings::test_file_client::TestFileClient;
 	use crate::bindings::test_rest_client::TestRestClient;
 	use crate::type_model_provider::TypeModelProvider;
+	use std::borrow::Borrow;
 
 	#[test]
 	fn read_type_model_only_once() {
@@ -97,8 +100,8 @@ mod tests {
 		);
 
 		assert!(std::ptr::eq(
-			first_type_model.client_app_models,
-			second_type_model.client_app_models
+			first_type_model.client_app_models.as_ref(),
+			second_type_model.client_app_models.as_ref()
 		));
 	}
 }

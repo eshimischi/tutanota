@@ -619,7 +619,7 @@ mod tests {
 	use crate::entities::generated::tutanota::Mail;
 	use crate::entities::Entity;
 	use crate::instance_mapper::InstanceMapper;
-	use crate::services::test_services::{extend_model_resolver, HelloEncOutput};
+	use crate::util::test_utils::*;
 	use crate::util::AttributeModel;
 
 	#[test]
@@ -663,10 +663,10 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json_serializer = JsonSerializer {
-			type_model_provider,
+			type_model_provider: type_model_provider.clone(),
 		};
+		let attribute_model = AttributeModel::new(&type_model_provider);
 		let email_json = include_str!("../test_data/email_response_attachments.json");
 		let raw_entity = serde_json::from_str::<RawEntity>(email_json).unwrap();
 		let type_ref = Mail::type_ref();
@@ -694,10 +694,10 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json_serializer = JsonSerializer {
-			type_model_provider,
+			type_model_provider: type_model_provider.clone(),
 		};
+		let attribute_model = AttributeModel::new(&type_model_provider);
 		let user_json = include_str!("../test_data/user_response.json");
 		let raw_entity = serde_json::from_str::<RawEntity>(user_json).unwrap();
 		let type_ref = User::type_ref();
@@ -744,10 +744,10 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json_serializer = JsonSerializer {
-			type_model_provider,
+			type_model_provider: type_model_provider.clone(),
 		};
+		let attribute_model = AttributeModel::new(&type_model_provider);
 		let user_json = include_str!("../test_data/user_response_empty_group_key.json");
 		let raw_entity = serde_json::from_str::<RawEntity>(user_json).unwrap();
 		let type_ref = User::type_ref();
@@ -793,12 +793,7 @@ mod tests {
 	fn serialization_for_encrypted_works() {
 		use crate::entities::entity_facade::EntityFacade;
 
-		let mut type_provider = TypeModelProvider::new(
-			Arc::new(MockRestClient::new()),
-			Arc::new(MockFileClient::new()),
-		);
-		let _ok_if_overwritten = extend_model_resolver(&mut type_provider);
-		let type_provider = Arc::new(type_provider);
+		let type_provider = Arc::new(mock_type_model_provider());
 
 		let entity_to_serialize = HelloEncOutput {
 			answer: "".to_string(),

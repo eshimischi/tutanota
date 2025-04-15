@@ -451,7 +451,7 @@ mod tests {
 		));
 
 		let mail_type_model: &'static TypeModel = type_model_provider
-			.resolve_type_ref(&Mail::type_ref())
+			.resolve_server_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 		let raw_mail_id = encrypted_mail
 			.get(
@@ -467,7 +467,7 @@ mod tests {
 		// Set up the mock of the plain unencrypted entity client
 		let mut mock_entity_client = MockEntityClient::default();
 		mock_entity_client
-			.expect_get_type_model()
+			.expect_resolve_server_type_ref()
 			.returning(|_| Ok(mail_type_model));
 		mock_entity_client
 			.expect_load()
@@ -502,7 +502,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new(&type_model_provider)),
+			Arc::new(InstanceMapper::new(type_model_provider.clone())),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);
@@ -560,13 +560,13 @@ mod tests {
 
 		// We cause a deliberate memory leak to convert the mail type's lifetime to static because
 		// the callback to `returning` requires returned references to have a static lifetime
-		let my_favorite_leak: &'static TypeModelProvider = leak(TypeModelProvider::new(
+		let type_model_provider: &'static TypeModelProvider = leak(TypeModelProvider::new(
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
 
-		let mail_type_model: &'static TypeModel = my_favorite_leak
-			.resolve_type_ref(&Mail::type_ref())
+		let mail_type_model: &'static TypeModel = type_model_provider
+			.resolve_client_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 		let raw_mail_id = encrypted_mail
 			.get(
@@ -582,7 +582,7 @@ mod tests {
 		// Set up the mock of the plain unencrypted entity client
 		let mut mock_entity_client = MockEntityClient::default();
 		mock_entity_client
-			.expect_get_type_model()
+			.expect_resolve_server_type_ref()
 			.returning(|_| Ok(mail_type_model));
 		mock_entity_client
 			.expect_load()
@@ -719,7 +719,7 @@ mod tests {
 		// Set up the mock of the plain unencrypted entity client
 		let mut mock_entity_client = MockEntityClient::default();
 		mock_entity_client
-			.expect_get_type_model()
+			.expect_resolve_server_type_ref()
 			.returning(|_| Ok(mail_type_model));
 		mock_entity_client
 			.expect_load()
@@ -838,7 +838,7 @@ mod tests {
 		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
-			.resolve_type_ref(&Mail::type_ref())
+			.resolve_server_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 		let raw_mail_id = encrypted_mail
 			.get(
@@ -854,7 +854,7 @@ mod tests {
 		// Set up the mock of the plain unencrypted entity client
 		let mut mock_entity_client = MockEntityClient::default();
 		mock_entity_client
-			.expect_get_type_model()
+			.expect_resolve_server_type_ref()
 			.returning(|_| Ok(mail_type_model));
 		mock_entity_client
 			.expect_load()
@@ -968,7 +968,7 @@ mod tests {
 		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
-			.resolve_type_ref(&Mail::type_ref())
+			.resolve_server_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 		let raw_mail_id = encrypted_mail
 			.get(
@@ -984,7 +984,7 @@ mod tests {
 		// Set up the mock of the plain unencrypted entity client
 		let mut mock_entity_client = MockEntityClient::default();
 		mock_entity_client
-			.expect_get_type_model()
+			.expect_resolve_server_type_ref()
 			.returning(|_| Ok(mail_type_model));
 		mock_entity_client
 			.expect_load()
@@ -1101,7 +1101,7 @@ mod tests {
 		));
 
 		let mail_type_model: &'static TypeModel = my_favorite_leak
-			.resolve_type_ref(&Mail::type_ref())
+			.resolve_server_type_ref(&Mail::type_ref())
 			.expect("Error in type_model_provider");
 		let raw_mail_id = encrypted_mail
 			.get(
@@ -1117,7 +1117,7 @@ mod tests {
 		// Set up the mock of the plain unencrypted entity client
 		let mut mock_entity_client = MockEntityClient::default();
 		mock_entity_client
-			.expect_get_type_model()
+			.expect_resolve_server_type_ref()
 			.returning(|_| Ok(mail_type_model));
 		mock_entity_client
 			.expect_load()
@@ -1169,7 +1169,7 @@ mod tests {
 			Arc::new(mock_entity_client),
 			Arc::new(entity_facade),
 			Arc::new(mock_crypto_facade),
-			Arc::new(InstanceMapper::new(&type_model_provider)),
+			Arc::new(InstanceMapper::new(type_model_provider.clone())),
 			Arc::new(asymmetric_crypto_facade),
 			Arc::new(key_loader_facade),
 		);

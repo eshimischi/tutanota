@@ -1,4 +1,3 @@
-use crate::bindings::rest_client::{HttpMethod, RestClientError, RestClientOptions, RestResponse};
 use thiserror::Error;
 
 #[derive(Error, Debug, uniffi::Error, Eq, PartialEq, Clone)]

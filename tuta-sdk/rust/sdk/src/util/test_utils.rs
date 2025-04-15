@@ -2,7 +2,7 @@
 
 use mockall::Any;
 use rand::random;
-use std::collections::HashMap;
+use std::borrow::Cow;
 use std::sync::Arc;
 use std::vec;
 
@@ -15,17 +15,14 @@ use crate::entities::entity_facade::ID_FIELD;
 use crate::entities::generated::sys::{
 	ArchiveRef, ArchiveType, Group, GroupKeysRef, KeyPair, PubEncKeyData, TypeInfo,
 };
-use crate::entities::Entity;
 use crate::instance_mapper::InstanceMapper;
 use crate::metamodel::ElementType::Aggregated;
-use crate::metamodel::{
-	AssociationType, Cardinality, ElementType, ModelValue, TypeModel, ValueType,
-};
+use crate::metamodel::{AssociationType, Cardinality, ElementType, ModelValue, ValueType};
 use crate::tutanota_constants::CryptoProtocolVersion;
 use crate::tutanota_constants::PublicKeyIdentifierType;
-use crate::type_model_provider::TypeModelProvider;
+use crate::type_model_provider::TypeId;
+use crate::CustomId;
 use crate::GeneratedId;
-use crate::{CustomId, TypeRef};
 use crate::{IdTupleCustom, IdTupleGenerated};
 
 /// Generates a URL-safe random string of length `Size`.
@@ -422,8 +419,195 @@ macro_rules! collection {
         }};
     }
 
-// note:
-// maybe we should have only one of this and test_services#extend_model_resolver
+use crate::date::DateTime;
+use crate::entities::{Entity, FinalIv};
+use crate::metamodel::TypeModel;
+use crate::type_model_provider::TypeModelProvider;
+use crate::TypeRef;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+
+pub const APP_NAME: &str = "test";
+pub const APP_VERSION_NUMBER: u32 = 75;
+pub const APP_VERSION_STR: &str = "75";
+
+pub const HELLO_OUTPUT_ENCRYPTED: &str = r#"{
+		"name": "HelloEncOutput",
+		"since": 7,
+		"type": "DATA_TRANSFER_TYPE",
+		"id": 458,
+		"rootId": "CHR1dGFub3RhAAHK",
+		"versioned": false,
+		"encrypted": true,
+		"values": {
+			"459": {
+				"final": false,
+				"name": "answer",
+				"id": 459,
+				"since": 7,
+				"type": "String",
+				"cardinality": "One",
+				"encrypted": true
+			},
+			"460": {
+				"final": false,
+				"name": "timestamp",
+				"id": 460,
+				"since": 7,
+				"type": "Date",
+				"cardinality": "One",
+				"encrypted": true
+			}
+		},
+		"associations": {},
+		"app": "test",
+		"version": "75"
+	}"#;
+impl Entity for HelloEncOutput {
+	fn type_ref() -> TypeRef {
+		TypeRef {
+			app: "test",
+			type_id: 458,
+		}
+	}
+}
+pub const HELLO_INPUT_ENCRYPTED: &str = r#"{
+		"name": "HelloEncInput",
+		"since": 7,
+		"type": "DATA_TRANSFER_TYPE",
+		"id": 358,
+		"rootId": "RDR1dGFub3RhAAHK",
+		"versioned": false,
+		"encrypted": true,
+		"values": {
+			"359": {
+				"final": false,
+				"name": "message",
+				"id": 359,
+				"since": 7,
+				"type": "String",
+				"cardinality": "One",
+				"encrypted": true
+			}
+		},
+		"associations": {},
+		"app": "test",
+		"version": "75"
+	}"#;
+impl Entity for HelloEncInput {
+	fn type_ref() -> TypeRef {
+		TypeRef {
+			app: "test",
+			type_id: 358,
+		}
+	}
+}
+
+pub const HELLO_OUTPUT_UNENCRYPTED: &str = r#"{
+		"name": "HelloUnEncOutput",
+		"since": 7,
+		"type": "DATA_TRANSFER_TYPE",
+		"id": 248,
+		"rootId": "CHR1dGFub3RhAAHK",
+		"versioned": false,
+		"encrypted": false,
+		"values": {
+			"159": {
+				"final": false,
+				"name": "answer",
+				"id": 159,
+				"since": 7,
+				"type": "String",
+				"cardinality": "One",
+				"encrypted": false
+			},
+			"160": {
+				"final": false,
+				"name": "timestamp",
+				"id": 160,
+				"since": 7,
+				"type": "Date",
+				"cardinality": "One",
+				"encrypted": false
+			}
+		},
+		"associations": {},
+		"app": "test",
+		"version": "75"
+	}"#;
+
+impl Entity for HelloUnEncOutput {
+	fn type_ref() -> TypeRef {
+		TypeRef {
+			app: "test",
+			type_id: 248,
+		}
+	}
+}
+pub const HELLO_INPUT_UNENCRYPTED: &str = r#"{
+		"name": "HelloUnEncInput",
+		"since": 7,
+		"type": "DATA_TRANSFER_TYPE",
+		"id": 148,
+		"rootId": "RDR1dGFub3RhAAHK",
+		"versioned": false,
+		"encrypted": false,
+		"values": {
+			"149": {
+				"final": false,
+				"name": "message",
+				"id": 149,
+				"since": 7,
+				"type": "String",
+				"cardinality": "One",
+				"encrypted": false
+			}
+		},
+		"associations": {},
+		"app": "test",
+		"version": "75"
+	}"#;
+
+impl Entity for HelloUnEncInput {
+	fn type_ref() -> TypeRef {
+		TypeRef {
+			app: "test",
+			type_id: 148,
+		}
+	}
+}
+pub struct HelloEncryptedService;
+pub struct HelloUnEncryptedService;
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct HelloEncInput {
+	#[serde(rename = "359")]
+	pub message: String,
+}
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[allow(non_snake_case)]
+pub struct HelloEncOutput {
+	#[serde(rename = "459")]
+	pub answer: String,
+	#[serde(rename = "460")]
+	pub timestamp: DateTime,
+	pub _finalIvs: HashMap<String, FinalIv>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct HelloUnEncInput {
+	#[serde(rename = "149")]
+	pub message: String,
+	pub _errors: Option<crate::entities::Errors>,
+}
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct HelloUnEncOutput {
+	#[serde(rename = "159")]
+	pub answer: String,
+	#[serde(rename = "160")]
+	pub timestamp: DateTime,
+}
+
 pub fn mock_type_model_provider() -> TypeModelProvider {
 	let mut type_model_provider = TypeModelProvider::new(
 		Arc::new(MockRestClient::new()),
@@ -493,7 +677,26 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 		associations: HashMap::default(),
 	};
 
-	let test_types = [
+	let enc_input_type_model = serde_json::from_str::<TypeModel>(HELLO_INPUT_ENCRYPTED).unwrap();
+	let enc_output_type_model = serde_json::from_str::<TypeModel>(HELLO_OUTPUT_ENCRYPTED).unwrap();
+	let unenc_input_type_model =
+		serde_json::from_str::<TypeModel>(HELLO_INPUT_UNENCRYPTED).unwrap();
+	let unenc_output_type_model =
+		serde_json::from_str::<TypeModel>(HELLO_OUTPUT_UNENCRYPTED).unwrap();
+
+	let test_types_hello: HashMap<TypeId, TypeModel> = [
+		(HelloEncInput::type_ref().type_id, enc_input_type_model),
+		(HelloEncOutput::type_ref().type_id, enc_output_type_model),
+		(HelloUnEncInput::type_ref().type_id, unenc_input_type_model),
+		(
+			HelloUnEncOutput::type_ref().type_id,
+			unenc_output_type_model,
+		),
+	]
+	.into_iter()
+	.collect();
+
+	let test_types_entity_client: HashMap<TypeId, TypeModel> = [
 		(
 			list_entity_generated_type_model.id,
 			list_entity_generated_type_model,
@@ -506,14 +709,15 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 	.into_iter()
 	.collect();
 
-	unsafe {
-		let app_models_mut = std::ptr::from_ref(type_model_provider.client_app_models)
-			.cast_mut()
-			.as_mut()
-			.expect("Should be Not null");
+	let mut client_map = type_model_provider.client_app_models.into_owned();
+	client_map.insert("entityClientTestApp", test_types_entity_client.clone());
+	client_map.insert("test", test_types_hello.clone());
+	type_model_provider.client_app_models = Cow::Owned(client_map);
 
-		app_models_mut.insert("entityClientTestApp", test_types);
-	}
+	let mut server_map = type_model_provider.server_app_models.into_owned();
+	server_map.insert("entityClientTestApp", test_types_entity_client.clone());
+	server_map.insert("test", test_types_hello.clone());
+	type_model_provider.server_app_models = Cow::Owned(server_map);
 
 	type_model_provider
 }

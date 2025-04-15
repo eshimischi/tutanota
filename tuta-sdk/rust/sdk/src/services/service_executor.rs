@@ -376,7 +376,6 @@ impl Executor for ServiceExecutor {
 
 #[cfg(test)]
 mod tests {
-	use crate::bindings::file_client::MockFileClient;
 	use crate::bindings::rest_client::{HttpMethod, MockRestClient, RestResponse};
 	#[mockall_double::double]
 	use crate::crypto::crypto_facade::CryptoFacade;
@@ -391,13 +390,8 @@ mod tests {
 	use crate::json_element::RawEntity;
 	use crate::json_serializer::JsonSerializer;
 	use crate::services::service_executor::ResolvingServiceExecutor;
-	use crate::services::test_services::{
-		HelloEncInput, HelloEncOutput, HelloEncryptedService, HelloUnEncInput, HelloUnEncOutput,
-		HelloUnEncryptedService, APP_VERSION_STR,
-	};
-	use crate::services::{test_services, ExtraServiceParams};
-	use crate::type_model_provider::TypeModelProvider;
-	use crate::util::test_utils::mock_type_model_provider;
+	use crate::services::ExtraServiceParams;
+	use crate::util::test_utils::*;
 	use crate::util::AttributeModel;
 	use crate::{HeadersProvider, CLIENT_VERSION};
 	use base64::prelude::BASE64_STANDARD;
@@ -409,6 +403,7 @@ mod tests {
 	pub async fn post_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
+			_errors: None,
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::POST);
 		let result = executor
@@ -428,6 +423,7 @@ mod tests {
 	pub async fn put_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
+			_errors: None,
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::PUT);
 		let result = executor
@@ -447,6 +443,7 @@ mod tests {
 	pub async fn get_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
+			_errors: None,
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::GET);
 		let result = executor
@@ -466,6 +463,7 @@ mod tests {
 	pub async fn delete_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
+			_errors: None,
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::DELETE);
 		let result = executor
@@ -591,12 +589,7 @@ mod tests {
 	}
 
 	fn setup() -> ResolvingServiceExecutor {
-		let mut type_model_provider: TypeModelProvider = TypeModelProvider::new(
-			Arc::new(MockRestClient::new()),
-			Arc::new(MockFileClient::new()),
-		);
-		let _ok_if_overwritten = test_services::extend_model_resolver(&mut type_model_provider);
-		let type_model_provider = Arc::new(type_model_provider);
+		let type_model_provider = Arc::new(mock_type_model_provider());
 
 		let crypto_facade = Arc::new(CryptoFacade::default());
 		let entity_facade = Arc::new(MockEntityFacade::default());
@@ -788,10 +781,10 @@ mod tests {
 			});
 
 		let provider = mock_type_model_provider();
-		let attribute_model = AttributeModel::new(&provider);
 		let session_key_clone = session_key.clone();
 		entity_facade.expect_decrypt_and_map().return_once(
 			move |_, mut entity, resolved_session_key| {
+				let attribute_model = AttributeModel::new(&provider);
 				assert_eq!(session_key_clone, resolved_session_key.session_key);
 				let timestamp_attribute_id = &attribute_model
 					.get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "timestamp")
