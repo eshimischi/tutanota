@@ -32,21 +32,25 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 				}),
 			),
 			m(
-				".text-center.h1",
+				".text-center",
 				{
 					style: {
 						padding: "1em 0",
 					},
 				},
-				"We are all ears!", // FIXME
+				[
+					m(".h1", "We are all ears!"),
+					m("p", { style: { margin: 0 } }, "Got feedback or facing an issue? We're here for you."),
+					// m("p", "We're listening - Whether it's a bright idea or an issue.")
+				],
 			),
-			m(Card, { shouldDivide: true }, [
+			m(Card, { shouldDivide: true, classes: ["mt"] }, [
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Bulb,
 						title: "ratingSupportTuta_title", // FIXME
 					},
-					text: lang.makeTranslation("", "Give suggestion"), // FIXME
+					text: lang.makeTranslation("", "I have a suggestion"), // FIXME
 					onclick: () => {
 						navigate("suggestion")
 					},
@@ -56,7 +60,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 						icon: Icons.Warning,
 						title: "attachmentWarning_msg", // FIXME
 					},
-					text: lang.makeTranslation("", "Need urgent help"), // FIXME
+					text: lang.makeTranslation("", "I need urgent help"), // FIXME
 					rightIcon: { icon: Icons.Open, title: "sendMail_label" },
 					onclick: () => {
 						dialog.close()
