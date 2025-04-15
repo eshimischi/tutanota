@@ -26,7 +26,7 @@ export class SuggestionPage implements Component<SuggestionPageAttrs> {
 	view(): Children {
 		return m(
 			".flex.flex-column.pt.height-100p.gap-vpad",
-			m(Card, { shouldDivide: true }, m(".h1.text-center.pb-s.pt-s", "What's on your mind?")), // FIXME
+			m(Card, { shouldDivide: true }, m(".h1.text-center.pb-s.pt-s", lang.get("ratingSuggestionPage_title"))),
 			m(
 				Card,
 				{
@@ -81,7 +81,7 @@ export class SuggestionPage implements Component<SuggestionPageAttrs> {
 		this.dialog?.close()
 
 		void showSnackBar({
-			message: lang.makeTranslation("", "Thank you for your feedback!"), // FIXME
+			message: "ratingFeedbackSent_msg",
 			button: {
 				label: "ok_action",
 				click: noOp,
@@ -99,7 +99,7 @@ class SimpleTextEditor implements Component<SimpleTextEditorAttrs> {
 	view(vnode: Vnode<SimpleTextEditorAttrs>) {
 		return m("textarea.tutaui-text-field", {
 			style: { "field-sizing": "content", resize: "none", "min-height": px(250) },
-			placeholder: "Have an idea or feedback? Type away...", // FIXME
+			placeholder: lang.get("ratingSuggestion_placeholder"),
 			oninput: (event: InputEvent) => {
 				const target = event.target
 				vnode.attrs.oninput(target ? (target as HTMLTextAreaElement).value : "")

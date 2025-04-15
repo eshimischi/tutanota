@@ -2003,6 +2003,13 @@ export default {
 		"ratingSupportTuta_title": "Help us spread privacy and fight Big Tech",
 		"donate_action": "Make a Donation",
 		"ratingUpgrade_label": "Upgrade & Support Us",
-		"ratingSupportTuta_msg": "David beat Goliath. You can help us do the same."
+		"ratingSupportTuta_msg": "David beat Goliath. You can help us do the same.",
+		"ratingDissatisfied_title": "We are all ears!",
+		"ratingDissatisfied_msg": "Got feedback or facing an issue? We're here for you.",
+		"ratingSuggestion_label": "I have a suggestion",
+		"ratingNeedUrgentHelp_label": "I need urgent help",
+		"ratingSuggestionPage_title": "What's on your mind?",
+		"ratingFeedbackSent_msg": "Thank you for your feedback!",
+		"ratingSuggestion_placeholder": "Have an idea or feedback? Type away..."
 	}
 }

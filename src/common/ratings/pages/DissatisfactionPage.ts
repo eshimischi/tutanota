@@ -41,19 +41,15 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 						padding: "1em 0",
 					},
 				},
-				[
-					m(".h1", "We are all ears!"),
-					m("p", { style: { margin: 0 } }, "Got feedback or facing an issue? We're here for you."),
-					// m("p", "We're listening - Whether it's a bright idea or an issue.")
-				],
+				[m(".h1", lang.get("ratingDissatisfied_title")), m("p", { style: { margin: 0 } }, lang.get("ratingDissatisfied_msg"))],
 			),
 			m(Card, { shouldDivide: true, classes: ["mt-auto"] }, [
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Bulb,
-						title: "ratingSupportTuta_title", // FIXME
+						title: "ratingSuggestion_label",
 					},
-					text: lang.makeTranslation("", "I have a suggestion"), // FIXME
+					text: "ratingSuggestion_label",
 					onclick: () => {
 						navigate("suggestion")
 					},
@@ -61,13 +57,13 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Warning,
-						title: "attachmentWarning_msg", // FIXME
+						title: "ratingNeedUrgentHelp_label",
 					},
-					text: lang.makeTranslation("", "I need urgent help"), // FIXME
+					text: "ratingNeedUrgentHelp_label",
 					rightIcon: { icon: Icons.Open, title: "sendMail_label" },
 					onclick: () => {
 						dialog.close()
-						void writeSupportMail("placeholder text") // FIXME
+						void writeSupportMail("")
 					},
 				}),
 			]),
