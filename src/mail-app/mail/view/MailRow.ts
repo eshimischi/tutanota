@@ -237,6 +237,7 @@ export class MailRow implements VirtualRow<Mail> {
 						},
 					}),
 					m(".dot.bg-accent-fg.hidden", {
+						"data-testid": "unread-indicator",
 						style: {
 							marginTop: px(MAIL_ROW_V_MARGIN),
 						},
