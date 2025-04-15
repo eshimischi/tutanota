@@ -31,7 +31,7 @@ export type Theme = {
 	on_surface_variant: string
 	outline: string
 	outline_variant: string
-	shadow: string
+	scrim: string
 	// Campaign colors
 	content_bg_tuta_bday: string
 	content_accent_tuta_bday: string

@@ -113,10 +113,9 @@ export const themes = (): Themes => {
 		on_surface: grey_darker_1,
 		on_surface_variant: grey_darker_0,
 
-		// optimised until here //
 		outline: grey_lighter_1,
 		outline_variant: grey_lighter_3,
-		shadow: grey_darker_1, // Only used for modal now, there are other box shadow definition in main-style.ts
+		scrim: grey_darker_1,
 	})
 	const darkRed = Object.freeze({
 		themeId: !isCalendarApp ? "dark" : "dark_secondary",
@@ -142,7 +141,7 @@ export const themes = (): Themes => {
 
 		outline: dark_lighter_1,
 		outline_variant: dark_lighter_1,
-		shadow: dark_darker_0,
+		scrim: dark_darker_0,
 	})
 	const lightBlue = Object.freeze({
 		themeId: isCalendarApp ? "light" : "light_secondary",
@@ -169,7 +168,7 @@ export const themes = (): Themes => {
 
 		outline: grey_lighter_1,
 		outline_variant: grey_lighter_2,
-		shadow: grey_darker_1,
+		scrim: grey_darker_1,
 	})
 	const darkBlue = Object.freeze({
 		themeId: isCalendarApp ? "dark" : "dark_secondary",
@@ -195,7 +194,7 @@ export const themes = (): Themes => {
 
 		outline: dark_lighter_1,
 		outline_variant: dark_lighter_1,
-		shadow: dark_darker_0,
+		scrim: dark_darker_0,
 	})
 
 	return {
