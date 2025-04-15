@@ -52,7 +52,7 @@ export function assertCorrectValueCardinality(
  * @param parsedValue the actual value as found on the ParsedInstance
  * @return a value that can be assigned to an Instance
  */
-export function assertCorrectAssociationClientCardinality(
+export function assertAndSupplyCorrectAssociationClientCardinality(
 	typeRef: TypeRef<unknown>,
 	attrId: string,
 	{ type, cardinality }: ModelAssociation,
@@ -114,8 +114,9 @@ function assertCompatibleModelTypesForApplyingClientModel(
 		fromType === toType ||
 		(fromType === ValueType.Number && toType === ValueType.Boolean) ||
 		(fromType === ValueType.String && toType === ValueType.Number)
-	)
+	) {
 		return
+	}
 	throw new ProgrammingError(
 		`cannot map from server to client type: types of field ${attrId} on type ${typeRef.app}/${typeRef.typeId} are incompatible. This client is not compatible with the current server model.`,
 	)
@@ -192,16 +193,16 @@ export class ModelMapper {
 			if (modelAssoc.type === AssociationType.Aggregation) {
 				const appName = modelAssoc.dependency ?? clientTypeModel.app
 				const assocTypeRef = new TypeRef(appName, modelAssoc.refTypeId)
-				const values = parsedInstance[assocId] as Array<ServerModelParsedInstance>
-				const clientValues = []
-				if (values) {
-					for (const value of values) {
-						clientValues.push(await this.mapToInstance(assocTypeRef, value))
+				const associationValues = parsedInstance[assocId] as Array<ServerModelParsedInstance>
+				const clientAssociationValues = []
+				if (associationValues) {
+					for (const value of associationValues) {
+						clientAssociationValues.push(await this.mapToInstance(assocTypeRef, value))
 					}
 				}
-				clientInstance[modelAssoc.name] = assertCorrectAssociationClientCardinality(typeRef, assocIdStr, modelAssoc, clientValues)
+				clientInstance[modelAssoc.name] = assertAndSupplyCorrectAssociationClientCardinality(typeRef, assocIdStr, modelAssoc, clientAssociationValues)
 			} else {
-				clientInstance[modelAssoc.name] = assertCorrectAssociationClientCardinality(
+				clientInstance[modelAssoc.name] = assertAndSupplyCorrectAssociationClientCardinality(
 					typeRef,
 					assocIdStr,
 					modelAssoc,

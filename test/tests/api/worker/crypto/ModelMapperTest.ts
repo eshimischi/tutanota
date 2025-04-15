@@ -1,7 +1,7 @@
 import o from "@tutao/otest"
 import { random } from "@tutao/tutanota-crypto"
 import {
-	assertCorrectAssociationClientCardinality,
+	assertAndSupplyCorrectAssociationClientCardinality,
 	assertCorrectValueCardinality,
 	convertDbToJsType,
 	convertJsToDbType,
@@ -184,7 +184,7 @@ o.spec("ModelMapper", function () {
 	o.spec("cardinality assertions", function () {
 		o("assertCorrectAssociationClientCardinality", async function () {
 			const f = (type, cardinality, value) =>
-				assertCorrectAssociationClientCardinality(
+				assertAndSupplyCorrectAssociationClientCardinality(
 					TestTypeRef,
 					"1",
 					downcast<ModelAssociation>({
