@@ -41,8 +41,7 @@ export async function evaluateRatingEligibility(now: Date, deviceConfig: DeviceC
 		disallowReasons.push(RatingDisallowReason.UNSUPPORTED_PLATFORM)
 	}
 
-	const appInstallationDate = await locator.systemFacade.getInstallationDate().then((rawDate) => new Date(Number(rawDate)))
-	if (isWithinLastNDays(now, appInstallationDate, 7)) {
+	if (isApp && isWithinLastNDays(now, await locator.systemFacade.getInstallationDate().then((rawDate) => new Date(Number(rawDate))), 7)) {
 		disallowReasons.push(RatingDisallowReason.APP_INSTALLATION_TOO_YOUNG)
 	}
 
