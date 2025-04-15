@@ -100,7 +100,6 @@ export const themes = (): Themes => {
 		content_accent_secondary_tuta_bday: light_purple,
 		content_bg_tuta_bday: dark,
 
-		// New color tokens
 		primary: red,
 		on_primary: light_white,
 		secondary: grey_lighter_3,
@@ -153,7 +152,6 @@ export const themes = (): Themes => {
 		content_accent_secondary_tuta_bday: light_purple,
 		content_bg_tuta_bday: dark,
 
-		// New color tokens
 		primary: blue,
 		on_primary: light_white,
 		secondary: grey_lighter_3,
@@ -167,7 +165,7 @@ export const themes = (): Themes => {
 		on_surface_variant: grey_darker_0,
 
 		outline: grey_lighter_1,
-		outline_variant: grey_lighter_2,
+		outline_variant: grey_lighter_3,
 		scrim: grey_darker_1,
 	})
 	const darkBlue = Object.freeze({

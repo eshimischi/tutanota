@@ -67,7 +67,7 @@ o.spec("SimpleColorEditor", function () {
 				primary: "#ee051f",
 				base: "dark",
 				surface: "#1df3ed",
-				shadow: "#1aa1aa",
+				scrim: "#1aa1aa",
 			})
 			model = new CustomColorsEditorViewModel(
 				defaultTheme,
@@ -98,13 +98,13 @@ o.spec("SimpleColorEditor", function () {
 				loginController,
 			)
 			model.addCustomization("on_surface_variant", "#abcdef")
-			model.addCustomization("shadow", "#fedcba")
+			model.addCustomization("scrim", "#fedcba")
 			// should only contain 2 customizations here
 			o(model.customizations).deepEquals(
 				downcast(
 					Object.assign({}, defaultCustomizations, {
 						on_surface_variant: "#abcdef",
-						shadow: "#fedcba",
+						scrim: "#fedcba",
 					}),
 				),
 			)
@@ -114,7 +114,7 @@ o.spec("SimpleColorEditor", function () {
 			o(JSON.parse(entityClient.update.args[0].jsonTheme)).deepEquals(
 				Object.assign({}, defaultCustomizations, {
 					on_surface_variant: "#abcdef",
-					shadow: "#fedcba",
+					scrim: "#fedcba",
 					themeId: "test.domain.com",
 				}),
 			)
@@ -131,7 +131,7 @@ o.spec("SimpleColorEditor", function () {
 				entityClient,
 				loginController,
 			)
-			model.addCustomization("shadow", "#false")
+			model.addCustomization("scrim", "#false")
 			model.addCustomization("secondary", "#69")
 			model.addCustomization("on_surface", "#zzzzzz")
 			model.addCustomization("surface_container", "#abcdefghi")
@@ -139,7 +139,7 @@ o.spec("SimpleColorEditor", function () {
 			o(model.customizations).deepEquals(
 				downcast(
 					Object.assign({}, defaultCustomizations, {
-						shadow: "#false",
+						scrim: "#false",
 						secondary: "#69",
 						on_surface: "#zzzzzz",
 						surface_container: "#abcdefghi",
@@ -160,7 +160,7 @@ o.spec("SimpleColorEditor", function () {
 				entityClient,
 				loginController,
 			)
-			model.addCustomization("shadow", "#fedcba")
+			model.addCustomization("scrim", "#fedcba")
 			model.addCustomization("secondary", "#69")
 			model.addCustomization("on_surface", "#deffed")
 			model.addCustomization("surface_container", "#abcdefghi")
@@ -168,7 +168,7 @@ o.spec("SimpleColorEditor", function () {
 			o(model.customizations).deepEquals(
 				downcast(
 					Object.assign({}, defaultCustomizations, {
-						shadow: "#fedcba",
+						scrim: "#fedcba",
 						secondary: "#69",
 						on_surface: "#deffed",
 						surface_container: "#abcdefghi",
@@ -178,7 +178,7 @@ o.spec("SimpleColorEditor", function () {
 			)
 			o(model._filterAndReturnCustomizations()).deepEquals(
 				Object.assign({}, defaultCustomizations, {
-					shadow: "#fedcba",
+					scrim: "#fedcba",
 					on_surface: "#deffed",
 					on_surface_variant: "#abcdef",
 				}),
@@ -195,7 +195,7 @@ o.spec("SimpleColorEditor", function () {
 				entityClient,
 				loginController,
 			)
-			model.addCustomization("shadow", "")
+			model.addCustomization("scrim", "")
 			model.addCustomization("on_surface", "")
 			model.addCustomization("on_surface_variant", "")
 
@@ -237,7 +237,7 @@ o.spec("SimpleColorEditor", function () {
 				entityClient,
 				loginController,
 			)
-			model.addCustomization("shadow", "#fedcba")
+			model.addCustomization("scrim", "#fedcba")
 			model.addCustomization("on_surface", "#deffed")
 			model.changeBaseTheme("dark")
 			model.changeAccentColor("#aaaaaa")
@@ -245,7 +245,7 @@ o.spec("SimpleColorEditor", function () {
 			o(entityClient.update.callCount).equals(1)
 			o(JSON.parse(entityClient.update.args[0].jsonTheme)).deepEquals(
 				Object.assign({}, defaultCustomizations, {
-					shadow: "#fedcba",
+					scrim: "#fedcba",
 					on_surface: "#deffed",
 					base: "dark",
 					primary: "#aaaaaa",
