@@ -49,7 +49,7 @@ impl EntityClient {
 		type_ref: &TypeRef,
 		id: &Id,
 	) -> Result<ParsedEntity, ApiCallError> {
-		let type_name = self
+		let type_name = &self
 			.type_model_provider
 			.resolve_server_type_ref(type_ref)
 			.ok_or_else(|| TypeNotFound {
@@ -157,12 +157,7 @@ impl EntityClient {
 			"{}/rest/{}/{}/",
 			self.base_url, type_ref.app, type_model.name
 		);
-		let model_version_str = type_model.version;
-		let model_version = model_version_str.parse::<u32>().map_err(|_e| {
-			ApiCallError::internal(format!(
-				"Expected version to be u32 compatible. Found: {model_version_str}"
-			))
-		})?;
+		let model_version = type_model.version;
 
 		let id_field_attribute_id = &type_model
 			.get_attribute_id_by_attribute_name(ID_FIELD)
@@ -335,7 +330,7 @@ impl EntityClient {
 		url: String,
 	) -> Result<Option<Vec<u8>>, ApiCallError> {
 		let type_model = self.resolve_client_type_ref(type_ref)?;
-		let model_version: u32 = type_model.version.parse().expect("invalid model_version");
+		let model_version = type_model.version;
 		let options = RestClientOptions {
 			body: None,
 			headers: self.auth_headers_provider.provide_headers(model_version),
@@ -418,6 +413,7 @@ mod tests {
 	use super::*;
 	use crate::bindings::rest_client::{MockRestClient, RestResponse};
 	use crate::entities::Entity;
+	use crate::metamodel::AppName;
 	use crate::util::test_utils::mock_type_model_provider;
 	use crate::util::AttributeModel;
 	use crate::CustomId;
@@ -444,7 +440,7 @@ mod tests {
 	impl Entity for TestListGeneratedElementIdEntity {
 		fn type_ref() -> TypeRef {
 			TypeRef {
-				app: "entityClientTestApp",
+				app: AppName::EntityClientTestApp,
 				type_id: 10,
 			}
 		}
@@ -453,7 +449,7 @@ mod tests {
 	impl Entity for TestListCustomElementIdEntity {
 		fn type_ref() -> TypeRef {
 			TypeRef {
-				app: "entityClientTestApp",
+				app: AppName::EntityClientTestApp,
 				type_id: 20,
 			}
 		}
@@ -471,7 +467,7 @@ mod tests {
 		};
 		println!("{}", serde_json::to_string_pretty(&entity_map).unwrap());
 		let mut rest_client = MockRestClient::new();
-		let url = "http://test.com/rest/entityClientTestApp/TestListGeneratedElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
+		let url = "http://test.com/rest/entityclienttestapp/TestListGeneratedElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
 		let json_folder = JsonSerializer::new(type_provider.clone())
 			.serialize(
 				&TestListGeneratedElementIdEntity::type_ref(),
@@ -523,7 +519,7 @@ mod tests {
 			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
-		let url = "http://test.com/rest/entityClientTestApp/TestListCustomElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
+		let url = "http://test.com/rest/entityclienttestapp/TestListCustomElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
 		let json_folder = JsonSerializer::new(type_model_provider.clone())
 			.serialize(
 				&TestListCustomElementIdEntity::type_ref(),
@@ -574,7 +570,7 @@ mod tests {
 			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
-		let url = "http://test.com/rest/entityClientTestApp/TestListGeneratedElementIdEntity/list_id?start=------------&count=100&reverse=false";
+		let url = "http://test.com/rest/entityclienttestapp/TestListGeneratedElementIdEntity/list_id?start=------------&count=100&reverse=false";
 		let json_folder = JsonSerializer::new(type_model_provider.clone())
 			.serialize(
 				&TestListGeneratedElementIdEntity::type_ref(),
@@ -625,7 +621,7 @@ mod tests {
 			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
-		let url = "http://test.com/rest/entityClientTestApp/TestListCustomElementIdEntity/list_id?start=------------&count=100&reverse=false";
+		let url = "http://test.com/rest/entityclienttestapp/TestListCustomElementIdEntity/list_id?start=------------&count=100&reverse=false";
 		let json_folder = JsonSerializer::new(type_model_provider.clone())
 			.serialize(
 				&TestListCustomElementIdEntity::type_ref(),

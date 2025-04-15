@@ -16,7 +16,7 @@ pub mod test_services;
 /// plus four traits for the different methods, since each method has its own input and output types.
 pub trait Service: 'static {
 	const PATH: &'static str;
-	const VERSION: u32;
+	const VERSION: u64;
 }
 
 #[async_trait::async_trait]

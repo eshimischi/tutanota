@@ -4,6 +4,7 @@
  */
 
 import { AssociationType, Type, ValueType } from "../src/common/api/common/EntityConstants.js"
+import { capitalizeFirstLetter } from "@tutao/tutanota-utils"
 
 /**
  * @param models {object}
@@ -70,7 +71,7 @@ pub struct ${typeName} {\n`
 impl Entity for ${typeName} {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "${modelName}",
+			app: AppName::${capitalizeFirstLetter(modelName)},
 			type_id: ${typeId},
 		}
 	}

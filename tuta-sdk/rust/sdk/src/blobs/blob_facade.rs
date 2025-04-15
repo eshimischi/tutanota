@@ -292,9 +292,6 @@ impl BlobFacade {
 			.resolve_client_type_ref(&BlobGetIn::type_ref())
 			.expect("no type model for BlobGetIn?")
 			.version;
-		let model_version = model_version
-			.parse()
-			.expect("could not parse model version");
 		let mut query_params: Vec<(String, String)> =
 			vec![("blobAccessToken".into(), blob_access_token)];
 		let auth_headers = self.auth_headers_provider.provide_headers(model_version);
@@ -469,9 +466,6 @@ impl BlobFacade {
 			.resolve_client_type_ref(&BlobGetIn::type_ref())
 			.expect("no type model for BlobGetIn?")
 			.version;
-		let model_version = model_version
-			.parse()
-			.expect("could not parse model version");
 		let mut query_params: Vec<(String, String)> = vec![
 			("blobHash".into(), blob_hash_b64),
 			("blobAccessToken".into(), blob_access_token),

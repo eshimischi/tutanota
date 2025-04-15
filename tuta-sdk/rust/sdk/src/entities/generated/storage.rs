@@ -20,7 +20,7 @@ pub struct BlobGetIn {
 impl Entity for BlobGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 50,
 		}
 	}
@@ -38,7 +38,7 @@ pub struct BlobWriteData {
 impl Entity for BlobWriteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 73,
 		}
 	}
@@ -60,7 +60,7 @@ pub struct BlobAccessTokenPostIn {
 impl Entity for BlobAccessTokenPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 77,
 		}
 	}
@@ -78,7 +78,7 @@ pub struct BlobAccessTokenPostOut {
 impl Entity for BlobAccessTokenPostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 81,
 		}
 	}
@@ -102,7 +102,7 @@ pub struct BlobReferencePutIn {
 impl Entity for BlobReferencePutIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 94,
 		}
 	}
@@ -126,7 +126,7 @@ pub struct BlobReferenceDeleteIn {
 impl Entity for BlobReferenceDeleteIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 100,
 		}
 	}
@@ -146,7 +146,7 @@ pub struct BlobPostOut {
 impl Entity for BlobPostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 125,
 		}
 	}
@@ -170,7 +170,7 @@ pub struct BlobArchiveRef {
 impl Entity for BlobArchiveRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 129,
 		}
 	}
@@ -188,7 +188,7 @@ pub struct BlobId {
 impl Entity for BlobId {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 144,
 		}
 	}
@@ -206,7 +206,7 @@ pub struct BlobServerUrl {
 impl Entity for BlobServerUrl {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 154,
 		}
 	}
@@ -230,7 +230,7 @@ pub struct BlobServerAccessInfo {
 impl Entity for BlobServerAccessInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 157,
 		}
 	}
@@ -248,7 +248,7 @@ pub struct InstanceId {
 impl Entity for InstanceId {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 172,
 		}
 	}
@@ -270,7 +270,7 @@ pub struct BlobReadData {
 impl Entity for BlobReadData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "storage",
+			app: AppName::Storage,
 			type_id: 175,
 		}
 	}

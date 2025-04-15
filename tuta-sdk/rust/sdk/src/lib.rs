@@ -46,7 +46,7 @@ use crate::services::generated::sys::{SaltService, SessionService};
 #[cfg_attr(test, mockall_double::double)]
 use crate::services::service_executor::{ResolvingServiceExecutor, ServiceExecutor};
 use crate::services::ExtraServiceParams;
-use crate::type_model_provider::{AppName, TypeId, TypeModelProvider};
+use crate::type_model_provider::TypeModelProvider;
 #[cfg_attr(test, mockall_double::double)]
 use crate::typed_entity_client::TypedEntityClient;
 #[cfg_attr(test, mockall_double::double)]
@@ -97,6 +97,7 @@ pub use id::custom_id::CustomId;
 pub use id::generated_id::GeneratedId;
 pub use id::id_tuple::IdTupleCustom;
 pub use id::id_tuple::IdTupleGenerated;
+use metamodel::{AppName, TypeId};
 
 pub static CLIENT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -144,7 +145,7 @@ impl HeadersProvider {
 		Self { access_token }
 	}
 
-	fn provide_headers(&self, model_version: u32) -> HashMap<String, String> {
+	fn provide_headers(&self, model_version: u64) -> HashMap<String, String> {
 		let mut headers = HashMap::from([
 			("cv".to_owned(), CLIENT_VERSION.to_string()),
 			("v".to_owned(), model_version.to_string()),

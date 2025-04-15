@@ -17,10 +17,12 @@ use crate::entities::generated::sys::{
 };
 use crate::instance_mapper::InstanceMapper;
 use crate::metamodel::ElementType::Aggregated;
-use crate::metamodel::{AssociationType, Cardinality, ElementType, ModelValue, ValueType};
+use crate::metamodel::{
+	AppName, ApplicationModel, AssociationType, Cardinality, ElementType, ModelValue, TypeId,
+	ValueType,
+};
 use crate::tutanota_constants::CryptoProtocolVersion;
 use crate::tutanota_constants::PublicKeyIdentifierType;
-use crate::type_model_provider::TypeId;
 use crate::CustomId;
 use crate::GeneratedId;
 use crate::{IdTupleCustom, IdTupleGenerated};
@@ -188,7 +190,7 @@ pub fn typed_entity_to_parsed_entity<T: Entity + serde::Serialize>(entity: T) ->
 
 fn create_test_entity_dict_with_provider(
 	provider: &TypeModelProvider,
-	app: &'static str,
+	app: AppName,
 	type_id: u64,
 ) -> ParsedEntity {
 	let Some(model) = provider.resolve_client_type_ref(&TypeRef::new(app, type_id)) else {
@@ -298,7 +300,7 @@ fn create_test_entity_dict_with_provider(
 
 fn create_encrypted_test_entity_dict_with_provider(
 	provider: &TypeModelProvider,
-	app: &'static str,
+	app: AppName,
 	type_id: u64,
 ) -> ParsedEntity {
 	let type_ref = TypeRef::new(app, type_id);
@@ -428,7 +430,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const APP_NAME: &str = "test";
-pub const APP_VERSION_NUMBER: u32 = 75;
+pub const APP_VERSION_NUMBER: u64 = 75;
 pub const APP_VERSION_STR: &str = "75";
 
 pub const HELLO_OUTPUT_ENCRYPTED: &str = r#"{
@@ -466,7 +468,7 @@ pub const HELLO_OUTPUT_ENCRYPTED: &str = r#"{
 impl Entity for HelloEncOutput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "test",
+			app: AppName::Test,
 			type_id: 458,
 		}
 	}
@@ -497,7 +499,7 @@ pub const HELLO_INPUT_ENCRYPTED: &str = r#"{
 impl Entity for HelloEncInput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "test",
+			app: AppName::Test,
 			type_id: 358,
 		}
 	}
@@ -539,7 +541,7 @@ pub const HELLO_OUTPUT_UNENCRYPTED: &str = r#"{
 impl Entity for HelloUnEncOutput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "test",
+			app: AppName::Test,
 			type_id: 248,
 		}
 	}
@@ -571,7 +573,7 @@ pub const HELLO_INPUT_UNENCRYPTED: &str = r#"{
 impl Entity for HelloUnEncInput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "test",
+			app: AppName::Test,
 			type_id: 148,
 		}
 	}
@@ -616,13 +618,12 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 	let list_entity_generated_type_model: TypeModel = TypeModel {
 		id: 10,
 		since: 1,
-		app: "entityClientTestApp",
-		version: "1",
-		name: "TestListGeneratedElementIdEntity",
+		app: AppName::EntityClientTestApp,
+		version: 1,
+		name: "TestListGeneratedElementIdEntity".to_string(),
 		element_type: ElementType::ListElement,
 		versioned: false,
 		encrypted: true,
-		root_id: "",
 		values: str_map! {
 			101 => ModelValue {
 					id: 101,
@@ -648,13 +649,12 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 	let list_entity_custom_type_model: TypeModel = TypeModel {
 		id: 20,
 		since: 1,
-		app: "entityClientTestApp",
-		version: "1",
-		name: "TestListCustomElementIdEntity",
+		app: AppName::EntityClientTestApp,
+		version: 1,
+		name: "TestListCustomElementIdEntity".to_string(),
 		element_type: ElementType::ListElement,
 		versioned: false,
 		encrypted: true,
-		root_id: "",
 		values: str_map! {
 			201 => ModelValue {
 					id: 201,
@@ -696,6 +696,12 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 	.into_iter()
 	.collect();
 
+	let test_types_hello = ApplicationModel {
+		name: AppName::Test,
+		version: 0,
+		types: test_types_hello,
+	};
+
 	let test_types_entity_client: HashMap<TypeId, TypeModel> = [
 		(
 			list_entity_generated_type_model.id,
@@ -709,14 +715,30 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 	.into_iter()
 	.collect();
 
+	let test_types_entity_client = ApplicationModel {
+		name: AppName::EntityClientTestApp,
+		version: 0,
+		types: test_types_entity_client,
+	};
+
 	let mut client_map = type_model_provider.client_app_models.into_owned();
-	client_map.insert("entityClientTestApp", test_types_entity_client.clone());
-	client_map.insert("test", test_types_hello.clone());
+	client_map.apps.insert(
+		AppName::EntityClientTestApp,
+		test_types_entity_client.clone(),
+	);
+	client_map
+		.apps
+		.insert(AppName::Test, test_types_hello.clone());
 	type_model_provider.client_app_models = Cow::Owned(client_map);
 
 	let mut server_map = type_model_provider.server_app_models.into_owned();
-	server_map.insert("entityClientTestApp", test_types_entity_client.clone());
-	server_map.insert("test", test_types_hello.clone());
+	server_map.apps.insert(
+		AppName::EntityClientTestApp,
+		test_types_entity_client.clone(),
+	);
+	server_map
+		.apps
+		.insert(AppName::Test, test_types_hello.clone());
 	type_model_provider.server_app_models = Cow::Owned(server_map);
 
 	type_model_provider

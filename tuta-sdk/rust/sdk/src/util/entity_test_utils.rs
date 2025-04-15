@@ -5,6 +5,7 @@ use crate::element_value::{ElementValue, ParsedEntity};
 use crate::entities::generated::sys::BucketKey;
 use crate::entities::generated::tutanota::{Mail, MailAddress};
 use crate::entities::Entity;
+use crate::metamodel::AppName;
 use crate::type_model_provider::TypeModelProvider;
 use crate::util::test_utils::{
 	create_test_entity, mock_type_model_provider, typed_entity_to_parsed_entity,
@@ -75,7 +76,7 @@ fn typed_entity_to_encrypted_entity<T: Entity + serde::Serialize>(
 fn encrypt_test_entity_dict_with_provider(
 	entity: &mut ParsedEntity,
 	provider: &TypeModelProvider,
-	app: &'static str,
+	app: AppName,
 	type_id: u64,
 	session_key: &GenericAesKey,
 	iv: &Iv,

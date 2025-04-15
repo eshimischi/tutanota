@@ -23,7 +23,7 @@ pub struct CustomerAccountPosting {
 impl Entity for CustomerAccountPosting {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "accounting",
+			app: AppName::Accounting,
 			type_id: 79,
 		}
 	}
@@ -54,7 +54,7 @@ pub struct CustomerAccountReturn {
 impl Entity for CustomerAccountReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "accounting",
+			app: AppName::Accounting,
 			type_id: 86,
 		}
 	}

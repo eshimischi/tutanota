@@ -16,7 +16,7 @@ pub struct Subfiles {
 impl Entity for Subfiles {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 11,
 		}
 	}
@@ -59,7 +59,7 @@ pub struct TutanotaFile {
 impl Entity for TutanotaFile {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 13,
 		}
 	}
@@ -90,7 +90,7 @@ pub struct FileSystem {
 impl Entity for FileSystem {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 28,
 		}
 	}
@@ -113,7 +113,7 @@ pub struct ContactMailAddress {
 impl Entity for ContactMailAddress {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 44,
 		}
 	}
@@ -136,7 +136,7 @@ pub struct ContactPhoneNumber {
 impl Entity for ContactPhoneNumber {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 49,
 		}
 	}
@@ -159,7 +159,7 @@ pub struct ContactAddress {
 impl Entity for ContactAddress {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 54,
 		}
 	}
@@ -182,7 +182,7 @@ pub struct ContactSocialId {
 impl Entity for ContactSocialId {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 59,
 		}
 	}
@@ -265,7 +265,7 @@ pub struct Contact {
 impl Entity for Contact {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 64,
 		}
 	}
@@ -295,7 +295,7 @@ pub struct ConversationEntry {
 impl Entity for ConversationEntry {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 84,
 		}
 	}
@@ -318,7 +318,7 @@ pub struct MailAddress {
 impl Entity for MailAddress {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 92,
 		}
 	}
@@ -391,7 +391,7 @@ pub struct Mail {
 impl Entity for Mail {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 97,
 		}
 	}
@@ -440,7 +440,7 @@ pub struct MailBox {
 impl Entity for MailBox {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 125,
 		}
 	}
@@ -466,7 +466,7 @@ pub struct CreateExternalUserGroupData {
 impl Entity for CreateExternalUserGroupData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 138,
 		}
 	}
@@ -515,7 +515,7 @@ pub struct ExternalUserData {
 impl Entity for ExternalUserData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 145,
 		}
 	}
@@ -548,7 +548,7 @@ pub struct ContactList {
 impl Entity for ContactList {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 153,
 		}
 	}
@@ -574,7 +574,7 @@ pub struct RemoteImapSyncInfo {
 impl Entity for RemoteImapSyncInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 183,
 		}
 	}
@@ -598,7 +598,7 @@ pub struct ImapFolder {
 impl Entity for ImapFolder {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 190,
 		}
 	}
@@ -622,7 +622,7 @@ pub struct ImapSyncState {
 impl Entity for ImapSyncState {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 196,
 		}
 	}
@@ -648,7 +648,7 @@ pub struct ImapSyncConfiguration {
 impl Entity for ImapSyncConfiguration {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 209,
 		}
 	}
@@ -706,7 +706,7 @@ pub struct TutanotaProperties {
 impl Entity for TutanotaProperties {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 216,
 		}
 	}
@@ -732,7 +732,7 @@ pub struct NotificationMail {
 impl Entity for NotificationMail {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 223,
 		}
 	}
@@ -752,7 +752,7 @@ pub struct DeleteMailData {
 impl Entity for DeleteMailData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 419,
 		}
 	}
@@ -791,7 +791,7 @@ pub struct MailFolder {
 impl Entity for MailFolder {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 429,
 		}
 	}
@@ -809,7 +809,7 @@ pub struct MailFolderRef {
 impl Entity for MailFolderRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 440,
 		}
 	}
@@ -831,7 +831,7 @@ pub struct MoveMailData {
 impl Entity for MoveMailData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 445,
 		}
 	}
@@ -860,7 +860,7 @@ pub struct CreateMailFolderData {
 impl Entity for CreateMailFolderData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 450,
 		}
 	}
@@ -880,7 +880,7 @@ pub struct CreateMailFolderReturn {
 impl Entity for CreateMailFolderReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 455,
 		}
 	}
@@ -900,7 +900,7 @@ pub struct DeleteMailFolderData {
 impl Entity for DeleteMailFolderData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 458,
 		}
 	}
@@ -923,7 +923,7 @@ pub struct EncryptTutanotaPropertiesData {
 impl Entity for EncryptTutanotaPropertiesData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 473,
 		}
 	}
@@ -944,7 +944,7 @@ pub struct DraftRecipient {
 impl Entity for DraftRecipient {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 482,
 		}
 	}
@@ -971,7 +971,7 @@ pub struct NewDraftAttachment {
 impl Entity for NewDraftAttachment {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 486,
 		}
 	}
@@ -996,7 +996,7 @@ pub struct DraftAttachment {
 impl Entity for DraftAttachment {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 491,
 		}
 	}
@@ -1039,7 +1039,7 @@ pub struct DraftData {
 impl Entity for DraftData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 496,
 		}
 	}
@@ -1068,7 +1068,7 @@ pub struct DraftCreateData {
 impl Entity for DraftCreateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 508,
 		}
 	}
@@ -1086,7 +1086,7 @@ pub struct DraftCreateReturn {
 impl Entity for DraftCreateReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 516,
 		}
 	}
@@ -1108,7 +1108,7 @@ pub struct DraftUpdateData {
 impl Entity for DraftUpdateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 519,
 		}
 	}
@@ -1128,7 +1128,7 @@ pub struct DraftUpdateReturn {
 impl Entity for DraftUpdateReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 523,
 		}
 	}
@@ -1155,7 +1155,7 @@ pub struct InternalRecipientKeyData {
 impl Entity for InternalRecipientKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 527,
 		}
 	}
@@ -1194,7 +1194,7 @@ pub struct SecureExternalRecipientKeyData {
 impl Entity for SecureExternalRecipientKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 532,
 		}
 	}
@@ -1218,7 +1218,7 @@ pub struct AttachmentKeyData {
 impl Entity for AttachmentKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 542,
 		}
 	}
@@ -1261,7 +1261,7 @@ pub struct SendDraftData {
 impl Entity for SendDraftData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 547,
 		}
 	}
@@ -1285,7 +1285,7 @@ pub struct SendDraftReturn {
 impl Entity for SendDraftReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 557,
 		}
 	}
@@ -1303,7 +1303,7 @@ pub struct ReceiveInfoServiceData {
 impl Entity for ReceiveInfoServiceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 570,
 		}
 	}
@@ -1326,7 +1326,7 @@ pub struct InboxRule {
 impl Entity for InboxRule {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 573,
 		}
 	}
@@ -1347,7 +1347,7 @@ pub struct EncryptedMailAddress {
 impl Entity for EncryptedMailAddress {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 612,
 		}
 	}
@@ -1426,7 +1426,7 @@ pub struct UserAccountUserData {
 impl Entity for UserAccountUserData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 622,
 		}
 	}
@@ -1472,7 +1472,7 @@ pub struct InternalGroupData {
 impl Entity for InternalGroupData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 642,
 		}
 	}
@@ -1527,7 +1527,7 @@ pub struct CustomerAccountCreateData {
 impl Entity for CustomerAccountCreateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 648,
 		}
 	}
@@ -1549,7 +1549,7 @@ pub struct UserAccountCreateData {
 impl Entity for UserAccountCreateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 663,
 		}
 	}
@@ -1573,7 +1573,7 @@ pub struct MailboxServerProperties {
 impl Entity for MailboxServerProperties {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 677,
 		}
 	}
@@ -1607,7 +1607,7 @@ pub struct MailboxGroupRoot {
 impl Entity for MailboxGroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 693,
 		}
 	}
@@ -1633,7 +1633,7 @@ pub struct CreateMailGroupData {
 impl Entity for CreateMailGroupData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 707,
 		}
 	}
@@ -1653,7 +1653,7 @@ pub struct DeleteGroupData {
 impl Entity for DeleteGroupData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 713,
 		}
 	}
@@ -1675,7 +1675,7 @@ pub struct Birthday {
 impl Entity for Birthday {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 844,
 		}
 	}
@@ -1693,7 +1693,7 @@ pub struct PhotosRef {
 impl Entity for PhotosRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 853,
 		}
 	}
@@ -1715,7 +1715,7 @@ pub struct ListUnsubscribeData {
 impl Entity for ListUnsubscribeData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 867,
 		}
 	}
@@ -1746,7 +1746,7 @@ pub struct CalendarRepeatRule {
 impl Entity for CalendarRepeatRule {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 926,
 		}
 	}
@@ -1804,7 +1804,7 @@ pub struct CalendarEvent {
 impl Entity for CalendarEvent {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 933,
 		}
 	}
@@ -1839,7 +1839,7 @@ pub struct CalendarGroupRoot {
 impl Entity for CalendarGroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 947,
 		}
 	}
@@ -1878,7 +1878,7 @@ pub struct UserAreaGroupData {
 impl Entity for UserAreaGroupData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 956,
 		}
 	}
@@ -1896,7 +1896,7 @@ pub struct UserAreaGroupPostData {
 impl Entity for UserAreaGroupPostData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 964,
 		}
 	}
@@ -1923,7 +1923,7 @@ pub struct GroupSettings {
 impl Entity for GroupSettings {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 968,
 		}
 	}
@@ -1960,7 +1960,7 @@ pub struct UserSettingsGroupRoot {
 impl Entity for UserSettingsGroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 972,
 		}
 	}
@@ -1978,7 +1978,7 @@ pub struct CalendarDeleteData {
 impl Entity for CalendarDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 982,
 		}
 	}
@@ -1998,7 +1998,7 @@ pub struct CreateGroupPostReturn {
 impl Entity for CreateGroupPostReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 985,
 		}
 	}
@@ -2038,7 +2038,7 @@ pub struct SharedGroupData {
 impl Entity for SharedGroupData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 992,
 		}
 	}
@@ -2058,7 +2058,7 @@ pub struct GroupInvitationPostData {
 impl Entity for GroupInvitationPostData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1002,
 		}
 	}
@@ -2080,7 +2080,7 @@ pub struct GroupInvitationPostReturn {
 impl Entity for GroupInvitationPostReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1006,
 		}
 	}
@@ -2108,7 +2108,7 @@ pub struct GroupInvitationPutData {
 impl Entity for GroupInvitationPutData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1011,
 		}
 	}
@@ -2126,7 +2126,7 @@ pub struct GroupInvitationDeleteData {
 impl Entity for GroupInvitationDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1016,
 		}
 	}
@@ -2146,7 +2146,7 @@ pub struct ReportedMailFieldMarker {
 impl Entity for ReportedMailFieldMarker {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1023,
 		}
 	}
@@ -2170,7 +2170,7 @@ pub struct PhishingMarkerWebsocketData {
 impl Entity for PhishingMarkerWebsocketData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1034,
 		}
 	}
@@ -2193,7 +2193,7 @@ pub struct ReportMailPostData {
 impl Entity for ReportMailPostData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1066,
 		}
 	}
@@ -2214,7 +2214,7 @@ pub struct CalendarEventAttendee {
 impl Entity for CalendarEventAttendee {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1084,
 		}
 	}
@@ -2240,7 +2240,7 @@ pub struct CalendarEventUidIndex {
 impl Entity for CalendarEventUidIndex {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1093,
 		}
 	}
@@ -2258,7 +2258,7 @@ pub struct CalendarEventIndexRef {
 impl Entity for CalendarEventIndexRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1100,
 		}
 	}
@@ -2291,7 +2291,7 @@ pub struct CalendarEventUpdate {
 impl Entity for CalendarEventUpdate {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1104,
 		}
 	}
@@ -2309,7 +2309,7 @@ pub struct CalendarEventUpdateList {
 impl Entity for CalendarEventUpdateList {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1113,
 		}
 	}
@@ -2330,7 +2330,7 @@ pub struct EntropyData {
 impl Entity for EntropyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1122,
 		}
 	}
@@ -2352,7 +2352,7 @@ pub struct OutOfOfficeNotificationMessage {
 impl Entity for OutOfOfficeNotificationMessage {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1126,
 		}
 	}
@@ -2382,7 +2382,7 @@ pub struct OutOfOfficeNotification {
 impl Entity for OutOfOfficeNotification {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1131,
 		}
 	}
@@ -2400,7 +2400,7 @@ pub struct OutOfOfficeNotificationRecipientList {
 impl Entity for OutOfOfficeNotificationRecipientList {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1147,
 		}
 	}
@@ -2421,7 +2421,7 @@ pub struct EmailTemplateContent {
 impl Entity for EmailTemplateContent {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1154,
 		}
 	}
@@ -2456,7 +2456,7 @@ pub struct EmailTemplate {
 impl Entity for EmailTemplate {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1158,
 		}
 	}
@@ -2475,7 +2475,7 @@ pub struct KnowledgeBaseEntryKeyword {
 impl Entity for KnowledgeBaseEntryKeyword {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1168,
 		}
 	}
@@ -2510,7 +2510,7 @@ pub struct KnowledgeBaseEntry {
 impl Entity for KnowledgeBaseEntry {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1171,
 		}
 	}
@@ -2543,7 +2543,7 @@ pub struct TemplateGroupRoot {
 impl Entity for TemplateGroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1181,
 		}
 	}
@@ -2561,7 +2561,7 @@ pub struct UserAreaGroupDeleteData {
 impl Entity for UserAreaGroupDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1190,
 		}
 	}
@@ -2594,7 +2594,7 @@ pub struct MailboxProperties {
 impl Entity for MailboxProperties {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1195,
 		}
 	}
@@ -2612,7 +2612,7 @@ pub struct SpamResults {
 impl Entity for SpamResults {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1217,
 		}
 	}
@@ -2632,7 +2632,7 @@ pub struct NewsId {
 impl Entity for NewsId {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1245,
 		}
 	}
@@ -2650,7 +2650,7 @@ pub struct NewsOut {
 impl Entity for NewsOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1256,
 		}
 	}
@@ -2668,7 +2668,7 @@ pub struct NewsIn {
 impl Entity for NewsIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1259,
 		}
 	}
@@ -2689,7 +2689,7 @@ pub struct MailAddressProperties {
 impl Entity for MailAddressProperties {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1263,
 		}
 	}
@@ -2710,7 +2710,7 @@ pub struct Header {
 impl Entity for Header {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1269,
 		}
 	}
@@ -2731,7 +2731,7 @@ pub struct Body {
 impl Entity for Body {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1273,
 		}
 	}
@@ -2753,7 +2753,7 @@ pub struct Recipients {
 impl Entity for Recipients {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1277,
 		}
 	}
@@ -2781,7 +2781,7 @@ pub struct MailDetails {
 impl Entity for MailDetails {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1282,
 		}
 	}
@@ -2812,7 +2812,7 @@ pub struct MailDetailsDraft {
 impl Entity for MailDetailsDraft {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1290,
 		}
 	}
@@ -2843,7 +2843,7 @@ pub struct MailDetailsBlob {
 impl Entity for MailDetailsBlob {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1298,
 		}
 	}
@@ -2863,7 +2863,7 @@ pub struct UpdateMailFolderData {
 impl Entity for UpdateMailFolderData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1311,
 		}
 	}
@@ -2881,7 +2881,7 @@ pub struct MailDetailsDraftsRef {
 impl Entity for MailDetailsDraftsRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1315,
 		}
 	}
@@ -2912,7 +2912,7 @@ pub struct ContactListEntry {
 impl Entity for ContactListEntry {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1325,
 		}
 	}
@@ -2943,7 +2943,7 @@ pub struct ContactListGroupRoot {
 impl Entity for ContactListGroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1333,
 		}
 	}
@@ -2968,7 +2968,7 @@ pub struct SymEncInternalRecipientKeyData {
 impl Entity for SymEncInternalRecipientKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1347,
 		}
 	}
@@ -2991,7 +2991,7 @@ pub struct ContactCustomDate {
 impl Entity for ContactCustomDate {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1356,
 		}
 	}
@@ -3014,7 +3014,7 @@ pub struct ContactWebsite {
 impl Entity for ContactWebsite {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1361,
 		}
 	}
@@ -3037,7 +3037,7 @@ pub struct ContactRelationship {
 impl Entity for ContactRelationship {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1366,
 		}
 	}
@@ -3060,7 +3060,7 @@ pub struct ContactMessengerHandle {
 impl Entity for ContactMessengerHandle {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1371,
 		}
 	}
@@ -3081,7 +3081,7 @@ pub struct ContactPronouns {
 impl Entity for ContactPronouns {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1376,
 		}
 	}
@@ -3099,7 +3099,7 @@ pub struct TranslationGetIn {
 impl Entity for TranslationGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1436,
 		}
 	}
@@ -3119,7 +3119,7 @@ pub struct TranslationGetOut {
 impl Entity for TranslationGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1439,
 		}
 	}
@@ -3138,7 +3138,7 @@ pub struct DefaultAlarmInfo {
 impl Entity for DefaultAlarmInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1446,
 		}
 	}
@@ -3162,7 +3162,7 @@ pub struct MailSetEntry {
 impl Entity for MailSetEntry {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1450,
 		}
 	}
@@ -3180,7 +3180,7 @@ pub struct MailBag {
 impl Entity for MailBag {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1460,
 		}
 	}
@@ -3200,7 +3200,7 @@ pub struct SimpleMoveMailPostIn {
 impl Entity for SimpleMoveMailPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1469,
 		}
 	}
@@ -3220,7 +3220,7 @@ pub struct UnreadMailStatePostIn {
 impl Entity for UnreadMailStatePostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1474,
 		}
 	}
@@ -3241,7 +3241,7 @@ pub struct ManageLabelServiceLabelData {
 impl Entity for ManageLabelServiceLabelData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1480,
 		}
 	}
@@ -3268,7 +3268,7 @@ pub struct ManageLabelServicePostIn {
 impl Entity for ManageLabelServicePostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1484,
 		}
 	}
@@ -3286,7 +3286,7 @@ pub struct ManageLabelServiceDeleteIn {
 impl Entity for ManageLabelServiceDeleteIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1500,
 		}
 	}
@@ -3308,7 +3308,7 @@ pub struct ApplyLabelServicePostIn {
 impl Entity for ApplyLabelServicePostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1504,
 		}
 	}
@@ -3326,7 +3326,7 @@ pub struct ImportMailDataMailReference {
 impl Entity for ImportMailDataMailReference {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1513,
 		}
 	}
@@ -3359,7 +3359,7 @@ pub struct NewImportAttachment {
 impl Entity for NewImportAttachment {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1516,
 		}
 	}
@@ -3384,7 +3384,7 @@ pub struct ImportAttachment {
 impl Entity for ImportAttachment {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1524,
 		}
 	}
@@ -3443,7 +3443,7 @@ pub struct ImportMailData {
 impl Entity for ImportMailData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1530,
 		}
 	}
@@ -3467,7 +3467,7 @@ pub struct ImportedMail {
 impl Entity for ImportedMail {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1552,
 		}
 	}
@@ -3501,7 +3501,7 @@ pub struct ImportMailState {
 impl Entity for ImportMailState {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1559,
 		}
 	}
@@ -3521,7 +3521,7 @@ pub struct ImportMailPostIn {
 impl Entity for ImportMailPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1570,
 		}
 	}
@@ -3537,7 +3537,7 @@ pub struct ImportMailPostOut {
 impl Entity for ImportMailPostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1579,
 		}
 	}
@@ -3568,7 +3568,7 @@ pub struct ImportMailGetIn {
 impl Entity for ImportMailGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1582,
 		}
 	}
@@ -3589,7 +3589,7 @@ pub struct AdvancedRepeatRule {
 impl Entity for AdvancedRepeatRule {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1586,
 		}
 	}
@@ -3607,7 +3607,7 @@ pub struct ImportMailGetOut {
 impl Entity for ImportMailGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1591,
 		}
 	}
@@ -3625,7 +3625,7 @@ pub struct MailExportTokenServicePostOut {
 impl Entity for MailExportTokenServicePostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1605,
 		}
 	}
@@ -3653,7 +3653,7 @@ pub struct SupportTopic {
 impl Entity for SupportTopic {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1618,
 		}
 	}
@@ -3681,7 +3681,7 @@ pub struct SupportCategory {
 impl Entity for SupportCategory {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1626,
 		}
 	}
@@ -3705,7 +3705,7 @@ pub struct SupportData {
 impl Entity for SupportData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1634,
 		}
 	}
@@ -3723,7 +3723,7 @@ pub struct ReceiveInfoServicePostOut {
 impl Entity for ReceiveInfoServicePostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1641,
 		}
 	}
@@ -3741,7 +3741,7 @@ pub struct ResolveConversationsServiceGetIn {
 impl Entity for ResolveConversationsServiceGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1645,
 		}
 	}
@@ -3759,7 +3759,7 @@ pub struct ResolveConversationsServiceGetOut {
 impl Entity for ResolveConversationsServiceGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "tutanota",
+			app: AppName::Tutanota,
 			type_id: 1648,
 		}
 	}

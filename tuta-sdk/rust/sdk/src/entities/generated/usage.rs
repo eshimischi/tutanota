@@ -18,7 +18,7 @@ pub struct UsageTestMetricConfigValue {
 impl Entity for UsageTestMetricConfigValue {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 8,
 		}
 	}
@@ -40,7 +40,7 @@ pub struct UsageTestMetricConfig {
 impl Entity for UsageTestMetricConfig {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 12,
 		}
 	}
@@ -60,7 +60,7 @@ pub struct UsageTestMetricData {
 impl Entity for UsageTestMetricData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 17,
 		}
 	}
@@ -84,7 +84,7 @@ pub struct UsageTestStage {
 impl Entity for UsageTestStage {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 35,
 		}
 	}
@@ -102,7 +102,7 @@ pub struct UsageTestAssignmentIn {
 impl Entity for UsageTestAssignmentIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 53,
 		}
 	}
@@ -128,7 +128,7 @@ pub struct UsageTestAssignment {
 impl Entity for UsageTestAssignment {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 56,
 		}
 	}
@@ -148,7 +148,7 @@ pub struct UsageTestAssignmentOut {
 impl Entity for UsageTestAssignmentOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 63,
 		}
 	}
@@ -172,7 +172,7 @@ pub struct UsageTestParticipationIn {
 impl Entity for UsageTestParticipationIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
-			app: "usage",
+			app: AppName::Usage,
 			type_id: 80,
 		}
 	}

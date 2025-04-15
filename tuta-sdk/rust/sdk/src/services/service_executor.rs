@@ -207,7 +207,7 @@ impl Executor for ServiceExecutor {
 			},
 			S::PATH,
 		);
-		let model_version: u32 = S::VERSION;
+		let model_version: u64 = S::VERSION;
 		let mut query_params = extra_service_params.query_params.unwrap_or_default();
 
 		let parsed_input_data: Option<RawEntity> = if let Some(input_entity) = data {
@@ -389,6 +389,7 @@ mod tests {
 	use crate::instance_mapper::InstanceMapper;
 	use crate::json_element::RawEntity;
 	use crate::json_serializer::JsonSerializer;
+	use crate::metamodel::AppName;
 	use crate::services::service_executor::ResolvingServiceExecutor;
 	use crate::services::ExtraServiceParams;
 	use crate::util::test_utils::*;
@@ -761,7 +762,10 @@ mod tests {
 		crypto_facade
 			.expect_resolve_session_key()
 			.returning(move |_entity, model| {
-				assert_eq!(("test", "HelloEncOutput"), (model.app, model.name));
+				assert_eq!(
+					(AppName::Test, "HelloEncOutput"),
+					(model.app, model.name.as_str())
+				);
 				assert!(model.marked_encrypted());
 
 				Ok(Some(ResolvedSessionKey {
