@@ -102,7 +102,7 @@ export class AttendeeListEditor implements Component<AttendeeListEditorAttrs> {
 						m(IconMessageBox, {
 							message: "noEntries_msg",
 							icon: Icons.People,
-							color: theme.surface_container_high,
+							color: theme.on_surface_fade,
 						}),
 					]),
 			  )

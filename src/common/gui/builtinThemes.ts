@@ -109,8 +109,8 @@ export const themes = (): Themes => {
 
 		surface: light_white,
 		surface_container: grey_lighter_4,
+		on_surface_fade: grey_lighter_0,
 		// optimised until here //
-		surface_container_high: grey_lighter_0, // on_surface_variant ??
 		on_surface: grey_darker_1,
 		on_surface_variant: grey_darker_0,
 
@@ -136,7 +136,7 @@ export const themes = (): Themes => {
 
 		surface: dark_darker_0,
 		surface_container: dark_lighter_0,
-		surface_container_high: dark_lighter_2,
+		on_surface_fade: dark_lighter_2,
 		on_surface: light_lighter_1,
 		on_surface_variant: light_lighter_0,
 
@@ -163,7 +163,7 @@ export const themes = (): Themes => {
 
 		surface: light_white,
 		surface_container: grey_lighter_4,
-		surface_container_high: grey_lighter_0,
+		on_surface_fade: grey_lighter_0,
 		on_surface: grey_darker_1,
 		on_surface_variant: grey_darker_0,
 
@@ -189,7 +189,7 @@ export const themes = (): Themes => {
 
 		surface: dark_darker_0,
 		surface_container: dark_lighter_0,
-		surface_container_high: dark_lighter_2,
+		on_surface_fade: dark_lighter_2,
 		on_surface: light_lighter_1,
 		on_surface_variant: light_lighter_0,
 

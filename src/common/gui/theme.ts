@@ -26,7 +26,7 @@ export type Theme = {
 	error: string
 	surface: string
 	surface_container: string
-	surface_container_high: string
+	on_surface_fade: string
 	on_surface: string
 	on_surface_variant: string
 	outline: string
@@ -77,7 +77,7 @@ export function getElevatedBackground(): string {
 }
 
 export function getNavigationMenuBg(): string {
-	return isColorLight(theme.surface) ? theme.surface_container : theme.surface
+	return isColorLight(theme.surface) ? theme.secondary : theme.surface
 }
 
 export function getLightOrDarkTutaLogo(isCalendarApp: boolean): string {

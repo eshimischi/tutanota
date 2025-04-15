@@ -30,7 +30,7 @@ export class MultiItemViewer<T> implements Component<MultiItemViewerAttrs<T>> {
 					m(ColumnEmptyMessageBox, {
 						message: attrs.getSelectionMessage(selectedEntities),
 						icon: BootIcons.Mail,
-						color: theme.surface_container_high,
+						color: theme.on_surface_fade,
 						backgroundColor: theme.surface_container,
 						bottomContent: this.renderEmptyMessageButtons(attrs),
 					}),

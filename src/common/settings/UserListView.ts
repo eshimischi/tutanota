@@ -119,7 +119,7 @@ export class UserListView implements UpdatableSettingsViewer {
 			},
 			this.listModel.isEmptyAndDone()
 				? m(ColumnEmptyMessageBox, {
-						color: theme.surface_container_high,
+						color: theme.on_surface_fade,
 						icon: BootIcons.Contacts,
 						message: "noEntries_msg",
 				  })

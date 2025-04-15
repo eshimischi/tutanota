@@ -709,7 +709,7 @@ styles.registerStyle("main", () => {
 			"pointer-events": "none",
 		},
 		".content-message-bg": {
-			"background-color": theme.surface_container_high,
+			"background-color": theme.on_surface_fade,
 		},
 		".elevated-bg": {
 			"background-color": getElevatedBackground(),
@@ -2017,7 +2017,7 @@ styles.registerStyle("main", () => {
 			height: px(16),
 			"text-align": "center",
 			color: "white",
-			background: theme.surface_container_high,
+			background: theme.on_surface_variant,
 		},
 		".tooltip": {
 			position: "relative",
@@ -2025,8 +2025,8 @@ styles.registerStyle("main", () => {
 		},
 		".tooltip .tooltiptext": {
 			visibility: "hidden",
-			"background-color": theme.surface_container,
-			color: theme.on_surface_variant,
+			"background-color": theme.on_surface_variant,
+			color: theme.surface,
 			"text-align": "center",
 			padding: "5px 5px",
 			"border-radius": px(6),
@@ -2055,7 +2055,7 @@ styles.registerStyle("main", () => {
 			},
 		},
 		".info-badge:active": {
-			background: theme.surface_container,
+			background: theme.on_surface,
 		},
 		".tooltip:hover .tooltiptext, .tooltip[expanded=true] .tooltiptext": {
 			visibility: "visible",
@@ -2417,7 +2417,7 @@ styles.registerStyle("main", () => {
 		".custom-color-container .inputWrapper:before": {
 			// slash in content is content alt. so that it's ignored by screen readers
 			content: '"#" / ""',
-			color: theme.surface_container_high,
+			color: theme.on_surface_fade,
 		},
 		".calendar-invite-field": {
 			"min-width": "80px",
@@ -2690,7 +2690,7 @@ styles.registerStyle("main", () => {
 			color: theme.on_surface_variant,
 		},
 		".faded-text": {
-			color: theme.surface_container_high,
+			color: theme.on_surface_fade,
 		},
 		".svg-text-content-bg text": {
 			fill: theme.surface,
@@ -2744,13 +2744,13 @@ styles.registerStyle("main", () => {
 			"background-color": theme.secondary,
 		},
 		".tutaui-text-field::placeholder": {
-			color: theme.surface_container_high,
+			color: theme.on_surface_fade,
 		},
 		".text-editor-placeholder": {
 			position: "absolute",
 			top: px(size.vpad_small),
 			left: px(size.vpad_small),
-			color: theme.surface_container_high,
+			color: theme.on_surface_fade,
 		},
 		".tutaui-switch": {
 			display: "flex",
@@ -2762,7 +2762,7 @@ styles.registerStyle("main", () => {
 			display: "block",
 			width: "45.5px",
 			height: "28px",
-			"background-color": theme.surface_container_high,
+			"background-color": theme.on_surface_fade,
 			"border-radius": px(size.vpad_small * 4),
 			transition: `background-color ${DefaultAnimationTime}ms ease-out`,
 		},

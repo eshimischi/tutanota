@@ -265,7 +265,7 @@ export class MailViewer implements Component<MailViewerAttrs> {
 			return m(IconMessageBox, {
 				message: "corrupted_msg",
 				icon: Icons.Warning,
-				color: theme.surface_container_high,
+				color: theme.on_surface_fade,
 			})
 		}
 
