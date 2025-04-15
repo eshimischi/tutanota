@@ -143,7 +143,7 @@ export class KnowledgeBaseListView implements UpdatableSettingsViewer {
 			},
 			this.listModel.isEmptyAndDone()
 				? m(ColumnEmptyMessageBox, {
-						color: theme.surface_dim,
+						color: theme.surface_container_high,
 						icon: Icons.Book,
 						message: "noEntries_msg",
 				  })

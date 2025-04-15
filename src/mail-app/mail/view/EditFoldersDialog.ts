@@ -77,7 +77,7 @@ export class EditFoldersDialog implements ModalComponent {
 					this._domDialog = vnode.dom as HTMLElement
 					let animation: AnimationPromise | null = null
 
-					const bgcolor = theme.surface_container_low
+					const bgcolor = theme.surface_container
 					const children = Array.from(this._domDialog.children) as Array<HTMLElement>
 					for (let child of children) {
 						child.style.opacity = "0"

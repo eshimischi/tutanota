@@ -31,7 +31,7 @@ export function getColors(buttonColors: ButtonColor | null | undefined): {
 		case ButtonColor.Nav:
 			return {
 				button: theme.on_surface_variant,
-				border: theme.surface_container_low,
+				border: theme.surface_container,
 			}
 
 		case ButtonColor.DrawerNav:

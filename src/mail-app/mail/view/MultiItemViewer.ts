@@ -31,7 +31,7 @@ export class MultiItemViewer<T> implements Component<MultiItemViewerAttrs<T>> {
 						message: attrs.getSelectionMessage(selectedEntities),
 						icon: BootIcons.Mail,
 						color: theme.surface_container_high,
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						bottomContent: this.renderEmptyMessageButtons(attrs),
 					}),
 				),

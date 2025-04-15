@@ -32,7 +32,7 @@ export class MultiContactViewer implements Component<MultiContactViewerAttrs> {
 								click: () => attrs.selectNone(),
 						  })
 						: undefined,
-				backgroundColor: theme.surface_container_low,
+				backgroundColor: theme.surface_container,
 			}),
 		]
 	}

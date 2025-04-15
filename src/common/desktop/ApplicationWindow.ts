@@ -222,7 +222,7 @@ export class ApplicationWindow {
 		const theme = await this.themeFacade.getCurrentThemeWithFallback()
 
 		if (theme) {
-			this._browserWindow.setBackgroundColor(theme.surface_container_low)
+			this._browserWindow.setBackgroundColor(theme.surface_container)
 		}
 	}
 

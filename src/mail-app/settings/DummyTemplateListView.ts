@@ -50,7 +50,7 @@ export class DummyTemplateListView implements Component<DummyTemplateListViewAtt
 			m(
 				".fill-absolute.overflow-hidden",
 				m(ColumnEmptyMessageBox, {
-					color: theme.surface_dim,
+					color: theme.surface_container_high,
 					icon: Icons.ListAlt,
 					message: "noEntries_msg",
 				}),

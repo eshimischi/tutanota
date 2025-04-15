@@ -102,7 +102,7 @@ export class AttendeeListEditor implements Component<AttendeeListEditorAttrs> {
 						m(IconMessageBox, {
 							message: "noEntries_msg",
 							icon: Icons.People,
-							color: theme.surface_dim,
+							color: theme.surface_container_high,
 						}),
 					]),
 			  )
@@ -270,7 +270,7 @@ export class AttendeeListEditor implements Component<AttendeeListEditorAttrs> {
 							: null,
 					]),
 					isMe && model.operation !== CalendarOperation.EditThis
-						? [m(Divider, { color: theme.secondary }), this.renderAttendeeStatus(whoModel, organizer)]
+						? [m(Divider, { color: theme.outline_variant }), this.renderAttendeeStatus(whoModel, organizer)]
 						: null,
 				]),
 			]),
@@ -341,7 +341,7 @@ export class AttendeeListEditor implements Component<AttendeeListEditorAttrs> {
 									},
 								},
 								m(Divider, {
-									color: theme.secondary,
+									color: theme.on_surface_variant,
 								}),
 							),
 							this.renderPasswordField(address, password, strength ?? 0, whoModel),

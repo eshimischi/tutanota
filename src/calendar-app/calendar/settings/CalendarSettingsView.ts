@@ -120,7 +120,7 @@ export class CalendarSettingsView extends BaseTopLevelView implements TopLevelVi
 				// are concealed), but there's still room for improvement for scrollbars
 				view: () =>
 					m(BackgroundColumnLayout, {
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						classes: this.isTabletView() ? "pr-m pl-vpad-s" : "",
 						columnLayout: m(
 							".mlr-safe-inset.fill-absolute.content-bg.border-radius-top-left-m.border-radius-top-right-m",
@@ -166,7 +166,7 @@ export class CalendarSettingsView extends BaseTopLevelView implements TopLevelVi
 			{
 				view: () => {
 					return m(BackgroundColumnLayout, {
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						columnLayout: m(".flex.flex-grow.col.full-height", [
 							this.renderSettingsNavigation(this.userFolders, "userSettings_label"),
 							this.renderLoggedInNavigationLinks(),

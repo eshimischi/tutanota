@@ -700,7 +700,7 @@ styles.registerStyle("main", () => {
 			"background-color": theme.surface,
 		},
 		".nav-bg": {
-			"background-color": theme.surface_container_low,
+			"background-color": theme.surface_container,
 		},
 		".content-hover:hover": {
 			color: theme.primary,
@@ -735,7 +735,7 @@ styles.registerStyle("main", () => {
 		},
 		".button-bg": {
 			background: theme.on_surface_variant,
-			color: theme.surface_container_low,
+			color: theme.surface_container,
 			opacity: "0.5",
 		},
 		".accent-bg": {
@@ -1176,7 +1176,7 @@ styles.registerStyle("main", () => {
 			"-webkit-tap-highlight-color": "rgba(255, 255, 255, 0)",
 			"padding-bottom": px(size.icon_size_small),
 			"padding-top": px(size.icon_size_small),
-			"border-bottom": `1px solid ${theme.secondary} !important`,
+			"border-bottom": `1px solid ${theme.outline_variant} !important`,
 		},
 		".settings-item:last-child": {
 			"border-bottom": "none !important",
@@ -1435,7 +1435,7 @@ styles.registerStyle("main", () => {
 		// header
 		".header-nav": {
 			height: px(size.navbar_height),
-			"background-color": theme.surface_container_low,
+			"background-color": theme.surface_container,
 			"z-index": 2,
 		},
 		".bottom-nav": {
@@ -1640,7 +1640,7 @@ styles.registerStyle("main", () => {
 		},
 		// mail list
 		".teamLabel": {
-			color: theme.surface_container_low,
+			color: theme.on_primary,
 			"background-color": theme.primary,
 		},
 		".ion": {
@@ -2017,7 +2017,7 @@ styles.registerStyle("main", () => {
 			height: px(16),
 			"text-align": "center",
 			color: "white",
-			background: theme.on_surface_variant,
+			background: theme.surface_container_high,
 		},
 		".tooltip": {
 			position: "relative",
@@ -2025,8 +2025,8 @@ styles.registerStyle("main", () => {
 		},
 		".tooltip .tooltiptext": {
 			visibility: "hidden",
-			"background-color": theme.on_surface_variant,
-			color: theme.surface,
+			"background-color": theme.surface_container,
+			color: theme.on_surface_variant,
 			"text-align": "center",
 			padding: "5px 5px",
 			"border-radius": px(6),
@@ -2055,8 +2055,7 @@ styles.registerStyle("main", () => {
 			},
 		},
 		".info-badge:active": {
-			background: theme.surface,
-			color: theme.on_surface_variant,
+			background: theme.surface_container,
 		},
 		".tooltip:hover .tooltiptext, .tooltip[expanded=true] .tooltiptext": {
 			visibility: "visible",
@@ -2195,10 +2194,10 @@ styles.registerStyle("main", () => {
 			opacity: "0.4",
 		},
 		".calendar-alternate-background": {
-			background: `${theme.surface_container_low} !important`,
+			background: `${theme.surface_container} !important`,
 		},
 		".calendar-day:hover": {
-			background: theme.surface_container_low,
+			background: theme.surface_container,
 		},
 		".calendar-day:hover .calendar-day-header-button": {
 			opacity: 1,
@@ -2212,7 +2211,7 @@ styles.registerStyle("main", () => {
 			flex: "1 0 auto",
 		},
 		".calendar-hour:hover": {
-			background: theme.surface_container_low,
+			background: theme.surface_container,
 		},
 		".calendar-column-border": {
 			"border-right": `1px solid ${theme.outline_variant}`,
@@ -2245,7 +2244,7 @@ styles.registerStyle("main", () => {
 			"font-size": "14px",
 		},
 		".calendar-day .calendar-day-indicator:hover": {
-			background: theme.surface_dim,
+			background: theme.surface_container,
 			opacity: 0.7,
 		},
 		".calendar-day-number": {
@@ -2724,7 +2723,7 @@ styles.registerStyle("main", () => {
 		},
 		".tutaui-card-container-divide > *:not(:last-child)": {
 			"border-radius": "0",
-			"border-bottom": `1px solid ${theme.secondary}`,
+			"border-bottom": `1px solid ${theme.outline_variant}`,
 		},
 		".tutaui-text-field, .child-text-editor [role='textbox']": {
 			display: "block",

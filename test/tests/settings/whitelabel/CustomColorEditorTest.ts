@@ -134,7 +134,7 @@ o.spec("SimpleColorEditor", function () {
 			model.addCustomization("shadow", "#false")
 			model.addCustomization("secondary", "#69")
 			model.addCustomization("on_surface", "#zzzzzz")
-			model.addCustomization("surface_container_low", "#abcdefghi")
+			model.addCustomization("surface_container", "#abcdefghi")
 			// Customizations should hold the wrong key
 			o(model.customizations).deepEquals(
 				downcast(
@@ -142,7 +142,7 @@ o.spec("SimpleColorEditor", function () {
 						shadow: "#false",
 						secondary: "#69",
 						on_surface: "#zzzzzz",
-						surface_container_low: "#abcdefghi",
+						surface_container: "#abcdefghi",
 					}),
 				),
 			)
@@ -163,7 +163,7 @@ o.spec("SimpleColorEditor", function () {
 			model.addCustomization("shadow", "#fedcba")
 			model.addCustomization("secondary", "#69")
 			model.addCustomization("on_surface", "#deffed")
-			model.addCustomization("surface_container_low", "#abcdefghi")
+			model.addCustomization("surface_container", "#abcdefghi")
 			model.addCustomization("on_surface_variant", "#abcdef")
 			o(model.customizations).deepEquals(
 				downcast(
@@ -171,7 +171,7 @@ o.spec("SimpleColorEditor", function () {
 						shadow: "#fedcba",
 						secondary: "#69",
 						on_surface: "#deffed",
-						surface_container_low: "#abcdefghi",
+						surface_container: "#abcdefghi",
 						on_surface_variant: "#abcdef",
 					}),
 				),

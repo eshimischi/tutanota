@@ -24,9 +24,7 @@ export type Theme = {
 	secondary: string
 	on_secondary: string
 	error: string
-	surface_dim: string
 	surface: string
-	surface_container_low: string
 	surface_container: string
 	surface_container_high: string
 	on_surface: string

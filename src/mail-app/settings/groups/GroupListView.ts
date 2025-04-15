@@ -103,7 +103,7 @@ export class GroupListView implements UpdatableSettingsViewer {
 			},
 			this.listModel.isEmptyAndDone()
 				? m(ColumnEmptyMessageBox, {
-						color: theme.surface_dim,
+						color: theme.surface_container_high,
 						icon: Icons.People,
 						message: "noEntries_msg",
 				  })

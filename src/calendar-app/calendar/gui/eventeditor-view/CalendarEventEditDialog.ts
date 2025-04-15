@@ -144,7 +144,7 @@ export class EventEditorDialog {
 			},
 			{
 				height: "100%",
-				"background-color": theme.surface_container_low,
+				"background-color": theme.surface_container,
 			},
 		)
 			.addShortcut({

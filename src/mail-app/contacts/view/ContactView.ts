@@ -143,7 +143,7 @@ export class ContactView extends BaseTopLevelView implements TopLevelView<Contac
 			{
 				view: () =>
 					m(BackgroundColumnLayout, {
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						desktopToolbar: () => m(DesktopViewerToolbar, this.detailsViewerActions()),
 						mobileHeader: () =>
 							m(MobileHeader, {
@@ -184,7 +184,7 @@ export class ContactView extends BaseTopLevelView implements TopLevelView<Contac
 
 	private renderContactListColumn(header: AppHeaderAttrs) {
 		return m(BackgroundColumnLayout, {
-			backgroundColor: theme.surface_container_low,
+			backgroundColor: theme.surface_container,
 			columnLayout: m(ContactListView, {
 				contactViewModel: this.contactViewModel,
 				onSingleSelection: () => {
@@ -218,7 +218,7 @@ export class ContactView extends BaseTopLevelView implements TopLevelView<Contac
 
 	private renderContactListRecipientColumn(header: AppHeaderAttrs) {
 		return m(BackgroundColumnLayout, {
-			backgroundColor: theme.surface_container_low,
+			backgroundColor: theme.surface_container,
 			columnLayout: m(ContactListRecipientView, {
 				viewModel: this.contactListViewModel,
 				focusDetailsViewer: () => {
@@ -413,7 +413,7 @@ export class ContactView extends BaseTopLevelView implements TopLevelView<Contac
 										click: () => this.contactListViewModel.listModel?.selectNone(),
 								  })
 								: null,
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 				  })
 				: m(ContactListEntryViewer, {
 						entry: getFirstOrThrow(entries),

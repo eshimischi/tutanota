@@ -83,7 +83,7 @@ export class KeyManagementSettingsViewer implements UpdatableSettingsViewer {
 				".fill-absolute.scroll.plr-l.pb-xl",
 				{
 					style: {
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						gap: "16px",
 						display: "flex",
 						flexDirection: "column",

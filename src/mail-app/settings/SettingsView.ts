@@ -324,7 +324,7 @@ export class SettingsView extends BaseTopLevelView implements TopLevelView<Setti
 				// are concealed), but there's still room for improvement for scrollbars
 				view: () =>
 					m(BackgroundColumnLayout, {
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						columnLayout: m(
 							".mlr-safe-inset.fill-absolute.content-bg",
 							{
@@ -355,7 +355,7 @@ export class SettingsView extends BaseTopLevelView implements TopLevelView<Setti
 			{
 				view: () =>
 					m(BackgroundColumnLayout, {
-						backgroundColor: theme.surface_container_low,
+						backgroundColor: theme.surface_container,
 						columnLayout: m(
 							`.mlr-safe-inset.fill-absolute${this.detailsViewer ? ".content-bg" : ""}`,
 							this.detailsViewer ? this.detailsViewer.renderView() : m(""),
