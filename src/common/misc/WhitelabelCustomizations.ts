@@ -23,7 +23,18 @@ export type WhitelabelCustomizations = {
  */
 export function getWhitelabelCustomizations(window: Window): WhitelabelCustomizations | null {
 	// @ts-ignore
-	return window.whitelabelCustomizations
+	return mapColorTokens(window.whitelabelCustomizations)
+}
+
+/**
+ * TODO: Map over the old color tokens to the new color tokens.
+ * If there are explicitly defined colours for the new tokens, they will be respected and the mapping will not be happen.
+ */
+function mapColorTokens(whitelabelCustomizations: WhitelabelCustomizations): WhitelabelCustomizations | null {
+	if (!whitelabelCustomizations) {
+		return null
+	}
+	return whitelabelCustomizations
 }
 
 export function getThemeCustomizations(whitelabelConfig: WhitelabelConfig): ThemeCustomizations {

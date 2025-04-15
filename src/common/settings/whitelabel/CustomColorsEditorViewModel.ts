@@ -165,16 +165,7 @@ export class CustomColorsEditorViewModel {
 	 * @return boolean, true iff provided parameter 'name' shall be excluded
 	 */
 	_shallBeExcluded(name: CustomizationKey): boolean {
-		const excludedColors = [
-			"logo",
-			"themeId",
-			"base",
-			"primary",
-			"primary",
-			"content_accent_tuta_bday",
-			"content_accent_secondary_tuta_bday",
-			"content_bg_tuta_bday",
-		]
+		const excludedColors = ["logo", "themeId", "base", "content_accent_tuta_bday", "content_accent_secondary_tuta_bday", "content_bg_tuta_bday"]
 		return excludedColors.includes(name)
 	}
 
