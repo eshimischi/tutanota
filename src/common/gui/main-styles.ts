@@ -2905,5 +2905,8 @@ styles.registerStyle("main", () => {
 		pre: {
 			margin: 0,
 		},
+		".mt-auto": {
+			"margin-top": "auto",
+		},
 	}
 })

@@ -2000,7 +2000,9 @@ export default {
 		"you_label": "You",
 		"zoomIn_action": "Zoom In",
 		"zoomOut_action": "Zoom Out",
-		"ratingSupportTuta_title": "Support the mission of privacy",
-		"donate_action": "Donate"
+		"ratingSupportTuta_title": "Help us spread privacy and fight Big Tech",
+		"donate_action": "Make a Donation",
+		"ratingUpgrade_label": "Upgrade & Support Us",
+		"ratingSupportTuta_msg": "David beat Goliath. You can help us do the same."
 	}
 }

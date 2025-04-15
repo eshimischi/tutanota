@@ -26,7 +26,7 @@ export class SuggestionPage implements Component<SuggestionPageAttrs> {
 	view(): Children {
 		return m(
 			".flex.flex-column.pt.height-100p.gap-vpad",
-			m(Card, m(".h1.m-0.text-center", "Tell us why")), // FIXME
+			m(Card, { shouldDivide: true }, m(".h1.text-center.pb-s.pt-s", "What's on your mind?")), // FIXME
 			m(
 				Card,
 				{
@@ -51,7 +51,7 @@ export class SuggestionPage implements Component<SuggestionPageAttrs> {
 				m(
 					".align-self-center.full-width",
 					m(LoginButton, {
-						label: "send_action",
+						label: "submit_action",
 						disabled: this.textFieldInput.trim() === "",
 						onclick: () => void this.onSendButtonClick(),
 					}),
@@ -99,7 +99,7 @@ class SimpleTextEditor implements Component<SimpleTextEditorAttrs> {
 	view(vnode: Vnode<SimpleTextEditorAttrs>) {
 		return m("textarea.tutaui-text-field", {
 			style: { "field-sizing": "content", resize: "none", "min-height": px(250) },
-			placeholder: "What's wrong?", // FIXME
+			placeholder: "Have an idea or feedback? Type away...", // FIXME
 			oninput: (event: InputEvent) => {
 				const target = event.target
 				vnode.attrs.oninput(target ? (target as HTMLTextAreaElement).value : "")

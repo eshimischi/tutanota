@@ -20,17 +20,20 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 	}
 
 	view({ attrs: { dialog, navigate } }: Vnode<DissatisfactionPageAttrs>): Children {
-		return [
-			m(
-				".mt-l.mb-s",
-				m("img.pb.block.full-width.height-100p", {
-					src: `${window.tutao.appState.prefixWithoutFile}/images/leaving-wizard/other.png`,
-					alt: "",
-					rel: "noreferrer",
-					loading: "lazy",
-					decoding: "async",
-				}),
-			),
+		return m(
+			"div.flex.flex-column.height-100p.gap-vpad",
+			{
+				style: {
+					padding: "1em 0",
+				},
+			},
+			m("img.pb.block.full-width", {
+				src: `${window.tutao.appState.prefixWithoutFile}/images/leaving-wizard/other.png`,
+				alt: "",
+				rel: "noreferrer",
+				loading: "lazy",
+				decoding: "async",
+			}),
 			m(
 				".text-center",
 				{
@@ -44,7 +47,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					// m("p", "We're listening - Whether it's a bright idea or an issue.")
 				],
 			),
-			m(Card, { shouldDivide: true, classes: ["mt"] }, [
+			m(Card, { shouldDivide: true, classes: ["mt-auto"] }, [
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Bulb,
@@ -68,6 +71,6 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					},
 				}),
 			]),
-		]
+		)
 	}
 }

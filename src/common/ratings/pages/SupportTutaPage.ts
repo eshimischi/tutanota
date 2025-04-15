@@ -39,7 +39,7 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/rate-us-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
 			imageStyle: { maxWidth: px(300) },
 			titleText: "ratingSupportTuta_title",
-			messageText: "emptyString_msg",
+			messageText: "ratingSupportTuta_msg",
 			mainActionText: this.getMainAction().langKey,
 			mainActionClick: () => {
 				const mainAction = this.getMainAction()
@@ -61,7 +61,7 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 			case PlanType.Revolutionary: {
 				return {
 					buttonType: "Upgrade",
-					langKey: "upgrade_action",
+					langKey: "ratingUpgrade_label",
 					onClick: () => {
 						this.dialog?.close()
 						void showUpgradeDialog()

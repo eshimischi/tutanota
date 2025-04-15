@@ -1443,6 +1443,8 @@ export type TranslationKeyType =
 	| "ratingLoveIt_label"
 	| "ratingNeedsWork_label"
 	| "ratingSupportTuta_title"
+	| "ratingSupportTuta_msg"
+	| "ratingUpgrade_label"
 	| "readResponse_action"
 	| "reallySubmitContent_msg"
 	| "receiveCalendarNotifications_label"
