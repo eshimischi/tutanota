@@ -8,6 +8,11 @@
 import WidgetKit
 import SwiftUI
 
+struct SimpleEntry: TimelineEntry {
+	let date: Date
+	let configuration: ConfigurationAppIntent
+}
+
 struct Provider: AppIntentTimelineProvider {
 	func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
 		var entries: [SimpleEntry] = []
@@ -31,20 +36,16 @@ struct Provider: AppIntentTimelineProvider {
     }
 }
 
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let configuration: ConfigurationAppIntent
-}
-
 struct AgendaWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
         VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
+            Text("Account:")
+			Text(entry.configuration.account?.email ?? "No account selected" )
 
-            Text("Favorite Emoji:")
+            Text("Calendars:")
+			// Text(entry.configuration ?? "No calendars selected" )
 		}.containerBackground(for: .widget) { Color.clear }
     }
 }

@@ -13,6 +13,22 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Select an account and calendars" }
     static var description: IntentDescription { "This is an example widget." }
 
-	@Parameter(title: "User", description: "User to load calendars from")
+	@Parameter(title: "User", description: LocalizedStringResource(stringLiteral: "User account to load calendars from"))
 	var account: Credential?
+
+	@Parameter(title: "Calendars", description: LocalizedStringResource(stringLiteral: "Calendars to fetch the event from"))
+	var calendars: [CalendarEntity]?
+
+	static var parameterSummary: some ParameterSummary {
+		When(\.$account, .hasNoValue) {
+			Summary {
+				\.$account
+			}
+		} otherwise: {
+			Summary {
+				\.$account
+				\.$calendars
+			}
+		}
+	}
 }

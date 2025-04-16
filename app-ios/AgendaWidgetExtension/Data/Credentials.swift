@@ -15,9 +15,15 @@ struct Credential : AppEntity {
 
 	static var defaultQuery: CredentialsQuery = CredentialsQuery()
 
-	static var typeDisplayRepresentation: TypeDisplayRepresentation = "User"
+	static var typeDisplayRepresentation: TypeDisplayRepresentation = "Credential"
 
-	var displayRepresentation: DisplayRepresentation
+	var displayRepresentation: DisplayRepresentation {
+		let emailUser = String(email.split(separator: "@").first ?? "")
+		return DisplayRepresentation(
+			title: LocalizedStringResource(stringLiteral: emailUser),
+			subtitle: LocalizedStringResource(stringLiteral: email)
+		)
+	}
 
 	static func fetchCredentials() async throws -> [Credential] {
 		do {
@@ -26,7 +32,7 @@ struct Credential : AppEntity {
 			let keychainEncryption = KeychainEncryption(keychainManager: keychainManager)
 			let credentialsFacade = IosNativeCredentialsFacade(keychainEncryption: keychainEncryption, credentialsDb: credentialsDb, cryptoFns: CryptoFunctions())
 			let credentials = try await credentialsFacade.loadAll()
-			return credentials.map { Credential(id: $0.credentialInfo.userId, email: $0.credentialInfo.login, displayRepresentation: DisplayRepresentation(stringLiteral: $0.credentialInfo.login)) }
+			return credentials.map { Credential(id: $0.credentialInfo.userId, email: $0.credentialInfo.login) }
 		} catch {
 			TUTSLog("[WidgetConfig] Error: \(error)")
 			return []
