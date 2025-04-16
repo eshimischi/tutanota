@@ -8,6 +8,7 @@ import { Icons } from "../../gui/base/icons/Icons.js"
 import { Card } from "../../gui/base/Card.js"
 import { client } from "../../misc/ClientDetector.js"
 import { px } from "../../gui/size.js"
+import { theme } from "../../gui/theme.js"
 
 interface DissatisfactionPageAttrs {
 	dialog: Dialog
@@ -54,6 +55,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					leftIcon: {
 						icon: Icons.Bulb,
 						title: "ratingSuggestion_label",
+						fill: theme.content_accent,
 					},
 					text: "ratingSuggestion_label",
 					onclick: () => {
@@ -64,9 +66,9 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					leftIcon: {
 						icon: Icons.Warning,
 						title: "ratingNeedUrgentHelp_label",
+						fill: theme.content_accent,
 					},
 					text: "ratingNeedUrgentHelp_label",
-					rightIcon: { icon: Icons.Open, title: "sendMail_label" },
 					onclick: () => {
 						navigate("contactSupport")
 					},

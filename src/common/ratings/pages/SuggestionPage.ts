@@ -28,18 +28,18 @@ export class SuggestionPage implements Component<SuggestionPageAttrs> {
 		return m(
 			".flex.flex-column.pt.height-100p.gap-vpad",
 			m(Card, [
-				m("img.pb.block.center-h", {
+				m("img.block.center-h", {
 					src: `${window.tutao.appState.prefixWithoutFile}/images/rating/suggestion-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
 					alt: "",
 					rel: "noreferrer",
 					loading: "lazy",
 					decoding: "async",
 					style: {
-						width: "50%",
-						maxWidth: px(200),
+						width: "30%",
+						maxWidth: px(160),
 					},
 				}),
-				m(".h1.text-center.pb-s.pt-s", lang.get("ratingSuggestionPage_title")),
+				m(".h3.text-center.pb-s.pt-s", lang.get("ratingSuggestionPage_title")),
 			]),
 			m(
 				Card,
