@@ -131,7 +131,7 @@ impl TypeRef {
 
 impl Display for TypeRef {
 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		write!(f, "TypeRef({}, {})", self.app, self.type_id)
+		write!(f, "TypeRef({}, {:?})", self.app, self.type_id)
 	}
 }
 

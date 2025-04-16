@@ -33,7 +33,7 @@ impl Entity for KeyPair {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 0,
+			type_id: TypeId::from(0),
 		}
 	}
 }
@@ -90,7 +90,7 @@ impl Entity for Group {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 5,
+			type_id: TypeId::from(5),
 		}
 	}
 }
@@ -136,7 +136,7 @@ impl Entity for GroupInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 14,
+			type_id: TypeId::from(14),
 		}
 	}
 }
@@ -171,7 +171,7 @@ impl Entity for GroupMembership {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 25,
+			type_id: TypeId::from(25),
 		}
 	}
 }
@@ -235,7 +235,7 @@ impl Entity for Customer {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 31,
+			type_id: TypeId::from(31),
 		}
 	}
 }
@@ -258,7 +258,7 @@ impl Entity for AuthenticatedDevice {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 43,
+			type_id: TypeId::from(43),
 		}
 	}
 }
@@ -282,7 +282,7 @@ impl Entity for Login {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 48,
+			type_id: TypeId::from(48),
 		}
 	}
 }
@@ -312,7 +312,7 @@ impl Entity for SecondFactorAuthentication {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 54,
+			type_id: TypeId::from(54),
 		}
 	}
 }
@@ -348,7 +348,7 @@ impl Entity for VariableExternalAuthInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 66,
+			type_id: TypeId::from(66),
 		}
 	}
 }
@@ -375,7 +375,7 @@ impl Entity for UserExternalAuthInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 77,
+			type_id: TypeId::from(77),
 		}
 	}
 }
@@ -433,7 +433,7 @@ impl Entity for User {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 84,
+			type_id: TypeId::from(84),
 		}
 	}
 }
@@ -459,7 +459,7 @@ impl Entity for ExternalUserReference {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 103,
+			type_id: TypeId::from(103),
 		}
 	}
 }
@@ -487,7 +487,7 @@ impl Entity for GroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 110,
+			type_id: TypeId::from(110),
 		}
 	}
 }
@@ -532,7 +532,7 @@ impl Entity for BucketPermission {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 118,
+			type_id: TypeId::from(118),
 		}
 	}
 }
@@ -550,7 +550,7 @@ impl Entity for Bucket {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 129,
+			type_id: TypeId::from(129),
 		}
 	}
 }
@@ -597,7 +597,7 @@ impl Entity for Permission {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 132,
+			type_id: TypeId::from(132),
 		}
 	}
 }
@@ -658,7 +658,7 @@ impl Entity for AccountingInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 143,
+			type_id: TypeId::from(143),
 		}
 	}
 }
@@ -736,7 +736,7 @@ impl Entity for CustomerInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 148,
+			type_id: TypeId::from(148),
 		}
 	}
 }
@@ -766,7 +766,7 @@ impl Entity for SentGroupInvitation {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 195,
+			type_id: TypeId::from(195),
 		}
 	}
 }
@@ -790,7 +790,7 @@ impl Entity for MailAddressToGroup {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 204,
+			type_id: TypeId::from(204),
 		}
 	}
 }
@@ -820,7 +820,7 @@ impl Entity for GroupMember {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 216,
+			type_id: TypeId::from(216),
 		}
 	}
 }
@@ -844,7 +844,7 @@ impl Entity for RootInstance {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 231,
+			type_id: TypeId::from(231),
 		}
 	}
 }
@@ -883,7 +883,7 @@ impl Entity for VersionInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 237,
+			type_id: TypeId::from(237),
 		}
 	}
 }
@@ -924,7 +924,7 @@ impl Entity for SystemKeysReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 301,
+			type_id: TypeId::from(301),
 		}
 	}
 }
@@ -944,7 +944,7 @@ impl Entity for RegistrationServiceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 316,
+			type_id: TypeId::from(316),
 		}
 	}
 }
@@ -962,7 +962,7 @@ impl Entity for RegistrationReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 326,
+			type_id: TypeId::from(326),
 		}
 	}
 }
@@ -986,7 +986,7 @@ impl Entity for SendRegistrationCodeData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 341,
+			type_id: TypeId::from(341),
 		}
 	}
 }
@@ -1004,7 +1004,7 @@ impl Entity for SendRegistrationCodeReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 347,
+			type_id: TypeId::from(347),
 		}
 	}
 }
@@ -1024,7 +1024,7 @@ impl Entity for VerifyRegistrationCodeData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 351,
+			type_id: TypeId::from(351),
 		}
 	}
 }
@@ -1046,7 +1046,7 @@ impl Entity for UserDataDelete {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 404,
+			type_id: TypeId::from(404),
 		}
 	}
 }
@@ -1068,7 +1068,7 @@ impl Entity for PublicKeyGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 409,
+			type_id: TypeId::from(409),
 		}
 	}
 }
@@ -1095,7 +1095,7 @@ impl Entity for PublicKeyGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 412,
+			type_id: TypeId::from(412),
 		}
 	}
 }
@@ -1113,7 +1113,7 @@ impl Entity for SaltData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 417,
+			type_id: TypeId::from(417),
 		}
 	}
 }
@@ -1134,7 +1134,7 @@ impl Entity for SaltReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 420,
+			type_id: TypeId::from(420),
 		}
 	}
 }
@@ -1154,7 +1154,7 @@ impl Entity for AutoLoginDataGet {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 431,
+			type_id: TypeId::from(431),
 		}
 	}
 }
@@ -1172,7 +1172,7 @@ impl Entity for AutoLoginDataDelete {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 435,
+			type_id: TypeId::from(435),
 		}
 	}
 }
@@ -1191,7 +1191,7 @@ impl Entity for AutoLoginDataReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 438,
+			type_id: TypeId::from(438),
 		}
 	}
 }
@@ -1209,7 +1209,7 @@ impl Entity for AutoLoginPostReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 441,
+			type_id: TypeId::from(441),
 		}
 	}
 }
@@ -1234,7 +1234,7 @@ impl Entity for UpdatePermissionKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 445,
+			type_id: TypeId::from(445),
 		}
 	}
 }
@@ -1262,7 +1262,7 @@ impl Entity for EntityUpdate {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 462,
+			type_id: TypeId::from(462),
 		}
 	}
 }
@@ -1288,7 +1288,7 @@ impl Entity for Version {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 480,
+			type_id: TypeId::from(480),
 		}
 	}
 }
@@ -1312,7 +1312,7 @@ impl Entity for VersionData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 487,
+			type_id: TypeId::from(487),
 		}
 	}
 }
@@ -1330,7 +1330,7 @@ impl Entity for VersionReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 493,
+			type_id: TypeId::from(493),
 		}
 	}
 }
@@ -1357,7 +1357,7 @@ impl Entity for MembershipAddData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 505,
+			type_id: TypeId::from(505),
 		}
 	}
 }
@@ -1394,7 +1394,7 @@ impl Entity for ChangePasswordPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 534,
+			type_id: TypeId::from(534),
 		}
 	}
 }
@@ -1420,7 +1420,7 @@ impl Entity for SecondFactorAuthData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 541,
+			type_id: TypeId::from(541),
 		}
 	}
 }
@@ -1438,7 +1438,7 @@ impl Entity for SecondFactorAuthAllowedReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 546,
+			type_id: TypeId::from(546),
 		}
 	}
 }
@@ -1469,7 +1469,7 @@ impl Entity for ResetPasswordPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 584,
+			type_id: TypeId::from(584),
 		}
 	}
 }
@@ -1487,7 +1487,7 @@ impl Entity for DomainMailAddressAvailabilityData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 599,
+			type_id: TypeId::from(599),
 		}
 	}
 }
@@ -1505,7 +1505,7 @@ impl Entity for DomainMailAddressAvailabilityReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 602,
+			type_id: TypeId::from(602),
 		}
 	}
 }
@@ -1554,7 +1554,7 @@ impl Entity for PushIdentifier {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 625,
+			type_id: TypeId::from(625),
 		}
 	}
 }
@@ -1572,7 +1572,7 @@ impl Entity for PushIdentifierList {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 635,
+			type_id: TypeId::from(635),
 		}
 	}
 }
@@ -1601,7 +1601,7 @@ impl Entity for DeleteCustomerData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 641,
+			type_id: TypeId::from(641),
 		}
 	}
 }
@@ -1635,7 +1635,7 @@ impl Entity for CustomerProperties {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 656,
+			type_id: TypeId::from(656),
 		}
 	}
 }
@@ -1659,7 +1659,7 @@ impl Entity for ExternalPropertiesReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 663,
+			type_id: TypeId::from(663),
 		}
 	}
 }
@@ -1679,7 +1679,7 @@ impl Entity for RegistrationCaptchaServiceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 674,
+			type_id: TypeId::from(674),
 		}
 	}
 }
@@ -1700,7 +1700,7 @@ impl Entity for RegistrationCaptchaServiceReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 678,
+			type_id: TypeId::from(678),
 		}
 	}
 }
@@ -1720,7 +1720,7 @@ impl Entity for MailAddressAlias {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 684,
+			type_id: TypeId::from(684),
 		}
 	}
 }
@@ -1740,7 +1740,7 @@ impl Entity for MailAddressAliasServiceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 688,
+			type_id: TypeId::from(688),
 		}
 	}
 }
@@ -1764,7 +1764,7 @@ impl Entity for MailAddressAliasServiceReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 692,
+			type_id: TypeId::from(692),
 		}
 	}
 }
@@ -1786,7 +1786,7 @@ impl Entity for DomainInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 696,
+			type_id: TypeId::from(696),
 		}
 	}
 }
@@ -1816,7 +1816,7 @@ impl Entity for BookingItem {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 700,
+			type_id: TypeId::from(700),
 		}
 	}
 }
@@ -1854,7 +1854,7 @@ impl Entity for Booking {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 709,
+			type_id: TypeId::from(709),
 		}
 	}
 }
@@ -1872,7 +1872,7 @@ impl Entity for BookingsRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 722,
+			type_id: TypeId::from(722),
 		}
 	}
 }
@@ -1890,7 +1890,7 @@ impl Entity for StringWrapper {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 728,
+			type_id: TypeId::from(728),
 		}
 	}
 }
@@ -1910,7 +1910,7 @@ impl Entity for CustomDomainReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 731,
+			type_id: TypeId::from(731),
 		}
 	}
 }
@@ -1930,7 +1930,7 @@ impl Entity for CustomDomainData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 735,
+			type_id: TypeId::from(735),
 		}
 	}
 }
@@ -1978,7 +1978,7 @@ impl Entity for InvoiceInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 752,
+			type_id: TypeId::from(752),
 		}
 	}
 }
@@ -2010,7 +2010,7 @@ impl Entity for SwitchAccountTypePostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 772,
+			type_id: TypeId::from(772),
 		}
 	}
 }
@@ -2032,7 +2032,7 @@ impl Entity for MailAddressAliasServiceDataDelete {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 785,
+			type_id: TypeId::from(785),
 		}
 	}
 }
@@ -2050,7 +2050,7 @@ impl Entity for PaymentDataServiceGetReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 790,
+			type_id: TypeId::from(790),
 		}
 	}
 }
@@ -2088,7 +2088,7 @@ impl Entity for PaymentDataServicePutData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 793,
+			type_id: TypeId::from(793),
 		}
 	}
 }
@@ -2108,7 +2108,7 @@ impl Entity for PaymentDataServicePutReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 805,
+			type_id: TypeId::from(805),
 		}
 	}
 }
@@ -2136,7 +2136,7 @@ impl Entity for PriceRequestData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 836,
+			type_id: TypeId::from(836),
 		}
 	}
 }
@@ -2156,7 +2156,7 @@ impl Entity for PriceServiceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 843,
+			type_id: TypeId::from(843),
 		}
 	}
 }
@@ -2180,7 +2180,7 @@ impl Entity for PriceItemData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 847,
+			type_id: TypeId::from(847),
 		}
 	}
 }
@@ -2204,7 +2204,7 @@ impl Entity for PriceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 853,
+			type_id: TypeId::from(853),
 		}
 	}
 }
@@ -2230,7 +2230,7 @@ impl Entity for PriceServiceReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 859,
+			type_id: TypeId::from(859),
 		}
 	}
 }
@@ -2250,7 +2250,7 @@ impl Entity for MembershipRemoveData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 867,
+			type_id: TypeId::from(867),
 		}
 	}
 }
@@ -2273,7 +2273,7 @@ impl Entity for File {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 917,
+			type_id: TypeId::from(917),
 		}
 	}
 }
@@ -2298,7 +2298,7 @@ impl Entity for EmailSenderListElement {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 949,
+			type_id: TypeId::from(949),
 		}
 	}
 }
@@ -2333,7 +2333,7 @@ impl Entity for CustomerServerProperties {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 954,
+			type_id: TypeId::from(954),
 		}
 	}
 }
@@ -2354,7 +2354,7 @@ impl Entity for CreateCustomerServerPropertiesData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 961,
+			type_id: TypeId::from(961),
 		}
 	}
 }
@@ -2372,7 +2372,7 @@ impl Entity for CreateCustomerServerPropertiesReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 964,
+			type_id: TypeId::from(964),
 		}
 	}
 }
@@ -2390,7 +2390,7 @@ impl Entity for UserAreaGroups {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 988,
+			type_id: TypeId::from(988),
 		}
 	}
 }
@@ -2406,7 +2406,7 @@ impl Entity for DebitServicePutData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1041,
+			type_id: TypeId::from(1041),
 		}
 	}
 }
@@ -2430,7 +2430,7 @@ impl Entity for EntityEventBatch {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1079,
+			type_id: TypeId::from(1079),
 		}
 	}
 }
@@ -2473,7 +2473,7 @@ impl Entity for AuditLogEntry {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1101,
+			type_id: TypeId::from(1101),
 		}
 	}
 }
@@ -2491,7 +2491,7 @@ impl Entity for AuditLogRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1114,
+			type_id: TypeId::from(1114),
 		}
 	}
 }
@@ -2529,7 +2529,7 @@ impl Entity for WhitelabelConfig {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1127,
+			type_id: TypeId::from(1127),
 		}
 	}
 }
@@ -2560,7 +2560,7 @@ impl Entity for BrandingDomainData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1149,
+			type_id: TypeId::from(1149),
 		}
 	}
 }
@@ -2578,7 +2578,7 @@ impl Entity for BrandingDomainDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1155,
+			type_id: TypeId::from(1155),
 		}
 	}
 }
@@ -2606,7 +2606,7 @@ impl Entity for U2fRegisteredDevice {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1162,
+			type_id: TypeId::from(1162),
 		}
 	}
 }
@@ -2637,7 +2637,7 @@ impl Entity for SecondFactor {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1169,
+			type_id: TypeId::from(1169),
 		}
 	}
 }
@@ -2660,7 +2660,7 @@ impl Entity for U2fKey {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1178,
+			type_id: TypeId::from(1178),
 		}
 	}
 }
@@ -2681,7 +2681,7 @@ impl Entity for U2fChallenge {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1183,
+			type_id: TypeId::from(1183),
 		}
 	}
 }
@@ -2703,7 +2703,7 @@ impl Entity for Challenge {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1187,
+			type_id: TypeId::from(1187),
 		}
 	}
 }
@@ -2749,7 +2749,7 @@ impl Entity for Session {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1191,
+			type_id: TypeId::from(1191),
 		}
 	}
 }
@@ -2771,7 +2771,7 @@ impl Entity for UserAuthentication {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1206,
+			type_id: TypeId::from(1206),
 		}
 	}
 }
@@ -2802,7 +2802,7 @@ impl Entity for CreateSessionData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1211,
+			type_id: TypeId::from(1211),
 		}
 	}
 }
@@ -2824,7 +2824,7 @@ impl Entity for CreateSessionReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1219,
+			type_id: TypeId::from(1219),
 		}
 	}
 }
@@ -2846,7 +2846,7 @@ impl Entity for U2fResponseData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1225,
+			type_id: TypeId::from(1225),
 		}
 	}
 }
@@ -2864,7 +2864,7 @@ impl Entity for SecondFactorAuthGetData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1233,
+			type_id: TypeId::from(1233),
 		}
 	}
 }
@@ -2882,7 +2882,7 @@ impl Entity for SecondFactorAuthGetReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1236,
+			type_id: TypeId::from(1236),
 		}
 	}
 }
@@ -2900,7 +2900,7 @@ impl Entity for OtpChallenge {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1244,
+			type_id: TypeId::from(1244),
 		}
 	}
 }
@@ -2918,7 +2918,7 @@ impl Entity for BootstrapFeature {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1249,
+			type_id: TypeId::from(1249),
 		}
 	}
 }
@@ -2936,7 +2936,7 @@ impl Entity for Feature {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1253,
+			type_id: TypeId::from(1253),
 		}
 	}
 }
@@ -2975,7 +2975,7 @@ impl Entity for WhitelabelChild {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1257,
+			type_id: TypeId::from(1257),
 		}
 	}
 }
@@ -2993,7 +2993,7 @@ impl Entity for WhitelabelChildrenRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1269,
+			type_id: TypeId::from(1269),
 		}
 	}
 }
@@ -3013,7 +3013,7 @@ impl Entity for WhitelabelParent {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1272,
+			type_id: TypeId::from(1272),
 		}
 	}
 }
@@ -3040,7 +3040,7 @@ impl Entity for CreditCard {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1313,
+			type_id: TypeId::from(1313),
 		}
 	}
 }
@@ -3058,7 +3058,7 @@ impl Entity for LocationServiceGetReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1321,
+			type_id: TypeId::from(1321),
 		}
 	}
 }
@@ -3097,7 +3097,7 @@ impl Entity for OrderProcessingAgreement {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1326,
+			type_id: TypeId::from(1326),
 		}
 	}
 }
@@ -3117,7 +3117,7 @@ impl Entity for SignOrderProcessingAgreementData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1342,
+			type_id: TypeId::from(1342),
 		}
 	}
 }
@@ -3135,7 +3135,7 @@ impl Entity for GeneratedIdWrapper {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1349,
+			type_id: TypeId::from(1349),
 		}
 	}
 }
@@ -3155,7 +3155,7 @@ impl Entity for SseConnectData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1352,
+			type_id: TypeId::from(1352),
 		}
 	}
 }
@@ -3177,7 +3177,7 @@ impl Entity for NotificationInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1364,
+			type_id: TypeId::from(1364),
 		}
 	}
 }
@@ -3210,7 +3210,7 @@ impl Entity for RecoverCode {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1407,
+			type_id: TypeId::from(1407),
 		}
 	}
 }
@@ -3232,7 +3232,7 @@ impl Entity for ResetFactorsDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1419,
+			type_id: TypeId::from(1419),
 		}
 	}
 }
@@ -3254,7 +3254,7 @@ impl Entity for UpgradePriceServiceData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1456,
+			type_id: TypeId::from(1456),
 		}
 	}
 }
@@ -3296,7 +3296,7 @@ impl Entity for PlanPrices {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1460,
+			type_id: TypeId::from(1460),
 		}
 	}
 }
@@ -3344,7 +3344,7 @@ impl Entity for UpgradePriceServiceReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1469,
+			type_id: TypeId::from(1469),
 		}
 	}
 }
@@ -3370,7 +3370,7 @@ impl Entity for RegistrationCaptchaServiceGetData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1479,
+			type_id: TypeId::from(1479),
 		}
 	}
 }
@@ -3396,7 +3396,7 @@ impl Entity for WebsocketEntityData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1483,
+			type_id: TypeId::from(1483),
 		}
 	}
 }
@@ -3416,7 +3416,7 @@ impl Entity for WebsocketCounterValue {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1488,
+			type_id: TypeId::from(1488),
 		}
 	}
 }
@@ -3440,7 +3440,7 @@ impl Entity for WebsocketCounterData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1492,
+			type_id: TypeId::from(1492),
 		}
 	}
 }
@@ -3464,7 +3464,7 @@ impl Entity for CertificateInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1500,
+			type_id: TypeId::from(1500),
 		}
 	}
 }
@@ -3486,7 +3486,7 @@ impl Entity for NotificationMailTemplate {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1517,
+			type_id: TypeId::from(1517),
 		}
 	}
 }
@@ -3506,7 +3506,7 @@ impl Entity for CalendarEventRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1532,
+			type_id: TypeId::from(1532),
 		}
 	}
 }
@@ -3529,7 +3529,7 @@ impl Entity for AlarmInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1536,
+			type_id: TypeId::from(1536),
 		}
 	}
 }
@@ -3560,7 +3560,7 @@ impl Entity for UserAlarmInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1541,
+			type_id: TypeId::from(1541),
 		}
 	}
 }
@@ -3578,7 +3578,7 @@ impl Entity for UserAlarmInfoListType {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1549,
+			type_id: TypeId::from(1549),
 		}
 	}
 }
@@ -3599,7 +3599,7 @@ impl Entity for NotificationSessionKey {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1553,
+			type_id: TypeId::from(1553),
 		}
 	}
 }
@@ -3630,7 +3630,7 @@ impl Entity for RepeatRule {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1557,
+			type_id: TypeId::from(1557),
 		}
 	}
 }
@@ -3663,7 +3663,7 @@ impl Entity for AlarmNotification {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1564,
+			type_id: TypeId::from(1564),
 		}
 	}
 }
@@ -3683,7 +3683,7 @@ impl Entity for AlarmServicePost {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1576,
+			type_id: TypeId::from(1576),
 		}
 	}
 }
@@ -3705,7 +3705,7 @@ impl Entity for DnsRecord {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1581,
+			type_id: TypeId::from(1581),
 		}
 	}
 }
@@ -3725,7 +3725,7 @@ impl Entity for CustomDomainCheckGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1586,
+			type_id: TypeId::from(1586),
 		}
 	}
 }
@@ -3749,7 +3749,7 @@ impl Entity for CustomDomainCheckGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1589,
+			type_id: TypeId::from(1589),
 		}
 	}
 }
@@ -3769,7 +3769,7 @@ impl Entity for CloseSessionServicePost {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1595,
+			type_id: TypeId::from(1595),
 		}
 	}
 }
@@ -3819,7 +3819,7 @@ impl Entity for ReceivedGroupInvitation {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1602,
+			type_id: TypeId::from(1602),
 		}
 	}
 }
@@ -3847,7 +3847,7 @@ impl Entity for UserGroupRoot {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1618,
+			type_id: TypeId::from(1618),
 		}
 	}
 }
@@ -3869,7 +3869,7 @@ impl Entity for PaymentErrorInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1632,
+			type_id: TypeId::from(1632),
 		}
 	}
 }
@@ -3900,7 +3900,7 @@ impl Entity for InvoiceItem {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1641,
+			type_id: TypeId::from(1641),
 		}
 	}
 }
@@ -3961,7 +3961,7 @@ impl Entity for Invoice {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1650,
+			type_id: TypeId::from(1650),
 		}
 	}
 }
@@ -3996,7 +3996,7 @@ impl Entity for MissedNotification {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1693,
+			type_id: TypeId::from(1693),
 		}
 	}
 }
@@ -4014,7 +4014,7 @@ impl Entity for BrandingDomainGetReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1723,
+			type_id: TypeId::from(1723),
 		}
 	}
 }
@@ -4046,7 +4046,7 @@ impl Entity for RejectedSender {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1736,
+			type_id: TypeId::from(1736),
 		}
 	}
 }
@@ -4064,7 +4064,7 @@ impl Entity for RejectedSendersRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1747,
+			type_id: TypeId::from(1747),
 		}
 	}
 }
@@ -4082,7 +4082,7 @@ impl Entity for SecondFactorAuthDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1755,
+			type_id: TypeId::from(1755),
 		}
 	}
 }
@@ -4106,7 +4106,7 @@ impl Entity for TakeOverDeletedAddressData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1759,
+			type_id: TypeId::from(1759),
 		}
 	}
 }
@@ -4128,7 +4128,7 @@ impl Entity for WebsocketLeaderStatus {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1766,
+			type_id: TypeId::from(1766),
 		}
 	}
 }
@@ -4167,7 +4167,7 @@ impl Entity for GiftCard {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1769,
+			type_id: TypeId::from(1769),
 		}
 	}
 }
@@ -4185,7 +4185,7 @@ impl Entity for GiftCardsRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1791,
+			type_id: TypeId::from(1791),
 		}
 	}
 }
@@ -4203,7 +4203,7 @@ impl Entity for GiftCardOption {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1795,
+			type_id: TypeId::from(1795),
 		}
 	}
 }
@@ -4225,7 +4225,7 @@ impl Entity for GiftCardGetReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1798,
+			type_id: TypeId::from(1798),
 		}
 	}
 }
@@ -4255,7 +4255,7 @@ impl Entity for GiftCardCreateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1803,
+			type_id: TypeId::from(1803),
 		}
 	}
 }
@@ -4273,7 +4273,7 @@ impl Entity for GiftCardDeleteData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1810,
+			type_id: TypeId::from(1810),
 		}
 	}
 }
@@ -4291,7 +4291,7 @@ impl Entity for GiftCardCreateReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1813,
+			type_id: TypeId::from(1813),
 		}
 	}
 }
@@ -4314,7 +4314,7 @@ impl Entity for GiftCardRedeemData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1817,
+			type_id: TypeId::from(1817),
 		}
 	}
 }
@@ -4338,7 +4338,7 @@ impl Entity for GiftCardRedeemGetReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1821,
+			type_id: TypeId::from(1821),
 		}
 	}
 }
@@ -4360,7 +4360,7 @@ impl Entity for Braintree3ds2Request {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1828,
+			type_id: TypeId::from(1828),
 		}
 	}
 }
@@ -4380,7 +4380,7 @@ impl Entity for Braintree3ds2Response {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1833,
+			type_id: TypeId::from(1833),
 		}
 	}
 }
@@ -4398,7 +4398,7 @@ impl Entity for PaymentDataServicePostData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1837,
+			type_id: TypeId::from(1837),
 		}
 	}
 }
@@ -4416,7 +4416,7 @@ impl Entity for PaymentDataServiceGetData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1861,
+			type_id: TypeId::from(1861),
 		}
 	}
 }
@@ -4436,7 +4436,7 @@ impl Entity for TypeInfo {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1869,
+			type_id: TypeId::from(1869),
 		}
 	}
 }
@@ -4454,7 +4454,7 @@ impl Entity for ArchiveRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1873,
+			type_id: TypeId::from(1873),
 		}
 	}
 }
@@ -4476,7 +4476,7 @@ impl Entity for ArchiveType {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1876,
+			type_id: TypeId::from(1876),
 		}
 	}
 }
@@ -4498,7 +4498,7 @@ impl Entity for Blob {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1882,
+			type_id: TypeId::from(1882),
 		}
 	}
 }
@@ -4526,7 +4526,7 @@ impl Entity for WebauthnResponseData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1899,
+			type_id: TypeId::from(1899),
 		}
 	}
 }
@@ -4544,7 +4544,7 @@ impl Entity for BlobReferenceTokenWrapper {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 1990,
+			type_id: TypeId::from(1990),
 		}
 	}
 }
@@ -4572,7 +4572,7 @@ impl Entity for CustomerAccountTerminationRequest {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2005,
+			type_id: TypeId::from(2005),
 		}
 	}
 }
@@ -4592,7 +4592,7 @@ impl Entity for CustomerAccountTerminationPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2015,
+			type_id: TypeId::from(2015),
 		}
 	}
 }
@@ -4610,7 +4610,7 @@ impl Entity for CustomerAccountTerminationPostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2018,
+			type_id: TypeId::from(2018),
 		}
 	}
 }
@@ -4630,7 +4630,7 @@ impl Entity for MailAddressAvailability {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2026,
+			type_id: TypeId::from(2026),
 		}
 	}
 }
@@ -4648,7 +4648,7 @@ impl Entity for MultipleMailAddressAvailabilityData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2030,
+			type_id: TypeId::from(2030),
 		}
 	}
 }
@@ -4666,7 +4666,7 @@ impl Entity for MultipleMailAddressAvailabilityReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2033,
+			type_id: TypeId::from(2033),
 		}
 	}
 }
@@ -4696,7 +4696,7 @@ impl Entity for InstanceSessionKey {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2037,
+			type_id: TypeId::from(2037),
 		}
 	}
 }
@@ -4728,7 +4728,7 @@ impl Entity for BucketKey {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2043,
+			type_id: TypeId::from(2043),
 		}
 	}
 }
@@ -4746,7 +4746,7 @@ impl Entity for UpdateSessionKeysPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2049,
+			type_id: TypeId::from(2049),
 		}
 	}
 }
@@ -4764,7 +4764,7 @@ impl Entity for ReferralCodeGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2062,
+			type_id: TypeId::from(2062),
 		}
 	}
 }
@@ -4780,7 +4780,7 @@ impl Entity for ReferralCodePostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2065,
+			type_id: TypeId::from(2065),
 		}
 	}
 }
@@ -4798,7 +4798,7 @@ impl Entity for ReferralCodePostOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2067,
+			type_id: TypeId::from(2067),
 		}
 	}
 }
@@ -4817,7 +4817,7 @@ impl Entity for DateWrapper {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2073,
+			type_id: TypeId::from(2073),
 		}
 	}
 }
@@ -4835,7 +4835,7 @@ impl Entity for MailAddressAliasGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2095,
+			type_id: TypeId::from(2095),
 		}
 	}
 }
@@ -4873,7 +4873,7 @@ impl Entity for PlanConfiguration {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2104,
+			type_id: TypeId::from(2104),
 		}
 	}
 }
@@ -4891,7 +4891,7 @@ impl Entity for PlanServiceGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2115,
+			type_id: TypeId::from(2115),
 		}
 	}
 }
@@ -4915,7 +4915,7 @@ impl Entity for PublicKeyPutIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2150,
+			type_id: TypeId::from(2150),
 		}
 	}
 }
@@ -4943,7 +4943,7 @@ impl Entity for InvoiceDataItem {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2162,
+			type_id: TypeId::from(2162),
 		}
 	}
 }
@@ -4985,7 +4985,7 @@ impl Entity for InvoiceDataGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2170,
+			type_id: TypeId::from(2170),
 		}
 	}
 }
@@ -5003,7 +5003,7 @@ impl Entity for InvoiceDataGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2185,
+			type_id: TypeId::from(2185),
 		}
 	}
 }
@@ -5035,7 +5035,7 @@ impl Entity for ChangeKdfPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2198,
+			type_id: TypeId::from(2198),
 		}
 	}
 }
@@ -5071,7 +5071,7 @@ impl Entity for GroupKey {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2255,
+			type_id: TypeId::from(2255),
 		}
 	}
 }
@@ -5089,7 +5089,7 @@ impl Entity for GroupKeysRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2267,
+			type_id: TypeId::from(2267),
 		}
 	}
 }
@@ -5123,7 +5123,7 @@ impl Entity for KeyRotation {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2283,
+			type_id: TypeId::from(2283),
 		}
 	}
 }
@@ -5141,7 +5141,7 @@ impl Entity for KeyRotationsRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2291,
+			type_id: TypeId::from(2291),
 		}
 	}
 }
@@ -5165,7 +5165,7 @@ impl Entity for SurveyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2295,
+			type_id: TypeId::from(2295),
 		}
 	}
 }
@@ -5185,7 +5185,7 @@ impl Entity for IdTupleWrapper {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2315,
+			type_id: TypeId::from(2315),
 		}
 	}
 }
@@ -5212,7 +5212,7 @@ impl Entity for UserGroupKeyDistribution {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2320,
+			type_id: TypeId::from(2320),
 		}
 	}
 }
@@ -5246,7 +5246,7 @@ impl Entity for GroupKeyRotationData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2328,
+			type_id: TypeId::from(2328),
 		}
 	}
 }
@@ -5264,7 +5264,7 @@ impl Entity for GroupKeyRotationPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2338,
+			type_id: TypeId::from(2338),
 		}
 	}
 }
@@ -5284,7 +5284,7 @@ impl Entity for GroupKeyRotationInfoGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2342,
+			type_id: TypeId::from(2342),
 		}
 	}
 }
@@ -5311,7 +5311,7 @@ impl Entity for RecoverCodeData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2346,
+			type_id: TypeId::from(2346),
 		}
 	}
 }
@@ -5357,7 +5357,7 @@ impl Entity for UserGroupKeyRotationData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2352,
+			type_id: TypeId::from(2352),
 		}
 	}
 }
@@ -5381,7 +5381,7 @@ impl Entity for AdminGroupKeyRotationPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2364,
+			type_id: TypeId::from(2364),
 		}
 	}
 }
@@ -5417,7 +5417,7 @@ impl Entity for GroupKeyUpdate {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2369,
+			type_id: TypeId::from(2369),
 		}
 	}
 }
@@ -5435,7 +5435,7 @@ impl Entity for GroupKeyUpdatesRef {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2380,
+			type_id: TypeId::from(2380),
 		}
 	}
 }
@@ -5470,7 +5470,7 @@ impl Entity for PubEncKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2384,
+			type_id: TypeId::from(2384),
 		}
 	}
 }
@@ -5496,7 +5496,7 @@ impl Entity for GroupKeyUpdateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2391,
+			type_id: TypeId::from(2391),
 		}
 	}
 }
@@ -5521,7 +5521,7 @@ impl Entity for GroupMembershipKeyData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2398,
+			type_id: TypeId::from(2398),
 		}
 	}
 }
@@ -5539,7 +5539,7 @@ impl Entity for MembershipPutIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2404,
+			type_id: TypeId::from(2404),
 		}
 	}
 }
@@ -5562,7 +5562,7 @@ impl Entity for GroupMembershipUpdateData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2427,
+			type_id: TypeId::from(2427),
 		}
 	}
 }
@@ -5590,7 +5590,7 @@ impl Entity for AffiliatePartnerKpiMonthSummary {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2453,
+			type_id: TypeId::from(2453),
 		}
 	}
 }
@@ -5614,7 +5614,7 @@ impl Entity for AffiliatePartnerKpiServiceGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2461,
+			type_id: TypeId::from(2461),
 		}
 	}
 }
@@ -5632,7 +5632,7 @@ impl Entity for UserGroupKeyRotationPostIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2471,
+			type_id: TypeId::from(2471),
 		}
 	}
 }
@@ -5657,7 +5657,7 @@ impl Entity for KeyMac {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2477,
+			type_id: TypeId::from(2477),
 		}
 	}
 }
@@ -5675,7 +5675,7 @@ impl Entity for AppStoreSubscriptionGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2497,
+			type_id: TypeId::from(2497),
 		}
 	}
 }
@@ -5693,7 +5693,7 @@ impl Entity for AppStoreSubscriptionGetIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2500,
+			type_id: TypeId::from(2500),
 		}
 	}
 }
@@ -5711,7 +5711,7 @@ impl Entity for VerifierTokenServiceOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2510,
+			type_id: TypeId::from(2510),
 		}
 	}
 }
@@ -5730,7 +5730,7 @@ impl Entity for VerifierTokenServiceIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2517,
+			type_id: TypeId::from(2517),
 		}
 	}
 }
@@ -5751,7 +5751,7 @@ impl Entity for CalendarAdvancedRepeatRule {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2521,
+			type_id: TypeId::from(2521),
 		}
 	}
 }
@@ -5771,7 +5771,7 @@ impl Entity for AdminGroupKeyDistributionElement {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2531,
+			type_id: TypeId::from(2531),
 		}
 	}
 }
@@ -5791,7 +5791,7 @@ impl Entity for AdminGroupKeyRotationPutIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2536,
+			type_id: TypeId::from(2536),
 		}
 	}
 }
@@ -5817,7 +5817,7 @@ impl Entity for PubDistributionKey {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2540,
+			type_id: TypeId::from(2540),
 		}
 	}
 }
@@ -5837,7 +5837,7 @@ impl Entity for AdminGroupKeyRotationGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Sys,
-			type_id: 2546,
+			type_id: TypeId::from(2546),
 		}
 	}
 }

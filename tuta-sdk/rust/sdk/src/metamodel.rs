@@ -1,13 +1,14 @@
 use crate::date::DateTime;
 use crate::element_value::ElementValue;
 use crate::TypeRef;
-use serde::{Deserialize, Deserializer};
+use aes::cipher::inout::InOut;
+use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use thiserror::Error;
 
 /// A kind of element that can appear in the model
-#[derive(Deserialize, PartialEq, Clone, Debug)]
+#[derive(Deserialize, Serialize, PartialEq, Clone, Debug)]
 pub enum ElementType {
 	/// Entity referenced by a single id
 	#[serde(rename = "ELEMENT_TYPE")]
@@ -26,7 +27,8 @@ pub enum ElementType {
 	BlobElement,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
+#[cfg_attr(test, derive(PartialEq))]
 pub enum ValueType {
 	String,
 	Number,
@@ -55,7 +57,8 @@ impl ValueType {
 
 /// Associations (references and aggregations) have two dimensions: the type they reference and
 /// their cardinality.
-#[derive(Deserialize, PartialEq, Clone, Debug)]
+#[derive(Deserialize, Serialize, PartialEq, Clone, Copy, Debug)]
+#[repr(u8)]
 pub enum Cardinality {
 	/// Optional
 	ZeroOrOne,
@@ -66,7 +69,7 @@ pub enum Cardinality {
 }
 
 /// Relationships between elements are described as association
-#[derive(Deserialize, Clone, Eq, PartialEq, Debug)]
+#[derive(Deserialize, Serialize, Clone, Eq, PartialEq, Debug)]
 pub enum AssociationType {
 	/// References [ElementType] by id
 	#[serde(rename = "ELEMENT_ASSOCIATION")]
@@ -88,8 +91,8 @@ pub enum AssociationType {
 }
 
 /// Description of the value (value field of Element)
-#[derive(Deserialize, Clone)]
-#[cfg_attr(test, derive(Debug))]
+#[derive(Deserialize, Serialize, Clone)]
+#[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct ModelValue {
 	pub id: AttributeId,
 	pub name: String,
@@ -103,8 +106,9 @@ pub struct ModelValue {
 }
 
 /// Description of the association (association field of Element)
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct ModelAssociation {
 	pub id: AttributeId,
 	pub name: String,
@@ -121,21 +125,24 @@ pub struct ModelAssociation {
 	pub dependency: Option<AppName>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
+#[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct ApplicationModel {
 	pub name: AppName,
 	pub version: u32,
 	pub types: HashMap<TypeId, TypeModel>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
+#[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct ApplicationModels {
 	pub apps: HashMap<AppName, ApplicationModel>,
 }
 
 /// Description of a single Element type
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct TypeModel {
 	pub id: TypeId,
 	/// Since which model version was it introduced
@@ -175,54 +182,30 @@ impl TypeModel {
 		}
 	}
 
-	pub fn is_attribute_id_association(
-		&self,
-		attribute_id: String,
-	) -> Result<bool, TypeModelError> {
-		let attribute_id = &attribute_id.parse::<AttributeId>().map_err(|e| {
-			TypeModelError(format!(
-				"invalid attribute_id format: '{}' (expected a number), {e}",
-				attribute_id
-			))
-		})?;
-		Ok(self.associations.contains_key(attribute_id))
+	pub fn is_attribute_id_association(&self, attribute_id: &AttributeId) -> bool {
+		self.associations.contains_key(attribute_id)
 	}
 
 	pub fn get_attribute_id_cardinality(
 		&self,
-		attribute_id: String,
+		attribute_id: &AttributeId,
 	) -> Result<&Cardinality, TypeModelError> {
-		let attribute_id = &attribute_id.parse::<AttributeId>().map_err(|e| {
-			TypeModelError(format!(
-				"invalid attribute_id format: '{}' (expected a number), {e}",
-				attribute_id
-			))
-		})?;
 		if let Some(cardinality) = self.associations.get(attribute_id).map(|a| &a.cardinality) {
 			Ok(cardinality)
 		} else {
 			Err(TypeModelError(format!(
-				"did not find association with attributeId {attribute_id}"
+				"did not find association with attributeId {attribute_id:?}"
 			)))
 		}
 	}
 
 	pub fn get_association_by_attribute_id(
 		&self,
-		attribute_id: &str,
+		attribute_id: &AttributeId,
 	) -> Result<&ModelAssociation, TypeModelError> {
-		// to skip in case of _finalIvs
-		let parsed_id = attribute_id.parse::<AttributeId>().map_err(|e| {
+		self.associations.get(attribute_id).ok_or_else(|| {
 			TypeModelError(format!(
-				"invalid attribute_id format: '{}' (expected a number), {e}",
-				attribute_id
-			))
-		})?;
-
-		self.associations.get(&parsed_id).ok_or_else(|| {
-			TypeModelError(format!(
-				"no association found with attribute_id '{}'",
-				attribute_id
+				"no association found with attribute_id '{attribute_id:?}'",
 			))
 		})
 	}
@@ -236,7 +219,7 @@ impl TypeModel {
 			.iter()
 			.find(|(_, value)| value.name == attribute_name)
 		{
-			return Ok(attr_id.to_string());
+			return Ok(String::from(*attr_id));
 		}
 
 		if let Some((attr_id, _model_association)) = self
@@ -244,7 +227,7 @@ impl TypeModel {
 			.iter()
 			.find(|(_, association)| association.name == attribute_name)
 		{
-			return Ok(attr_id.to_string());
+			return Ok(String::from(*attr_id));
 		}
 
 		Err(TypeModelError(format!(
@@ -268,7 +251,12 @@ impl TypeModel {
 
 #[cfg(test)]
 mod tests {
+	use crate::bindings::file_client::MockFileClient;
+	use crate::bindings::rest_client::MockRestClient;
 	use crate::metamodel::{AppName, ApplicationModel, ApplicationModels};
+	use crate::type_model_provider::TypeModelProvider;
+	use std::collections::HashMap;
+	use std::sync::Arc;
 
 	const CARGO_ROOT: &str = env!("CARGO_MANIFEST_DIR");
 
@@ -279,6 +267,7 @@ mod tests {
 
 	#[test]
 	pub fn can_deserialize_tutanota_type_model() {
+		let mut new_apps = HashMap::new();
 		for app in [
 			AppName::Base,
 			AppName::Usage,
@@ -290,13 +279,21 @@ mod tests {
 		] {
 			eprintln!("Comparing type model for app: {app}");
 
-			let types = serde_json::from_str(&types_raw_string).unwrap();
+			let types = serde_json::from_str(&get_type_models_for_app(app)).unwrap();
 			let model = ApplicationModel {
 				types,
 				name: app,
 				version: 1,
 			};
+			new_apps.insert(app, model);
 		}
+
+		let type_model_provider = TypeModelProvider::new(
+			Arc::new(MockRestClient::new()),
+			Arc::new(MockFileClient::new()),
+		);
+		assert_eq!(new_apps, type_model_provider.client_app_models.apps);
+		assert_eq!(new_apps, type_model_provider.server_app_models.apps);
 	}
 
 	fn get_type_models_for_app(app: AppName) -> String {
@@ -373,5 +370,54 @@ impl Display for AppName {
 	}
 }
 
-pub type TypeId = u64;
-pub type AttributeId = u64;
+#[repr(transparent)]
+#[derive(Debug, serde::Deserialize, serde::Serialize, Hash, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(test, derive(Debug))]
+#[serde(try_from = "&'de str")]
+#[serde(into = "String")]
+pub struct TypeId(u64);
+
+#[repr(transparent)]
+#[derive(Debug, serde::Deserialize, serde::Serialize, Hash, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(test, derive(Debug))]
+#[serde(try_from = "&'de str")]
+#[serde(into = "String")]
+pub struct AttributeId(u64);
+
+impl TryFrom<&str> for TypeId {
+	type Error = <u64 as std::str::FromStr>::Err;
+	fn try_from(value: &str) -> Result<Self, Self::Error> {
+		value.parse::<u64>().map(Self)
+	}
+}
+
+impl TryFrom<&str> for AttributeId {
+	type Error = <u64 as std::str::FromStr>::Err;
+	fn try_from(value: &str) -> Result<Self, Self::Error> {
+		value.parse::<u64>().map(Self)
+	}
+}
+
+impl From<AttributeId> for String {
+	fn from(value: AttributeId) -> Self {
+		value.0.to_string()
+	}
+}
+
+impl From<TypeId> for String {
+	fn from(value: TypeId) -> Self {
+		value.0.to_string()
+	}
+}
+
+impl From<u64> for AttributeId {
+	fn from(value: u64) -> Self {
+		Self(value)
+	}
+}
+
+impl From<u64> for TypeId {
+	fn from(value: u64) -> Self {
+		Self(value)
+	}
+}

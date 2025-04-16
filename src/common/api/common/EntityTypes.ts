@@ -116,6 +116,11 @@ export type TypeModel = {
 	versioned: boolean
 	/** whether the type contains encrypted values */
 	encrypted: boolean
+	/**
+	 * this is used to directly load certain instances that are indirectly referenced by their predictable Id,
+	 * eg. when going from the Calendar group to the instance that contains the calendar list. All groups need to
+	 * have the same structure, so this associated data has to go in another type.
+	 **/
 	rootId: Id
 	/** a map of scalar fields. the record keys are the ModelValue.id field of the record values */
 	values: Record<AttributeId, ModelValue>

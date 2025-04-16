@@ -119,7 +119,7 @@ impl EntityFacadeImpl {
 			Ok(instance_value.clone())
 		} else if element_is_nil {
 			Err(ApiCallError::internal(format!(
-				"Nil encrypted value is not accepted. ModelValue Id: {}",
+				"Nil encrypted value is not accepted. ModelValue Id: {:?}",
 				model_value.id
 			)))
 		} else {
@@ -174,8 +174,8 @@ impl EntityFacadeImpl {
 		let mut encrypted = ParsedEntity::new();
 
 		for (&value_id, value_type) in &type_model.values {
-			let value_id_string = &value_id.to_string();
-			let instance_value = instance.get(value_id_string).ok_or_else(|| {
+			let value_id_string = String::from(value_id);
+			let instance_value = instance.get(&value_id_string).ok_or_else(|| {
 				ApiCallError::internal(format!(
 					"Can not find key: {} in instance: {instance:?}",
 					value_id_string
@@ -188,17 +188,17 @@ impl EntityFacadeImpl {
 				value_type,
 				instance_value,
 				instance,
-				value_id_string,
+				value_id_string.as_str(),
 			) {
 				// restore the default encrypted value because it has not changed
 				// note: this branch must be checked *before* the one which reuses IVs as this one checks
 				// the length.
 				ElementValue::String(String::new())
 			} else if value_type.is_final
-				&& Self::get_final_iv_for_key(instance, value_id_string).is_some()
+				&& Self::get_final_iv_for_key(instance, &value_id_string).is_some()
 			{
 				let final_iv = Iv::from_bytes(
-					Self::get_final_iv_for_key(instance, value_id_string)
+					Self::get_final_iv_for_key(instance, &value_id_string)
 						.unwrap()
 						.assert_bytes()
 						.as_slice(),
@@ -218,14 +218,16 @@ impl EntityFacadeImpl {
 		}
 
 		if type_model.element_type == ElementType::Aggregated {
-			let id_attribute_id = type_model
-				.get_attribute_id_by_attribute_name(ID_FIELD)
-				.map_err(|err| {
-					ApiCallError::internal(format!(
-						"{ID_FIELD} field not found on the aggregate {:?}",
-						err
-					))
-				})?;
+			let id_attribute_id = String::from(
+				type_model
+					.get_attribute_id_by_attribute_name(ID_FIELD)
+					.map_err(|err| {
+						ApiCallError::internal(format!(
+							"{ID_FIELD} field not found on the aggregate {:?}",
+							err
+						))
+					})?,
+			);
 
 			match encrypted.get(&id_attribute_id) {
 				Some(ElementValue::Null) => {
@@ -244,11 +246,11 @@ impl EntityFacadeImpl {
 		}
 
 		for (&association_id, association_type) in &type_model.associations {
-			let association_id_string = &association_id.to_string();
+			let association_id_string: String = association_id.into();
 			let encrypted_association = match association_type.association_type {
 				AssociationType::Aggregation => self.encrypt_aggregate(
 					type_model,
-					association_id_string,
+					association_id_string.as_str(),
 					association_type,
 					instance,
 					sk,
@@ -258,7 +260,7 @@ impl EntityFacadeImpl {
 				| AssociationType::ListElementAssociationCustom
 				| AssociationType::ListElementAssociationGenerated
 				| AssociationType::BlobElementAssociation => instance
-					.get(association_id_string)
+					.get(&association_id_string)
 					.cloned()
 					.ok_or(ApiCallError::internal(format!(
 						"could not find association {} on type {}",
@@ -314,26 +316,28 @@ impl EntityFacadeImpl {
 		let mut mapped_ivs: HashMap<String, ElementValue> = Default::default();
 
 		for (&value_id, value_type) in &type_model.values {
-			let value_id_string = &value_id.to_string();
+			let value_id_string: String = value_id.into();
 			let value_name = &value_type.name;
-			let stored_element = entity.remove(value_id_string).unwrap_or(ElementValue::Null);
+			let stored_element = entity
+				.remove(&value_id_string)
+				.unwrap_or(ElementValue::Null);
 			let MappedValue { value, iv, error } =
 				Self::decrypt_and_parse_value(stored_element, session_key, value_name, value_type)?;
 
-			mapped_decrypted.insert(value_id_string.to_string(), value);
+			mapped_decrypted.insert(value_id_string.clone(), value);
 			if let Some(error) = error {
-				mapped_errors.insert(value_id_string.to_string(), ElementValue::String(error));
+				mapped_errors.insert(value_id_string.clone(), ElementValue::String(error));
 			}
 			if let Some(iv) = iv {
-				mapped_ivs.insert(value_id_string.to_string(), ElementValue::Bytes(iv.clone()));
+				mapped_ivs.insert(value_id_string, ElementValue::Bytes(iv.clone()));
 			}
 		}
 
 		for (&association_id, association_type) in &type_model.associations {
 			let association_name = &association_type.name;
-			let association_id_string = &association_id.to_string();
+			let association_id_string: String = association_id.into();
 			let association_entry = entity
-				.remove(association_id_string)
+				.remove(&association_id_string)
 				.unwrap_or(ElementValue::Array(vec![]));
 			let (mapped_association, errors) = self.map_associations(
 				type_model,
@@ -343,12 +347,9 @@ impl EntityFacadeImpl {
 				association_type,
 			)?;
 
-			mapped_decrypted.insert(association_id_string.to_string(), mapped_association);
+			mapped_decrypted.insert(association_id_string.clone(), mapped_association);
 			if !errors.is_empty() {
-				mapped_errors.insert(
-					association_id_string.to_string(),
-					ElementValue::Dict(errors),
-				);
+				mapped_errors.insert(association_id_string, ElementValue::Dict(errors));
 			}
 		}
 
@@ -617,7 +618,7 @@ impl EntityFacade for EntityFacadeImpl {
 		let mut mapped_decrypted =
 			self.decrypt_and_map_inner(type_model, entity, &resolved_session_key.session_key)?;
 
-		let owner_enc_session_key_attribute_id = type_model
+		let owner_enc_session_key_attribute_id: String = type_model
 				.get_attribute_id_by_attribute_name(OWNER_ENC_SESSION_KEY_FIELD)
 				.map_err(|err| ApiCallError::InternalSdkError {
 					error_message: format!(
@@ -625,14 +626,15 @@ impl EntityFacade for EntityFacadeImpl {
 						type_model.id,
 						err
 					),
-				})?;
+				})?
+				.into();
 
 		mapped_decrypted.insert(
 			owner_enc_session_key_attribute_id,
 			ElementValue::Bytes(resolved_session_key.owner_enc_session_key.clone()),
 		);
 
-		let owner_key_version_attribute_id = type_model
+		let owner_key_version_attribute_id: String = type_model
 			.get_attribute_id_by_attribute_name(OWNER_KEY_VERSION_FIELD)
 			.map_err(|err| ApiCallError::InternalSdkError {
 				error_message: format!(
@@ -640,7 +642,8 @@ impl EntityFacade for EntityFacadeImpl {
 						type_model.id,
 						err
 					),
-			})?;
+			})?
+			.into();
 
 		mapped_decrypted.insert(
 			owner_key_version_attribute_id,
@@ -763,7 +766,7 @@ mod tests {
 	use crate::instance_mapper::InstanceMapper;
 	use crate::json_element::{JsonElement, RawEntity};
 	use crate::json_serializer::JsonSerializer;
-	use crate::metamodel::{Cardinality, ModelValue, ValueType};
+	use crate::metamodel::{AttributeId, Cardinality, ModelValue, ValueType};
 	use crate::type_model_provider::TypeModelProvider;
 	use crate::util::entity_test_utils::generate_email_entity;
 	use crate::util::AttributeModel;
@@ -1839,7 +1842,7 @@ mod tests {
 		cardinality: Cardinality,
 	) -> ModelValue {
 		ModelValue {
-			id: 426,
+			id: AttributeId::from(426),
 			name: "test".to_string(),
 			value_type,
 			cardinality,

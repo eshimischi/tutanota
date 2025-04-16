@@ -72,7 +72,7 @@ impl Entity for ${typeName} {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::${capitalizeFirstLetter(modelName)},
-			type_id: ${typeId},
+			type_id: TypeId::from(${typeId}),
 		}
 	}
 }`

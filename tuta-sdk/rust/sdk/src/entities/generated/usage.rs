@@ -19,7 +19,7 @@ impl Entity for UsageTestMetricConfigValue {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 8,
+			type_id: TypeId::from(8),
 		}
 	}
 }
@@ -41,7 +41,7 @@ impl Entity for UsageTestMetricConfig {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 12,
+			type_id: TypeId::from(12),
 		}
 	}
 }
@@ -61,7 +61,7 @@ impl Entity for UsageTestMetricData {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 17,
+			type_id: TypeId::from(17),
 		}
 	}
 }
@@ -85,7 +85,7 @@ impl Entity for UsageTestStage {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 35,
+			type_id: TypeId::from(35),
 		}
 	}
 }
@@ -103,7 +103,7 @@ impl Entity for UsageTestAssignmentIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 53,
+			type_id: TypeId::from(53),
 		}
 	}
 }
@@ -129,7 +129,7 @@ impl Entity for UsageTestAssignment {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 56,
+			type_id: TypeId::from(56),
 		}
 	}
 }
@@ -149,7 +149,7 @@ impl Entity for UsageTestAssignmentOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 63,
+			type_id: TypeId::from(63),
 		}
 	}
 }
@@ -173,7 +173,7 @@ impl Entity for UsageTestParticipationIn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Usage,
-			type_id: 80,
+			type_id: TypeId::from(80),
 		}
 	}
 }

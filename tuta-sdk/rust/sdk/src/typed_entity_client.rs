@@ -6,6 +6,7 @@ use crate::instance_mapper::InstanceMapper;
 use crate::metamodel::{ElementType, TypeModel};
 use crate::GeneratedId;
 use crate::{ApiCallError, ListLoadDirection};
+use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use std::sync::Arc;
 
@@ -28,7 +29,7 @@ impl TypedEntityClient {
 	}
 
 	#[allow(clippy::unused_async, unused)]
-	pub async fn load<T: Entity + Deserialize<'static>, Id: IdType>(
+	pub async fn load<T: Entity + DeserializeOwned, Id: IdType>(
 		&self,
 		id: &Id,
 	) -> Result<T, ApiCallError> {
@@ -58,7 +59,7 @@ impl TypedEntityClient {
 	}
 
 	#[allow(clippy::unused_async, unused)]
-	pub async fn load_range<T: Entity + Deserialize<'static>, Id: BaseIdType>(
+	pub async fn load_range<T: Entity + DeserializeOwned, Id: BaseIdType>(
 		&self,
 		list_id: &GeneratedId,
 		start_id: &Id,

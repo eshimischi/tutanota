@@ -19,7 +19,7 @@ impl Entity for PersistenceResourcePostReturn {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Base,
-			type_id: 0,
+			type_id: TypeId::from(0),
 		}
 	}
 }
@@ -41,7 +41,7 @@ impl Entity for ApplicationTypesGetOut {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Base,
-			type_id: 4,
+			type_id: TypeId::from(4),
 		}
 	}
 }

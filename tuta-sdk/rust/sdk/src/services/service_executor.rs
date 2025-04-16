@@ -16,6 +16,7 @@ use crate::services::{
 };
 use crate::type_model_provider::TypeModelProvider;
 use crate::{ApiCallError, HeadersProvider};
+use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use serde::Serialize;
 use std::ops::Deref;
@@ -310,7 +311,7 @@ impl Executor for ServiceExecutor {
 		body: Option<Vec<u8>>,
 	) -> Result<OutputType, ApiCallError>
 	where
-		OutputType: Entity + Deserialize<'static>,
+		OutputType: Entity + DeserializeOwned,
 	{
 		let response_bytes = body.expect("no body");
 		let response_entity = serde_json::from_slice::<RawEntity>(response_bytes.as_slice())

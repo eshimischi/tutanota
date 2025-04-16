@@ -62,11 +62,11 @@ impl JsonSerializer {
 			})?;
 		let mut mapped: ParsedEntity = HashMap::new();
 		for (&value_id, value_type) in &type_model.values {
-			let value_id_string = &value_id.to_string();
+			let value_id_string: String = value_id.into();
 			let value_name = &value_type.name;
 			let (_value_id_string, value) =
 				raw_entity
-					.remove_entry(value_id_string)
+					.remove_entry(&value_id_string)
 					.ok_or_else(|| InvalidValue {
 						type_ref: type_ref.clone(),
 						field: value_name.clone(),
@@ -101,14 +101,14 @@ impl JsonSerializer {
 					})
 				},
 			};
-			mapped.insert(value_id.to_string().clone(), mapped_value);
+			mapped.insert(value_id_string, mapped_value);
 		}
 
 		for (&association_id, association_type) in &type_model.associations {
-			let association_id_string = &association_id.to_string();
+			let association_id_string: String = association_id.into();
 			let association_name = &association_type.name;
 			let (association_id_string, value) = raw_entity
-				.remove_entry(association_id_string)
+				.remove_entry(&association_id_string)
 				.ok_or_else(|| InvalidValue {
 					type_ref: type_ref.clone(),
 					field: association_name.to_owned(),
@@ -173,7 +173,7 @@ impl JsonSerializer {
                         .collect::<Vec<ElementValue>>();
                     mapped.insert(association_id_string.clone(), ElementValue::Array(element_values), );
                 }
-                (_, _, value) => panic!("Unknown Association/cardinality/valueType combination: association id = {} cardinality = {:?} valueType = {:?} value {:?}", association_id, association_type.cardinality, association_type.association_type, value),
+                (_, _, value) => panic!("Unknown Association/cardinality/valueType combination: association id = {:?} cardinality = {:?} valueType = {:?} value {:?}", association_id, association_type.cardinality, association_type.association_type, value),
             }
 		}
 
@@ -268,7 +268,7 @@ impl JsonSerializer {
 			})?;
 		let mut mapped: RawEntity = HashMap::new();
 		for (&value_id, value_type) in &type_model.values {
-			let value_id_string = value_id.to_string();
+			let value_id_string: String = value_id.into();
 			let value_name = &value_type.name;
 			// we take out of the map to reuse the values
 			let (value_id_string, value) =
@@ -286,7 +286,7 @@ impl JsonSerializer {
 
 		for (&association_id, association_type) in &type_model.associations {
 			let association_name = &association_type.name;
-			let association_id_string = association_id.to_string();
+			let association_id_string: String = association_id.into();
 			let (association_id_string, association) = entity
 				.remove_entry(&association_id_string)
 				.ok_or_else(|| InvalidValue {

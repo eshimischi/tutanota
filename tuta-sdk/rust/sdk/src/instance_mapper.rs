@@ -1,5 +1,6 @@
 use serde::de::{
-	DeserializeSeed, EnumAccess, IntoDeserializer, MapAccess, Unexpected, VariantAccess, Visitor,
+	DeserializeOwned, DeserializeSeed, EnumAccess, IntoDeserializer, MapAccess, Unexpected,
+	VariantAccess, Visitor,
 };
 use serde::ser::{Error, Impossible, SerializeMap, SerializeSeq, SerializeStruct};
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
@@ -12,7 +13,7 @@ use crate::date::DateTime;
 use crate::element_value::ElementValue::Array;
 use crate::element_value::{ElementValue, ParsedEntity};
 use crate::entities::Entity;
-use crate::metamodel::{AssociationType, Cardinality, ModelAssociation, TypeModel};
+use crate::metamodel::{AssociationType, AttributeId, Cardinality, ModelAssociation, TypeModel};
 use crate::type_model_provider::TypeModelProvider;
 use crate::{CustomId, GeneratedId, IdTupleCustom, IdTupleGenerated, TypeRef};
 
@@ -28,7 +29,7 @@ impl InstanceMapper {
 		}
 	}
 
-	pub fn parse_entity<'a, E: Entity + Deserialize<'a>>(
+	pub fn parse_entity<E: Entity + DeserializeOwned>(
 		&self,
 		map: ParsedEntity,
 	) -> Result<E, DeError> {
@@ -36,7 +37,7 @@ impl InstanceMapper {
 			.type_model_provider
 			.resolve_server_type_ref(&E::type_ref())
 			.ok_or_else(|| DeError(format!("server type not found: {:?}", E::type_ref())))?;
-		let de = DictionaryDeserializer::<_>::from_iterable(
+		let de = DictionaryDeserializer::<'_, _>::from_iterable(
 			map,
 			type_model,
 			self.type_model_provider.as_ref(),
@@ -142,7 +143,7 @@ where
 	}
 }
 
-impl<'de, I> Deserializer<'de> for DictionaryDeserializer<'_, I>
+impl<'de, I> Deserializer<'de> for DictionaryDeserializer<'de, I>
 where
 	I: Iterator<Item = (String, ElementValue)>,
 {
@@ -174,7 +175,7 @@ where
 	}
 }
 
-impl<'de, I> MapAccess<'de> for DictionaryDeserializer<'_, I>
+impl<'de, I> MapAccess<'de> for DictionaryDeserializer<'de, I>
 where
 	I: Iterator<Item = (String, ElementValue)>,
 {
@@ -200,7 +201,8 @@ where
 	{
 		let (key, value) = self.value.take().expect("next_key must be called first!");
 		let deserializer = ElementValueDeserializer {
-			attribute_id: key.as_str(),
+			attribute_id: AttributeId::try_from(key.as_str())
+				.map_err(|e| DeError(format!("Invalid attribute Id: {key}")))?,
 			value,
 			type_model: self.type_model,
 			type_model_provider: self.type_model_provider,
@@ -219,9 +221,13 @@ where
 	{
 		match self.iter.next() {
 			Some((key, value)) => {
+				let attribute_id = key
+					.as_str()
+					.try_into()
+					.map_err(|e| DeError(format!("Invalid attribute Id: {key}")))?;
 				let key_result = kseed.deserialize(key.as_str().into_deserializer())?;
 				let value_result = vseed.deserialize(ElementValueDeserializer {
-					attribute_id: key.as_str(),
+					attribute_id,
 					value,
 					type_model: self.type_model,
 					type_model_provider: self.type_model_provider,
@@ -242,22 +248,22 @@ where
 }
 
 /// Deserializer for a single ElementValue.
-struct ElementValueDeserializer<'t, 's> {
+struct ElementValueDeserializer<'t> {
 	/// attribute_id for which we are deserializing the value. Useful for diagnostics.
-	attribute_id: &'s str,
+	attribute_id: AttributeId,
 	/// The value being deserialized
 	value: ElementValue,
 	type_model: &'t TypeModel,
 	type_model_provider: &'t TypeModelProvider,
 }
 
-impl ElementValueDeserializer<'_, '_> {
+impl ElementValueDeserializer<'_> {
 	fn wrong_type_err(&self, expected: &str) -> DeError {
-		DeError::wrong_type(self.attribute_id, &self.value, expected)
+		DeError::wrong_type(&String::from(self.attribute_id), &self.value, expected)
 	}
 }
 
-impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
+impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 	type Error = DeError;
 
 	serde::forward_to_deserialize_any! {
@@ -272,7 +278,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 	{
 		let type_name = self.value.type_variant_name();
 		Err(de::Error::custom(format_args!(
-			"deserialize_any is not supported! key: `{}`, value type: `{type_name}`",
+			"deserialize_any is not supported! key: `{:?}`, value type: `{type_name}`",
 			self.attribute_id
 		)))
 	}
@@ -354,9 +360,9 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 			ElementValue::Array(arr) => {
 				let is_association = self
 					.type_model
-					.is_attribute_id_association(self.attribute_id.to_string());
+					.is_attribute_id_association(&self.attribute_id);
 				// only associations are stored in arrays
-				if is_association.is_ok() && arr.is_empty() {
+				if is_association && arr.is_empty() {
 					visitor.visit_none()
 				} else {
 					visitor.visit_some(self)
@@ -430,11 +436,11 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 
 		let is_association = self
 			.type_model
-			.is_attribute_id_association(self.attribute_id.to_string());
+			.is_attribute_id_association(&self.attribute_id);
 
 		if name == crate::id::id_tuple::ID_TUPLE_GENERATED_NAME {
 			match self.value {
-				ElementValue::Array(mut arr) if is_association.is_ok() => {
+				ElementValue::Array(mut arr) if is_association => {
 					if let Some(ElementValue::IdTupleGeneratedElementId(IdTupleGenerated {
 						list_id: GeneratedId(list_id_str),
 						element_id: GeneratedId(element_id_str),
@@ -462,7 +468,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 			}
 		} else if name == crate::id::id_tuple::ID_TUPLE_CUSTOM_NAME {
 			match self.value {
-				ElementValue::Array(mut array) if is_association.is_ok() => {
+				ElementValue::Array(mut array) if is_association => {
 					if let Some(ElementValue::IdTupleCustomElementId(IdTupleCustom {
 						list_id: GeneratedId(list_id_str),
 						element_id: CustomId(element_id_str),
@@ -491,10 +497,10 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 		} else if let ElementValue::Dict(dict) = self.value {
 			let attr_assoc = self
 				.type_model
-				.get_association_by_attribute_id(self.attribute_id)
+				.get_association_by_attribute_id(&self.attribute_id)
 				.map_err(|err| {
 					DeError(format!(
-							"association for attribute id {} does not exist on type model with typeId {:?} {:?}",
+							"association for attribute id {:?} does not exist on type model with typeId {:?} {:?}",
 							self.attribute_id,
 							self.type_model.id,
 							err
@@ -523,25 +529,25 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 		} else if let ElementValue::Array(arr) = self.value {
 			let cardinality = self
 				.type_model
-				.get_attribute_id_cardinality(self.attribute_id.to_string())
-				.map_err(|err| {
+				.associations
+				.get(&self.attribute_id)
+				.ok_or_else(|| {
 					DeError(format!(
-							"association for attribute id {} does not exist on type model with typeId {:?} {:?}",
+							"association for attribute id {:?} does not exist on type model with typeId {:?}",
 							self.attribute_id,
-							self.type_model.id,
-							err
+							self.type_model.id
 						))
-				})?;
+				})?
+				.cardinality;
 
 			let attr_assoc = self
 				.type_model
-				.get_association_by_attribute_id(self.attribute_id)
+				.get_association_by_attribute_id(&self.attribute_id)
 				.map_err(|err| {
 					DeError(format!(
-							"association for attribute id {} does not exist on type model with typeId {:?} {:?}",
+							"association for attribute id {:?} does not exist on type model with typeId {:?} {err:?}",
 							self.attribute_id,
 							self.type_model.id,
-							err
 						))
 				})?;
 			let ref_type_ref = TypeRef {
@@ -637,7 +643,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'_, '_> {
 	}
 }
 
-impl<'de> EnumAccess<'de> for ElementValueDeserializer<'_, '_> {
+impl<'de> EnumAccess<'de> for ElementValueDeserializer<'de> {
 	type Error = DeError;
 	type Variant = Self;
 
@@ -651,7 +657,7 @@ impl<'de> EnumAccess<'de> for ElementValueDeserializer<'_, '_> {
 	}
 }
 
-impl<'de> VariantAccess<'de> for ElementValueDeserializer<'_, '_> {
+impl<'de> VariantAccess<'de> for ElementValueDeserializer<'de> {
 	type Error = DeError;
 
 	fn unit_variant(self) -> Result<(), Self::Error> {
@@ -681,18 +687,18 @@ impl<'de> VariantAccess<'de> for ElementValueDeserializer<'_, '_> {
 }
 
 /// Deserializer for sequence of elements (like an array or vec).
-struct ArrayDeserializer<'t, 's, I>
+struct ArrayDeserializer<'t, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
 	/// Key under which the entities are. Will be passed to the deserializer for elements.
-	attribute_id: &'s str,
+	attribute_id: AttributeId,
 	iter: I,
 	type_model: &'t TypeModel,
 	type_model_provider: &'t TypeModelProvider,
 }
 
-impl<'de, I> Deserializer<'de> for ArrayDeserializer<'_, 'de, I>
+impl<'de, I> Deserializer<'de> for ArrayDeserializer<'de, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
@@ -719,7 +725,7 @@ where
 	}
 }
 
-impl<'de, I> de::SeqAccess<'de> for ArrayDeserializer<'_, '_, I>
+impl<'de, I> de::SeqAccess<'de> for ArrayDeserializer<'de, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
@@ -1050,7 +1056,10 @@ impl<'t> SerializeStruct for ElementValueStructSerializer<'t> {
 					return Ok(());
 				}
 
-				let association_info = type_model.get_association_by_attribute_id(key).ok();
+				let association_info: Option<&ModelAssociation> = AttributeId::try_from(key)
+					.ok()
+					.map(|attr_id| type_model.get_association_by_attribute_id(&attr_id).ok())
+					.flatten();
 				if let Some(association_info) = association_info {
 					let ModelAssociation {
 						cardinality,

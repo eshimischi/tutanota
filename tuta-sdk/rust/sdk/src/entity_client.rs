@@ -77,7 +77,7 @@ impl EntityClient {
 			.resolve_client_type_ref(type_ref)
 			.ok_or_else(|| {
 				ApiCallError::internal(format!(
-					"Model {} not found in client app {}",
+					"Model {:?} not found in client app {:?}",
 					type_ref.type_id, type_ref.app
 				))
 			})
@@ -88,7 +88,7 @@ impl EntityClient {
 			.resolve_client_type_ref(type_ref)
 			.ok_or_else(|| {
 				ApiCallError::internal(format!(
-					"Model {} not found in server app {}",
+					"Model {:?} not found in server app {:?}",
 					type_ref.type_id, type_ref.app
 				))
 			})
@@ -159,17 +159,18 @@ impl EntityClient {
 		);
 		let model_version = type_model.version;
 
-		let id_field_attribute_id = &type_model
+		let id_field_attribute_id: String = type_model
 			.get_attribute_id_by_attribute_name(ID_FIELD)
 			.map_err(|err| ApiCallError::InternalSdkError {
 				error_message: format!(
 					"{ID_FIELD} attribute does not exist on the type model with typeId {:?} {:?}",
 					type_model.id, err
 				),
-			})?;
+			})?
+			.into();
 
 		let entity_id = parsed_entity
-			.get(id_field_attribute_id)
+			.get(&id_field_attribute_id)
 			.filter(|id| !matches!(id, ElementValue::Null))
 			.ok_or_else(|| {
 				ApiCallError::internal(
@@ -200,7 +201,7 @@ impl EntityClient {
 			request_url.push_str(list_id.as_str());
 		}
 
-		let permissions_field_attribute_id = &type_model
+		let permissions_field_attribute_id: String = type_model
 			.get_attribute_id_by_attribute_name(PERMISSIONS_FIELD)
 			.map_err(|err| ApiCallError::InternalSdkError {
 				error_message: format!(
@@ -208,14 +209,12 @@ impl EntityClient {
 					type_model.id,
 					err
 				),
-			})?;
+			})?
+			.into();
 
 		if request_type == HttpMethod::POST {
-			raw_entity.insert(id_field_attribute_id.to_string(), JsonElement::Null);
-			raw_entity.insert(
-				permissions_field_attribute_id.to_string(),
-				JsonElement::Null,
-			);
+			raw_entity.insert(id_field_attribute_id, JsonElement::Null);
+			raw_entity.insert(permissions_field_attribute_id, JsonElement::Null);
 		} else {
 			request_url.push('/');
 			request_url.push_str(element_id.as_str());
@@ -413,7 +412,7 @@ mod tests {
 	use super::*;
 	use crate::bindings::rest_client::{MockRestClient, RestResponse};
 	use crate::entities::Entity;
-	use crate::metamodel::AppName;
+	use crate::metamodel::{AppName, TypeId};
 	use crate::util::test_utils::mock_type_model_provider;
 	use crate::util::AttributeModel;
 	use crate::CustomId;
@@ -441,7 +440,7 @@ mod tests {
 		fn type_ref() -> TypeRef {
 			TypeRef {
 				app: AppName::EntityClientTestApp,
-				type_id: 10,
+				type_id: TypeId::from(10),
 			}
 		}
 	}
@@ -450,7 +449,7 @@ mod tests {
 		fn type_ref() -> TypeRef {
 			TypeRef {
 				app: AppName::EntityClientTestApp,
-				type_id: 20,
+				type_id: TypeId::from(20),
 			}
 		}
 	}

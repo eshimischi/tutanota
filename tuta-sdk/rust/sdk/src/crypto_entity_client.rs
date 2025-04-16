@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use serde::{Deserialize, Serialize};
-
 #[cfg_attr(test, mockall_double::double)]
 use crate::crypto::asymmetric_crypto_facade::AsymmetricCryptoFacade;
 #[cfg_attr(test, mockall_double::double)]
@@ -27,6 +25,8 @@ use crate::tutanota_constants::{
 use crate::util::{convert_version_to_u64, Versioned};
 use crate::GeneratedId;
 use crate::{ApiCallError, ListLoadDirection};
+use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 
 // A high level interface to manipulate encrypted entities/instances via the REST API
 pub struct CryptoEntityClient {
@@ -137,7 +137,7 @@ impl CryptoEntityClient {
 			.await
 	}
 
-	pub async fn load<T: Entity + Deserialize<'static>, ID: IdType>(
+	pub async fn load<T: Entity + DeserializeOwned, ID: IdType>(
 		&self,
 		id: &ID,
 	) -> Result<T, ApiCallError> {
@@ -164,7 +164,7 @@ impl CryptoEntityClient {
 		}
 	}
 
-	async fn process_encrypted_entity<T: Entity + Deserialize<'static>>(
+	async fn process_encrypted_entity<T: Entity + DeserializeOwned>(
 		&self,
 		type_model: &TypeModel,
 		parsed_entity: ParsedEntity,
@@ -174,8 +174,9 @@ impl CryptoEntityClient {
 			.resolve_session_key(&parsed_entity, type_model)
 			.await
 			.map_err(|error| {
-				let Ok(id_field_attribute_id) =
-					type_model.get_attribute_id_by_attribute_name(ID_FIELD)
+				let Ok(id_field_attribute_id) = type_model
+					.get_attribute_id_by_attribute_name(ID_FIELD)
+					.map(String::from)
 				else {
 					return ApiCallError::InternalSdkError {
 						error_message: format!(
@@ -226,7 +227,7 @@ impl CryptoEntityClient {
 	/// Tries authenticating the given decrypted typed_entity against the provided sender_identity_pub_key
 	/// If authentication is necessary the result will be injected into the typed_entity
 	/// Currently this will not change the typed_entity except for (asymmetrically) encrypted mail instances.
-	async fn insert_encryption_auth_status_if_needed<T: Entity + Deserialize<'static>>(
+	async fn insert_encryption_auth_status_if_needed<T: Entity + DeserializeOwned>(
 		&self,
 		typed_entity: &mut T,
 		sender_identity_pub_key: Option<X25519PublicKey>,
@@ -328,7 +329,7 @@ impl CryptoEntityClient {
 	}
 
 	#[allow(dead_code)] // will be used but rustc can't see it in some configurations right now
-	pub async fn load_range<T: Entity + Deserialize<'static>, Id: BaseIdType>(
+	pub async fn load_range<T: Entity + DeserializeOwned, Id: BaseIdType>(
 		&self,
 		list_id: &GeneratedId,
 		start_id: &Id,
