@@ -124,10 +124,10 @@ impl JsonSerializer {
                 value,
             ) {
                 (
-					AssociationType::Aggregation,
-					_,
-					JsonElement::Array(elements)
-				) => {
+                    AssociationType::Aggregation,
+                    _,
+                    JsonElement::Array(elements)
+                ) => {
                     let parsed_aggregates = self.parse_aggregated_array(
                         association_name,
                         &association_type_ref,
@@ -140,7 +140,7 @@ impl JsonSerializer {
                 }
                 (
                     AssociationType::ListElementAssociationGenerated
-					| AssociationType::BlobElementAssociation,
+                    | AssociationType::BlobElementAssociation,
                     _,
                     JsonElement::Array(vec),
                 ) => {
@@ -148,15 +148,15 @@ impl JsonSerializer {
                     mapped.insert(association_id_string.clone(), ElementValue::Array(ids));
                 }
                 (
-					AssociationType::ListElementAssociationCustom,
-					_,
-					JsonElement::Array(vec)
-				) => {
+                    AssociationType::ListElementAssociationCustom,
+                    _,
+                    JsonElement::Array(vec)
+                ) => {
                     let ids = self.parse_id_tuple_list_custom(type_ref, association_name, vec)?;
                     mapped.insert(association_id_string.clone(), ElementValue::Array(ids));
                 }
                 (
-					AssociationType::ListAssociation | AssociationType::ElementAssociation,
+                    AssociationType::ListAssociation | AssociationType::ElementAssociation,
                     _,
                     JsonElement::Array(vec),
                 ) => {
@@ -171,7 +171,7 @@ impl JsonSerializer {
                             }
                         })
                         .collect::<Vec<ElementValue>>();
-                    mapped.insert(association_id_string.clone(), ElementValue::Array(element_values), );
+                    mapped.insert(association_id_string.clone(), ElementValue::Array(element_values));
                 }
                 (_, _, value) => panic!("Unknown Association/cardinality/valueType combination: association id = {:?} cardinality = {:?} valueType = {:?} value {:?}", association_id, association_type.cardinality, association_type.association_type, value),
             }
@@ -620,7 +620,6 @@ mod tests {
 	use crate::entities::Entity;
 	use crate::instance_mapper::InstanceMapper;
 	use crate::util::test_utils::*;
-	use crate::util::AttributeModel;
 
 	#[test]
 	fn test_parse_mail() {
@@ -666,7 +665,6 @@ mod tests {
 		let json_serializer = JsonSerializer {
 			type_model_provider: type_model_provider.clone(),
 		};
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let email_json = include_str!("../test_data/email_response_attachments.json");
 		let raw_entity = serde_json::from_str::<RawEntity>(email_json).unwrap();
 		let type_ref = Mail::type_ref();
@@ -680,8 +678,10 @@ mod tests {
 			)]),
 			parsed
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "attachments")
+					&type_model_provider
+						.resolve_server_type_ref(&Mail::type_ref())
+						.expect("mail type not found")
+						.get_attribute_id_by_attribute_name("attachments")
 						.unwrap()
 				)
 				.expect("has attachments")
@@ -697,15 +697,16 @@ mod tests {
 		let json_serializer = JsonSerializer {
 			type_model_provider: type_model_provider.clone(),
 		};
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let user_json = include_str!("../test_data/user_response.json");
 		let raw_entity = serde_json::from_str::<RawEntity>(user_json).unwrap();
 		let type_ref = User::type_ref();
 		let parsed = json_serializer.parse(&type_ref, raw_entity).unwrap();
 		let ship = parsed
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(User::type_ref(), "memberships")
+				&type_model_provider
+					.resolve_server_type_ref(&User::type_ref())
+					.expect("user type not found")
+					.get_attribute_id_by_attribute_name("memberships")
 					.unwrap(),
 			)
 			.unwrap()
@@ -714,11 +715,10 @@ mod tests {
 			.find(|m| {
 				m.assert_dict()
 					.get(
-						&attribute_model
-							.get_attribute_id_by_attribute_name(
-								GroupMembership::type_ref(),
-								"groupType",
-							)
+						&type_model_provider
+							.resolve_server_type_ref(&GroupMembership::type_ref())
+							.expect("group membership type not found")
+							.get_attribute_id_by_attribute_name("groupType")
 							.unwrap(),
 					)
 					.unwrap()
@@ -729,8 +729,10 @@ mod tests {
 			.assert_dict();
 		assert!(!ship
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(GroupMembership::type_ref(), "symEncGKey")
+				&type_model_provider
+					.resolve_server_type_ref(&GroupMembership::type_ref())
+					.expect("group membership type not found")
+					.get_attribute_id_by_attribute_name("symEncGKey")
 					.unwrap()
 			)
 			.unwrap()
@@ -747,15 +749,16 @@ mod tests {
 		let json_serializer = JsonSerializer {
 			type_model_provider: type_model_provider.clone(),
 		};
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let user_json = include_str!("../test_data/user_response_empty_group_key.json");
 		let raw_entity = serde_json::from_str::<RawEntity>(user_json).unwrap();
 		let type_ref = User::type_ref();
 		let parsed = json_serializer.parse(&type_ref, raw_entity).unwrap();
 		let ship = parsed
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(User::type_ref(), "memberships")
+				&type_model_provider
+					.resolve_server_type_ref(&User::type_ref())
+					.expect("user type not found")
+					.get_attribute_id_by_attribute_name("memberships")
 					.unwrap(),
 			)
 			.unwrap()
@@ -764,11 +767,10 @@ mod tests {
 			.find(|m| {
 				m.assert_dict()
 					.get(
-						&attribute_model
-							.get_attribute_id_by_attribute_name(
-								GroupMembership::type_ref(),
-								"groupType",
-							)
+						&type_model_provider
+							.resolve_server_type_ref(&GroupMembership::type_ref())
+							.expect("group membership type not found")
+							.get_attribute_id_by_attribute_name("groupType")
 							.unwrap(),
 					)
 					.unwrap()
@@ -779,8 +781,10 @@ mod tests {
 			.assert_dict();
 		assert_eq!(
 			ship.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(GroupMembership::type_ref(), "symEncGKey")
+				&type_model_provider
+					.resolve_server_type_ref(&GroupMembership::type_ref())
+					.expect("group membership type not found")
+					.get_attribute_id_by_attribute_name("symEncGKey")
 					.unwrap()
 			)
 			.unwrap()
@@ -856,26 +860,26 @@ mod tests {
 		raw_entity_actual: RawEntity,
 	) {
 		raw_entity_expected
-			.into_iter()
-			.for_each(|(name_expected, value_expected)| {
-				let value_actual = raw_entity_actual.get(&name_expected).unwrap().to_owned();
-				match value_expected {
-					JsonElement::Dict(dict_expected) => {
-						let dict_new = match value_actual {
-							JsonElement::Dict(dict_actual) => dict_actual,
-							_ => panic!("aggregation on raw entities is not equals, expected {:?} , actual: {:?} !", dict_expected, value_actual),
-						};
-						assert_raw_entities_deep_equals(dict_expected, dict_new);
-					}
-					// edge case, where an encrypted boolean value is empty ("") but defaults to false ("0")
-					JsonElement::String(string_expected) if string_expected == "" => {
-						match value_actual {
-							JsonElement::String(string_actual) if string_actual == "0" => string_actual,
-							_ => panic!("string value on raw entities is not equals, expected {:?} , actual: {:?} !", string_expected, value_actual),
-						};
-					}
-					_ => assert_eq!(value_expected, value_actual),
-				};
-			});
+            .into_iter()
+            .for_each(|(name_expected, value_expected)| {
+                let value_actual = raw_entity_actual.get(&name_expected).unwrap().to_owned();
+                match value_expected {
+                    JsonElement::Dict(dict_expected) => {
+                        let dict_new = match value_actual {
+                            JsonElement::Dict(dict_actual) => dict_actual,
+                            _ => panic!("aggregation on raw entities is not equals, expected {:?} , actual: {:?} !", dict_expected, value_actual),
+                        };
+                        assert_raw_entities_deep_equals(dict_expected, dict_new);
+                    }
+                    // edge case, where an encrypted boolean value is empty ("") but defaults to false ("0")
+                    JsonElement::String(string_expected) if string_expected == "" => {
+                        match value_actual {
+                            JsonElement::String(string_actual) if string_actual == "0" => string_actual,
+                            _ => panic!("string value on raw entities is not equals, expected {:?} , actual: {:?} !", string_expected, value_actual),
+                        };
+                    }
+                    _ => assert_eq!(value_expected, value_actual),
+                };
+            });
 	}
 }

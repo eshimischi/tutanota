@@ -86,7 +86,8 @@ mod hidden {
 	use crate::entities::Entity;
 	use crate::services::{ExtraServiceParams, Service};
 	use crate::{ApiCallError, TypeRef};
-	use serde::{Deserialize, Serialize, Serializer};
+	use serde::{Serialize, Serializer};
+	use serde::de::DeserializeOwned;
 
 	/// Type that allows us to call the executor even
 	/// if the service doesn't have an input or output.
@@ -130,6 +131,6 @@ mod hidden {
 
 		async fn handle_response<O>(&self, body: Option<Vec<u8>>) -> Result<O, ApiCallError>
 		where
-			O: Entity + Deserialize<'static>;
+			O: Entity + DeserializeOwned;
 	}
 }

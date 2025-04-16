@@ -5,7 +5,7 @@ use crate::element_value::{ElementValue, ParsedEntity};
 use crate::entities::generated::sys::BucketKey;
 use crate::entities::generated::tutanota::{Mail, MailAddress};
 use crate::entities::Entity;
-use crate::metamodel::AppName;
+use crate::metamodel::{AppName, TypeId};
 use crate::type_model_provider::TypeModelProvider;
 use crate::util::test_utils::{
 	create_test_entity, mock_type_model_provider, typed_entity_to_parsed_entity,
@@ -77,22 +77,22 @@ fn encrypt_test_entity_dict_with_provider(
 	entity: &mut ParsedEntity,
 	provider: &TypeModelProvider,
 	app: AppName,
-	type_id: u64,
+	type_id: TypeId,
 	session_key: &GenericAesKey,
 	iv: &Iv,
 ) {
 	let type_ref = TypeRef::new(app, type_id);
 	let Some(model) = provider.resolve_client_type_ref(&type_ref) else {
-		panic!("Failed to create test entity {app}/{type_id}: not in model")
+		panic!("Failed to create test entity {app}/{type_id:?}: not in model")
 	};
 
 	for (&value_id, value_type) in &model.values {
-		let value_id_string = &value_id.to_string();
+		let value_id_string: String = value_id.into();
 		let value_name = &value_type.name;
 		if !value_type.encrypted {
 			continue;
 		}
-		let Some(data) = entity.get_mut(value_id_string) else {
+		let Some(data) = entity.get_mut(&value_id_string) else {
 			continue;
 		};
 		let encrypt_element_value = |value_to_encrypt: &mut ElementValue| match value_to_encrypt {
@@ -123,7 +123,7 @@ fn encrypt_test_entity_dict_with_provider(
 				)
 			},
 			_ => unimplemented!(
-				"can't encrypt {app}/{type_id}.{value_name} => {:?}/{}",
+				"can't encrypt {app}/{type_id:?}.{value_name} => {:?}/{}",
 				value_type.value_type,
 				value_to_encrypt.type_variant_name()
 			),
@@ -140,8 +140,8 @@ fn encrypt_test_entity_dict_with_provider(
 	}
 
 	for (&association_id, association_type) in &model.associations {
-		let association_id_string = &association_id.to_string();
-		let Some(ElementValue::Array(data)) = entity.get_mut(association_id_string) else {
+		let association_id_string: String = association_id.into();
+		let Some(ElementValue::Array(data)) = entity.get_mut(&association_id_string) else {
 			continue;
 		};
 		for i in data {

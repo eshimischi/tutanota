@@ -1,6 +1,3 @@
-use crate::metamodel::{AttributeId, TypeModelError};
-use crate::type_model_provider::TypeModelProvider;
-use crate::TypeRef;
 use base64::alphabet::Alphabet;
 use base64::engine::GeneralPurpose;
 use std::fmt::Debug;

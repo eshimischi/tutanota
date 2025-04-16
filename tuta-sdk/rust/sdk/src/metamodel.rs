@@ -1,8 +1,7 @@
 use crate::date::DateTime;
 use crate::element_value::ElementValue;
 use crate::TypeRef;
-use aes::cipher::inout::InOut;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use thiserror::Error;
@@ -262,7 +261,7 @@ mod tests {
 
 	#[test]
 	pub fn can_deserialize_empty_application() {
-		let models: ApplicationModels = serde_json::from_str("{\"apps\": {}}").unwrap();
+		let _models: ApplicationModels = serde_json::from_str("{\"apps\": {}}").unwrap();
 	}
 
 	#[test]
@@ -372,14 +371,12 @@ impl Display for AppName {
 
 #[repr(transparent)]
 #[derive(Debug, serde::Deserialize, serde::Serialize, Hash, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(test, derive(Debug))]
 #[serde(try_from = "&'de str")]
 #[serde(into = "String")]
 pub struct TypeId(u64);
 
 #[repr(transparent)]
 #[derive(Debug, serde::Deserialize, serde::Serialize, Hash, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(test, derive(Debug))]
 #[serde(try_from = "&'de str")]
 #[serde(into = "String")]
 pub struct AttributeId(u64);

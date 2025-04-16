@@ -1,6 +1,5 @@
 use std::sync::Arc;
 use time::macros::datetime;
-use time::Date;
 use tutasdk::bindings::test_file_client::TestFileClient;
 use tutasdk::date::calendar_facade::{
 	CalendarFacade, DEFAULT_CALENDAR_COLOR, DEFAULT_CALENDAR_NAME, DEFAULT_LONG_EVENT_NAME,

@@ -18,7 +18,7 @@ use crate::entities::generated::sys::{
 use crate::instance_mapper::InstanceMapper;
 use crate::metamodel::ElementType::Aggregated;
 use crate::metamodel::{
-	AppName, ApplicationModel, AssociationType, Cardinality, ElementType, ModelValue, TypeId,
+	AppName, ApplicationModel, AssociationType, Cardinality, ElementType, ModelValue,
 	ValueType,
 };
 use crate::tutanota_constants::CryptoProtocolVersion;
@@ -26,6 +26,9 @@ use crate::tutanota_constants::PublicKeyIdentifierType;
 use crate::CustomId;
 use crate::GeneratedId;
 use crate::{IdTupleCustom, IdTupleGenerated};
+use crate::metamodel::AttributeId;
+use crate::metamodel::TypeId;
+use serde::de::DeserializeOwned;
 
 /// Generates a URL-safe random string of length `Size`.
 #[must_use]
@@ -120,7 +123,7 @@ pub fn leak<T>(what: T) -> &'static T {
 /// assert_eq!(1337, mail.phishingStatus);
 /// ```
 #[must_use]
-pub fn create_test_entity<'a, T: Entity + serde::Deserialize<'a>>() -> T {
+pub fn create_test_entity<'a, T: Entity + DeserializeOwned>() -> T {
 	let mapper = InstanceMapper::new(Arc::new(mock_type_model_provider()));
 	let entity = create_test_entity_dict::<T>();
 	let type_ref = T::type_ref();
@@ -143,7 +146,7 @@ pub fn create_test_entity<'a, T: Entity + serde::Deserialize<'a>>() -> T {
 ///
 /// **NOTE:** The resulting dictionary is unencrypted.
 #[must_use]
-pub fn create_test_entity_dict<'a, T: Entity + serde::Deserialize<'a>>() -> ParsedEntity {
+pub fn create_test_entity_dict<'a, T: Entity + DeserializeOwned>() -> ParsedEntity {
 	let provider = Arc::new(mock_type_model_provider());
 	let type_ref = T::type_ref();
 	let entity = create_test_entity_dict_with_provider(&provider, type_ref.app, type_ref.type_id);
@@ -180,7 +183,7 @@ pub fn typed_entity_to_parsed_entity<T: Entity + serde::Serialize>(entity: T) ->
 	match mapper.serialize_entity(entity) {
 		Ok(n) => n,
 		Err(e) => panic!(
-			"Failed to serialize {}/{}: {:?}",
+			"Failed to serialize {}/{:?}: {:?}",
 			T::type_ref().app,
 			T::type_ref().type_id,
 			e
@@ -191,16 +194,16 @@ pub fn typed_entity_to_parsed_entity<T: Entity + serde::Serialize>(entity: T) ->
 fn create_test_entity_dict_with_provider(
 	provider: &TypeModelProvider,
 	app: AppName,
-	type_id: u64,
+	type_id: TypeId,
 ) -> ParsedEntity {
 	let Some(model) = provider.resolve_client_type_ref(&TypeRef::new(app, type_id)) else {
-		panic!("Failed to create test entity {app}/{type_id}: not in model")
+		panic!("Failed to create test entity {app}/{type_id:?}: not in model")
 	};
 	let mut object = ParsedEntity::new();
 
 	for (&value_id, value) in &model.values {
 		let value_name = &value.name;
-		let value_id_string = value_id.to_string();
+		let value_id_string = value_id.into();
 		let element_value = match value.cardinality {
 			Cardinality::ZeroOrOne => ElementValue::Null,
 			Cardinality::Any => ElementValue::Array(Vec::new()),
@@ -244,7 +247,7 @@ fn create_test_entity_dict_with_provider(
 	}
 
 	for (&association_id, association) in &model.associations {
-		let association_id_string = association_id.to_string();
+		let association_id_string: String = association_id.into();
 		let association_value = match association.cardinality {
 			Cardinality::ZeroOrOne => ElementValue::Array(vec![]),
 			Cardinality::Any => ElementValue::Array(Vec::new()),
@@ -301,11 +304,11 @@ fn create_test_entity_dict_with_provider(
 fn create_encrypted_test_entity_dict_with_provider(
 	provider: &TypeModelProvider,
 	app: AppName,
-	type_id: u64,
+	type_id: TypeId,
 ) -> ParsedEntity {
 	let type_ref = TypeRef::new(app, type_id);
 	let Some(model) = provider.resolve_client_type_ref(&type_ref) else {
-		panic!("Failed to create test entity {app}/{type_id}: not in model")
+		panic!("Failed to create test entity {app}/{type_id:?}: not in model")
 	};
 	let mut object = ParsedEntity::new();
 
@@ -357,7 +360,7 @@ fn create_encrypted_test_entity_dict_with_provider(
 			},
 		};
 
-		object.insert(format!("{value_id}"), element_value);
+		object.insert(String::from(value_id), element_value);
 	}
 
 	for (&association_id, association) in &model.associations {
@@ -395,7 +398,7 @@ fn create_encrypted_test_entity_dict_with_provider(
 				),
 			},
 		};
-		object.insert(format!("{association_id}"), association_value);
+		object.insert(String::from(association_id), association_value);
 	}
 
 	object
@@ -405,7 +408,7 @@ fn create_encrypted_test_entity_dict_with_provider(
 macro_rules! str_map {
         // map-like
         ($($k:expr => $v:expr),* $(,)?) => {{
-            core::convert::From::from([$(($k, $v),)*])
+            core::convert::From::from([$((core::convert::From::from($k), $v),)*])
         }};
     }
 
@@ -469,7 +472,7 @@ impl Entity for HelloEncOutput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Test,
-			type_id: 458,
+			type_id: TypeId::from(458),
 		}
 	}
 }
@@ -500,7 +503,7 @@ impl Entity for HelloEncInput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Test,
-			type_id: 358,
+			type_id: TypeId::from(358),
 		}
 	}
 }
@@ -542,7 +545,7 @@ impl Entity for HelloUnEncOutput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Test,
-			type_id: 248,
+			type_id: TypeId::from(248),
 		}
 	}
 }
@@ -574,7 +577,7 @@ impl Entity for HelloUnEncInput {
 	fn type_ref() -> TypeRef {
 		TypeRef {
 			app: AppName::Test,
-			type_id: 148,
+			type_id: TypeId::from(148),
 		}
 	}
 }
@@ -616,7 +619,7 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 		Arc::new(MockFileClient::new()),
 	);
 	let list_entity_generated_type_model: TypeModel = TypeModel {
-		id: 10,
+		id: TypeId::from(10),
 		since: 1,
 		app: AppName::EntityClientTestApp,
 		version: 1,
@@ -626,7 +629,7 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 		encrypted: true,
 		values: str_map! {
 			101 => ModelValue {
-					id: 101,
+					id: AttributeId::from(101),
 					name: "_id".to_string(),
 					value_type: ValueType::GeneratedId,
 					cardinality: Cardinality::One,
@@ -635,7 +638,7 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 				},
 			102 =>
 				ModelValue {
-					id: 102,
+					id: AttributeId::from(102),
 					name: "field".to_string(),
 					value_type: ValueType::String,
 					cardinality: Cardinality::One,
@@ -647,7 +650,7 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 	};
 
 	let list_entity_custom_type_model: TypeModel = TypeModel {
-		id: 20,
+		id: TypeId::from(20),
 		since: 1,
 		app: AppName::EntityClientTestApp,
 		version: 1,
@@ -657,7 +660,7 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 		encrypted: true,
 		values: str_map! {
 			201 => ModelValue {
-					id: 201,
+					id: AttributeId::from(201),
 					name: "_id".to_string(),
 					value_type: ValueType::CustomId,
 					cardinality: Cardinality::One,
@@ -666,7 +669,7 @@ pub fn mock_type_model_provider() -> TypeModelProvider {
 				},
 			202 =>
 				ModelValue {
-					id: 202,
+					id: AttributeId::from(202),
 					name: "field".to_string(),
 					value_type: ValueType::String,
 					cardinality: Cardinality::One,

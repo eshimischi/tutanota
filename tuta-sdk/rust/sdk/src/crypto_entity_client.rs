@@ -26,7 +26,7 @@ use crate::util::{convert_version_to_u64, Versioned};
 use crate::GeneratedId;
 use crate::{ApiCallError, ListLoadDirection};
 use serde::de::DeserializeOwned;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 // A high level interface to manipulate encrypted entities/instances via the REST API
 pub struct CryptoEntityClient {
@@ -400,7 +400,7 @@ mod tests {
 	use crate::type_model_provider::TypeModelProvider;
 	use crate::util::entity_test_utils::generate_email_entity;
 	use crate::util::test_utils::{create_test_entity, leak, mock_type_model_provider};
-	use crate::util::{AttributeModel, Versioned};
+	use crate::util::Versioned;
 	use crate::{GeneratedId, IdTupleGenerated};
 
 	#[tokio::test]
@@ -701,12 +701,14 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(type_model_provider);
+		let type_model = type_model_provider
+			.resolve_client_type_ref(&Mail::type_ref())
+			.expect("no mail type in client model");
 
 		let raw_mail_id = encrypted_mail
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(Mail::type_ref(), ID_FIELD)
+				&type_model
+					.get_attribute_id_by_attribute_name(ID_FIELD)
 					.unwrap(),
 			)
 			.unwrap()

@@ -202,15 +202,15 @@ impl EntityClient {
 		}
 
 		let permissions_field_attribute_id: String = type_model
-			.get_attribute_id_by_attribute_name(PERMISSIONS_FIELD)
-			.map_err(|err| ApiCallError::InternalSdkError {
-				error_message: format!(
-					"{PERMISSIONS_FIELD} attribute does not exist on the type model with typeId {:?} {:?}",
-					type_model.id,
-					err
-				),
-			})?
-			.into();
+            .get_attribute_id_by_attribute_name(PERMISSIONS_FIELD)
+            .map_err(|err| ApiCallError::InternalSdkError {
+                error_message: format!(
+                    "{PERMISSIONS_FIELD} attribute does not exist on the type model with typeId {:?} {:?}",
+                    type_model.id,
+                    err
+                ),
+            })?
+            .into();
 
 		if request_type == HttpMethod::POST {
 			raw_entity.insert(id_field_attribute_id, JsonElement::Null);
@@ -414,7 +414,6 @@ mod tests {
 	use crate::entities::Entity;
 	use crate::metamodel::{AppName, TypeId};
 	use crate::util::test_utils::mock_type_model_provider;
-	use crate::util::AttributeModel;
 	use crate::CustomId;
 	use crate::{collection, IdTupleCustom, IdTupleGenerated};
 	use mockall::predicate::{always, eq};
@@ -457,12 +456,21 @@ mod tests {
 	#[tokio::test]
 	async fn test_load_range_generated_element_id() {
 		let type_provider = Arc::new(mock_type_model_provider());
-		let attribute_model = AttributeModel::new(type_provider.as_ref());
 
 		let list_id = GeneratedId("list_id".to_owned());
+		let list_id_field_id = type_provider
+			.resolve_server_type_ref(&TestListGeneratedElementIdEntity::type_ref())
+			.expect("missing listentity")
+			.get_attribute_id_by_attribute_name(ID_FIELD)
+			.unwrap();
+		let element_id_field_id = type_provider
+			.resolve_server_type_ref(&TestListGeneratedElementIdEntity::type_ref())
+			.expect("missing elemententity")
+			.get_attribute_id_by_attribute_name("field")
+			.unwrap();
 		let entity_map: ParsedEntity = collection! {
-			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleGeneratedElementId(IdTupleGenerated::new(list_id.clone(), GeneratedId("element_id".to_owned()))),
-			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
+			 list_id_field_id => ElementValue::IdTupleGeneratedElementId(IdTupleGenerated::new(list_id.clone(), GeneratedId("element_id".to_owned()))),
+			element_id_field_id => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		println!("{}", serde_json::to_string_pretty(&entity_map).unwrap());
 		let mut rest_client = MockRestClient::new();
@@ -508,14 +516,22 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_load_range_custom_element_id() {
-		let type_provider = mock_type_model_provider();
-		let type_model_provider = Arc::new(type_provider);
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let type_model_provider = Arc::new(mock_type_model_provider());
 
 		let list_id = GeneratedId("list_id".to_owned());
+		let id_field_id = type_model_provider
+			.resolve_server_type_ref(&TestListCustomElementIdEntity::type_ref())
+			.expect("custom id type not found")
+			.get_attribute_id_by_attribute_name(ID_FIELD)
+			.unwrap();
+		let field_field_id = type_model_provider
+			.resolve_server_type_ref(&TestListCustomElementIdEntity::type_ref())
+			.expect("custom id type not found")
+			.get_attribute_id_by_attribute_name("field")
+			.unwrap();
 		let entity_map: ParsedEntity = collection! {
-			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleCustomElementId(IdTupleCustom::new(list_id.clone(), CustomId("element_id".to_owned()))),
-			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
+			 id_field_id => ElementValue::IdTupleCustomElementId(IdTupleCustom::new(list_id.clone(), CustomId("element_id".to_owned()))),
+			 field_field_id => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
 		let url = "http://test.com/rest/entityclienttestapp/TestListCustomElementIdEntity/list_id?start=zzzzzzzzzzzz&count=100&reverse=true";
@@ -561,12 +577,20 @@ mod tests {
 	#[tokio::test]
 	async fn test_load_range_asc_generated_element_id() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
-		let attribute_model = AttributeModel::new(&type_model_provider);
-
+		let id_field_id = type_model_provider
+			.resolve_server_type_ref(&TestListGeneratedElementIdEntity::type_ref())
+			.expect("list type not found")
+			.get_attribute_id_by_attribute_name(ID_FIELD)
+			.unwrap();
+		let field_field_id = type_model_provider
+			.resolve_server_type_ref(&TestListGeneratedElementIdEntity::type_ref())
+			.expect("element type not found")
+			.get_attribute_id_by_attribute_name("field")
+			.unwrap();
 		let list_id = GeneratedId("list_id".to_owned());
 		let entity_map: ParsedEntity = collection! {
-			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleGeneratedElementId(IdTupleGenerated::new(list_id.clone(), GeneratedId("element_id".to_owned()))),
-			attribute_model.get_attribute_id_by_attribute_name(TestListGeneratedElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
+			id_field_id => ElementValue::IdTupleGeneratedElementId(IdTupleGenerated::new(list_id.clone(), GeneratedId("element_id".to_owned()))),
+			field_field_id => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
 		let url = "http://test.com/rest/entityclienttestapp/TestListGeneratedElementIdEntity/list_id?start=------------&count=100&reverse=false";
@@ -612,12 +636,21 @@ mod tests {
 	#[tokio::test]
 	async fn test_load_range_asc_custom_element_id() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
-		let attribute_model = AttributeModel::new(&type_model_provider);
 
 		let list_id = GeneratedId("list_id".to_owned());
+		let id_field_id = type_model_provider
+			.resolve_server_type_ref(&TestListCustomElementIdEntity::type_ref())
+			.expect("list type not found")
+			.get_attribute_id_by_attribute_name(ID_FIELD)
+			.unwrap();
+		let field_field_id = type_model_provider
+			.resolve_server_type_ref(&TestListCustomElementIdEntity::type_ref())
+			.expect("custom id type not found")
+			.get_attribute_id_by_attribute_name("field")
+			.unwrap();
 		let entity_map: ParsedEntity = collection! {
-			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), ID_FIELD).unwrap() => ElementValue::IdTupleCustomElementId(IdTupleCustom::new(list_id.clone(), CustomId("element_id".to_owned()))),
-			attribute_model.get_attribute_id_by_attribute_name(TestListCustomElementIdEntity::type_ref(), "field").unwrap() => ElementValue::Bytes(vec![1, 2, 3])
+			id_field_id => ElementValue::IdTupleCustomElementId(IdTupleCustom::new(list_id.clone(), CustomId("element_id".to_owned()))),
+			field_field_id => ElementValue::Bytes(vec![1, 2, 3])
 		};
 		let mut rest_client = MockRestClient::new();
 		let url = "http://test.com/rest/entityclienttestapp/TestListCustomElementIdEntity/list_id?start=------------&count=100&reverse=false";

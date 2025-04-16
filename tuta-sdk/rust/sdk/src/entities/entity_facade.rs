@@ -760,8 +760,7 @@ mod tests {
 		MAX_UNCOMPRESSED_INPUT_LZ4, OWNER_ENC_SESSION_KEY_FIELD, OWNER_KEY_VERSION_FIELD,
 	};
 	use crate::entities::generated::sys::CustomerAccountTerminationRequest;
-	use crate::entities::generated::tutanota;
-	use crate::entities::generated::tutanota::Mail;
+	use crate::entities::generated::tutanota::{Mail, MailAddress};
 	use crate::entities::Entity;
 	use crate::instance_mapper::InstanceMapper;
 	use crate::json_element::{JsonElement, RawEntity};
@@ -769,7 +768,6 @@ mod tests {
 	use crate::metamodel::{AttributeId, Cardinality, ModelValue, ValueType};
 	use crate::type_model_provider::TypeModelProvider;
 	use crate::util::entity_test_utils::generate_email_entity;
-	use crate::util::AttributeModel;
 	use crate::{collection, ApiCallError};
 	use std::collections::{BTreeMap, HashMap};
 	use std::sync::Arc;
@@ -869,18 +867,19 @@ mod tests {
 			.parse(&Mail::type_ref(), raw_entity)
 			.unwrap();
 
-		let attribute_model = AttributeModel::new(&type_model_provider);
-
 		let entity_facade = EntityFacadeImpl::new(
 			Arc::clone(&type_model_provider),
 			RandomizerFacade::from_core(rand_core::OsRng),
 		);
-		let type_model = type_model_provider
+		let mail_type_model = type_model_provider
 			.resolve_server_type_ref(&Mail::type_ref())
+			.unwrap();
+		let mail_address_type_model = type_model_provider
+			.resolve_server_type_ref(&MailAddress::type_ref())
 			.unwrap();
 		let decrypted_mail = entity_facade
 			.decrypt_and_map(
-				type_model,
+				mail_type_model,
 				encrypted_mail,
 				ResolvedSessionKey {
 					session_key: sk,
@@ -900,8 +899,8 @@ mod tests {
 			&DateTime::from_millis(1720612041643),
 			decrypted_mail
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "receivedDate")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("receivedDate")
 						.unwrap()
 				)
 				.unwrap()
@@ -909,8 +908,8 @@ mod tests {
 		);
 		assert!(decrypted_mail
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(Mail::type_ref(), "confidential")
+				&mail_type_model
+					.get_attribute_id_by_attribute_name("confidential")
 					.unwrap()
 			)
 			.unwrap()
@@ -919,8 +918,8 @@ mod tests {
 			"Html email features",
 			decrypted_mail
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "subject")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("subject")
 						.unwrap()
 				)
 				.unwrap()
@@ -930,19 +929,16 @@ mod tests {
 			"Matthias",
 			decrypted_mail
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap()
 				)
 				.unwrap()
 				.assert_array_ref()[0]
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
-							"name"
-						)
+					&mail_address_type_model
+						.get_attribute_id_by_attribute_name("name")
 						.unwrap()
 				)
 				.unwrap()
@@ -952,19 +948,16 @@ mod tests {
 			"map-free@tutanota.de",
 			decrypted_mail
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap()
 				)
 				.unwrap()
 				.assert_array_ref()[0]
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
-							"address"
-						)
+					&mail_address_type_model
+						.get_attribute_id_by_attribute_name("address")
 						.unwrap()
 				)
 				.unwrap()
@@ -972,8 +965,8 @@ mod tests {
 		);
 		assert!(decrypted_mail
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(Mail::type_ref(), "attachments")
+				&mail_type_model
+					.get_attribute_id_by_attribute_name("attachments")
 					.unwrap()
 			)
 			.unwrap()
@@ -985,8 +978,8 @@ mod tests {
 				.expect("has_final_ivs")
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "subject")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("subject")
 						.unwrap()
 				)
 				.expect("has_subject")
@@ -999,8 +992,8 @@ mod tests {
 		assert_eq!(
 			decrypted_mail
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap()
 				)
 				.expect("has sender")
@@ -1262,10 +1255,12 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(&type_model_provider);
 
-		let type_model = type_model_provider
+		let mail_type_model = type_model_provider
 			.resolve_server_type_ref(&Mail::type_ref())
+			.unwrap();
+		let mail_address_type_model = type_model_provider
+			.resolve_server_type_ref(&MailAddress::type_ref())
 			.unwrap();
 
 		let entity_facade = EntityFacadeImpl::new(
@@ -1288,8 +1283,8 @@ mod tests {
 			expected_encrypted_mail.remove("_finalIvs").unwrap();
 			expected_encrypted_mail
 				.get_mut(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap(),
 				)
 				.unwrap()
@@ -1299,26 +1294,23 @@ mod tests {
 				.unwrap();
 			expected_encrypted_mail
 				.get_mut(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap(),
 				)
 				.unwrap()
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
-							ID_FIELD,
-						)
+					mail_address_type_model
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap(),
 					expected_aggregate_id.clone(),
 				);
 			expected_encrypted_mail
 				.get_mut(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "firstRecipient")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("firstRecipient")
 						.unwrap(),
 				)
 				.unwrap()
@@ -1328,17 +1320,16 @@ mod tests {
 				.unwrap();
 			expected_encrypted_mail
 				.get_mut(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "firstRecipient")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("firstRecipient")
 						.unwrap(),
 				)
 				.unwrap()
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					attribute_model
+					mail_address_type_model
 						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
 							ID_FIELD,
 						)
 						.unwrap(),
@@ -1351,17 +1342,16 @@ mod tests {
 			// them on the fly if they're missing. by removing them here we test that they're re-created
 			raw_mail
 				.get_mut(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap(),
 				)
 				.unwrap()
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					attribute_model
+					mail_address_type_model
 						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
 							ID_FIELD,
 						)
 						.unwrap(),
@@ -1369,17 +1359,16 @@ mod tests {
 				);
 			raw_mail
 				.get_mut(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "firstRecipient")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("firstRecipient")
 						.unwrap(),
 				)
 				.unwrap()
 				.assert_array_mut_ref()[0]
 				.assert_dict_mut_ref()
 				.insert(
-					attribute_model
+					mail_address_type_model
 						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
 							ID_FIELD,
 						)
 						.unwrap(),
@@ -1388,7 +1377,7 @@ mod tests {
 		}
 
 		let encrypted_mail = entity_facade
-			.encrypt_and_map_inner(type_model, &raw_mail, &sk)
+			.encrypt_and_map_inner(mail_type_model, &raw_mail, &sk)
 			.unwrap();
 
 		assert_eq!(expected_encrypted_mail, encrypted_mail);
@@ -1399,17 +1388,16 @@ mod tests {
 			{
 				original_mail
 					.get_mut(
-						&attribute_model
-							.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+						&mail_type_model
+							.get_attribute_id_by_attribute_name( "sender")
 							.unwrap(),
 					)
 					.unwrap()
 					.assert_array_mut_ref()[0]
 					.assert_dict_mut_ref()
 					.insert(
-						attribute_model
+						mail_address_type_model
 							.get_attribute_id_by_attribute_name(
-								tutanota::MailAddress::type_ref(),
 								ID_FIELD,
 							)
 							.unwrap(),
@@ -1417,17 +1405,16 @@ mod tests {
 					);
 				original_mail
 					.get_mut(
-						&attribute_model
-							.get_attribute_id_by_attribute_name(Mail::type_ref(), "firstRecipient")
+						&mail_type_model
+							.get_attribute_id_by_attribute_name("firstRecipient")
 							.unwrap(),
 					)
 					.unwrap()
 					.assert_array_mut_ref()[0]
 					.assert_dict_mut_ref()
 					.insert(
-						attribute_model
+						mail_address_type_model
 							.get_attribute_id_by_attribute_name(
-								tutanota::MailAddress::type_ref(),
 								ID_FIELD,
 							)
 							.unwrap(),
@@ -1437,7 +1424,7 @@ mod tests {
 
 			let mut decrypted_mail = entity_facade
 				.decrypt_and_map(
-					type_model,
+					mail_type_model,
 					encrypted_mail.clone(),
 					ResolvedSessionKey {
 						session_key: sk.clone(),
@@ -1455,18 +1442,17 @@ mod tests {
 			assert_eq!(
 				Some(&ElementValue::Bytes(owner_enc_session_key.to_vec())),
 				decrypted_mail.get(
-					&attribute_model
+					&mail_type_model
 						.get_attribute_id_by_attribute_name(
-							Mail::type_ref(),
+
 							OWNER_ENC_SESSION_KEY_FIELD
 						)
 						.unwrap()
 				),
 			);
 			decrypted_mail.insert(
-				attribute_model
+				mail_type_model
 					.get_attribute_id_by_attribute_name(
-						Mail::type_ref(),
 						OWNER_ENC_SESSION_KEY_FIELD,
 					)
 					.unwrap(),
@@ -1477,17 +1463,16 @@ mod tests {
 					owner_key_version as i64 // we know it is 0
 				)),
 				decrypted_mail.get(
-					&attribute_model
+					&mail_type_model
 						.get_attribute_id_by_attribute_name(
-							Mail::type_ref(),
 							OWNER_KEY_VERSION_FIELD
 						)
 						.unwrap()
 				),
 			);
 			decrypted_mail.insert(
-				attribute_model
-					.get_attribute_id_by_attribute_name(Mail::type_ref(), OWNER_KEY_VERSION_FIELD)
+				mail_type_model
+					.get_attribute_id_by_attribute_name(OWNER_KEY_VERSION_FIELD)
 					.unwrap(),
 				ElementValue::Null,
 			);
@@ -1548,17 +1533,18 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(&type_model_provider);
 
 		let rng = DeterministicRng(13);
 		let entity_facade = EntityFacadeImpl::new(
 			Arc::clone(&type_model_provider),
 			RandomizerFacade::from_core(rng.clone()),
 		);
-		let type_model = type_model_provider
+		let mail_type_model = type_model_provider
 			.resolve_server_type_ref(&Mail::type_ref())
 			.unwrap();
-		let sk = GenericAesKey::from_bytes(rand::random::<[u8; 32]>().as_slice()).unwrap();
+		let mail_address_type_model = type_model_provider
+			.resolve_server_type_ref(&MailAddress::type_ref())
+			.unwrap();		let sk = GenericAesKey::from_bytes(rand::random::<[u8; 32]>().as_slice()).unwrap();
 		let new_iv = Iv::from_bytes(&rand::random::<[u8; 16]>()).unwrap();
 		let original_iv = Iv::generate(&RandomizerFacade::from_core(rng.clone()));
 
@@ -1577,8 +1563,8 @@ mod tests {
 
 		// set separate finalIv for some field
 		let final_iv_for_subject = [(
-			attribute_model
-				.get_attribute_id_by_attribute_name(Mail::type_ref(), "subject")
+			mail_type_model
+				.get_attribute_id_by_attribute_name("subject")
 				.unwrap()
 				.to_string(),
 			ElementValue::Bytes(new_iv.get_inner().to_vec()),
@@ -1592,13 +1578,13 @@ mod tests {
 		);
 
 		let encrypted_mail = entity_facade
-			.encrypt_and_map_inner(type_model, &unencrypted_mail, &sk)
+			.encrypt_and_map_inner(mail_type_model, &unencrypted_mail, &sk)
 			.unwrap();
 
 		let encrypted_subject = encrypted_mail
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(Mail::type_ref(), "subject")
+				&mail_type_model
+					.get_attribute_id_by_attribute_name("subject")
 					.unwrap(),
 			)
 			.unwrap();
@@ -1615,16 +1601,16 @@ mod tests {
 		// other fields should be encrypted with origin_iv
 		let encrypted_recipient_name = encrypted_mail
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(Mail::type_ref(), "firstRecipient")
+				&mail_type_model
+					.get_attribute_id_by_attribute_name("firstRecipient")
 					.unwrap(),
 			)
 			.unwrap()
 			.assert_array()[0]
 			.assert_dict()
 			.get(
-				&attribute_model
-					.get_attribute_id_by_attribute_name(tutanota::MailAddress::type_ref(), "name")
+				&mail_address_type_model
+					.get_attribute_id_by_attribute_name("name")
 					.unwrap(),
 			)
 			.unwrap()

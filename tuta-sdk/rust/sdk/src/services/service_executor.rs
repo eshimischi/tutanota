@@ -17,7 +17,6 @@ use crate::services::{
 use crate::type_model_provider::TypeModelProvider;
 use crate::{ApiCallError, HeadersProvider};
 use serde::de::DeserializeOwned;
-use serde::Deserialize;
 use serde::Serialize;
 use std::ops::Deref;
 use std::sync::Arc;
@@ -394,7 +393,6 @@ mod tests {
 	use crate::services::service_executor::ResolvingServiceExecutor;
 	use crate::services::ExtraServiceParams;
 	use crate::util::test_utils::*;
-	use crate::util::AttributeModel;
 	use crate::{HeadersProvider, CLIENT_VERSION};
 	use base64::prelude::BASE64_STANDARD;
 	use base64::Engine;
@@ -789,13 +787,15 @@ mod tests {
 		let session_key_clone = session_key.clone();
 		entity_facade.expect_decrypt_and_map().return_once(
 			move |_, mut entity, resolved_session_key| {
-				let attribute_model = AttributeModel::new(&provider);
+				let type_model = provider
+					.resolve_server_type_ref(&HelloEncOutput::type_ref())
+					.expect("missing type");
 				assert_eq!(session_key_clone, resolved_session_key.session_key);
-				let timestamp_attribute_id = &attribute_model
-					.get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "timestamp")
+				let timestamp_attribute_id = &type_model
+					.get_attribute_id_by_attribute_name("timestamp")
 					.unwrap();
-				let answer_attribute_id = &attribute_model
-					.get_attribute_id_by_attribute_name(HelloEncOutput::type_ref(), "answer")
+				let answer_attribute_id = &type_model
+					.get_attribute_id_by_attribute_name("answer")
 					.unwrap();
 				assert_eq!(
 					&ElementValue::Bytes(BASE64_STANDARD.decode(r#"MzAwMA=="#).unwrap()),

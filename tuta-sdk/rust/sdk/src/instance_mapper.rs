@@ -3,7 +3,7 @@ use serde::de::{
 	VariantAccess, Visitor,
 };
 use serde::ser::{Error, Impossible, SerializeMap, SerializeSeq, SerializeStruct};
-use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{de, ser, Deserializer, Serialize, Serializer};
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::sync::Arc;
@@ -202,7 +202,7 @@ where
 		let (key, value) = self.value.take().expect("next_key must be called first!");
 		let deserializer = ElementValueDeserializer {
 			attribute_id: AttributeId::try_from(key.as_str())
-				.map_err(|e| DeError(format!("Invalid attribute Id: {key}")))?,
+				.map_err(|_| DeError(format!("Invalid attribute Id: {key}")))?,
 			value,
 			type_model: self.type_model,
 			type_model_provider: self.type_model_provider,
@@ -224,7 +224,7 @@ where
 				let attribute_id = key
 					.as_str()
 					.try_into()
-					.map_err(|e| DeError(format!("Invalid attribute Id: {key}")))?;
+					.map_err(|_| DeError(format!("Invalid attribute Id: {key}")))?;
 				let key_result = kseed.deserialize(key.as_str().into_deserializer())?;
 				let value_result = vseed.deserialize(ElementValueDeserializer {
 					attribute_id,
@@ -1436,12 +1436,12 @@ mod tests {
 	use crate::entities::entity_facade::{
 		FORMAT_FIELD, ID_FIELD, OWNER_GROUP_FIELD, PERMISSIONS_FIELD,
 	};
+	use crate::entities::generated::sys;
 	use crate::entities::generated::sys::{BucketKey, Group, GroupInfo, InstanceSessionKey};
 	use crate::entities::generated::tutanota::{
-		CalendarEventUidIndex, Mail, MailDetailsBlob, MailboxGroupRoot, OutOfOfficeNotification,
-		OutOfOfficeNotificationRecipientList,
+		CalendarEventUidIndex, Mail, MailAddress, MailDetailsBlob, MailboxGroupRoot,
+		OutOfOfficeNotification, OutOfOfficeNotificationRecipientList,
 	};
-	use crate::entities::generated::{sys, tutanota};
 	use crate::json_element::RawEntity;
 	use crate::json_serializer::JsonSerializer;
 	use crate::tutanota_constants::CryptoProtocolVersion;
@@ -1449,7 +1449,6 @@ mod tests {
 	use crate::util::test_utils::{
 		create_test_entity, generate_random_group, mock_type_model_provider, HelloUnEncInput,
 	};
-	use crate::util::AttributeModel;
 	use crate::GeneratedId;
 	use std::sync::Arc;
 
@@ -1508,13 +1507,14 @@ mod tests {
 			Arc::new(MockRestClient::new()),
 			Arc::new(MockFileClient::new()),
 		));
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let json = include_str!("../test_data/group_info_response.json");
 		let mut parsed_entity = get_parsed_entity::<GroupInfo>(json);
 		// this is encrypted, so we can't actually deserialize it without replacing it with a decrypted version
 		parsed_entity.insert(
-			attribute_model
-				.get_attribute_id_by_attribute_name(GroupInfo::type_ref(), "name")
+			type_model_provider
+				.resolve_server_type_ref(&GroupInfo::type_ref())
+				.unwrap()
+				.get_attribute_id_by_attribute_name("name")
 				.unwrap(),
 			ElementValue::String("some string".to_owned()),
 		);
@@ -1526,10 +1526,12 @@ mod tests {
 	#[test]
 	fn test_de_error_wrong_type() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let group_type_model = type_model_provider
+			.resolve_server_type_ref(&Group::type_ref())
+			.unwrap();
 		let parsed_entity = [(
-			attribute_model
-				.get_attribute_id_by_attribute_name(Group::type_ref(), ID_FIELD)
+			group_type_model
+				.get_attribute_id_by_attribute_name(ID_FIELD)
 				.unwrap(),
 			ElementValue::Number(2),
 		)]
@@ -1546,10 +1548,12 @@ mod tests {
 	#[test]
 	fn test_de_error_missing_key() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let group_type_model = type_model_provider
+			.resolve_server_type_ref(&Group::type_ref())
+			.unwrap();
 		let parsed_entity = [(
-			attribute_model
-				.get_attribute_id_by_attribute_name(Group::type_ref(), "_id")
+			group_type_model
+				.get_attribute_id_by_attribute_name("_id")
 				.unwrap(),
 			ElementValue::IdGeneratedId(GeneratedId("id".to_owned())),
 		)]
@@ -1575,79 +1579,57 @@ mod tests {
 	#[test]
 	fn test_de_out_of_office_notification() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let oofn_type_model = type_model_provider
+			.resolve_server_type_ref(&OutOfOfficeNotification::type_ref())
+			.unwrap();
 
 		let parsed_entity: ParsedEntity = HashMap::from_iter(
 			[
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							FORMAT_FIELD,
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name(FORMAT_FIELD)
 						.unwrap(),
 					ElementValue::Number(0),
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							ID_FIELD,
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap(),
 					ElementValue::IdGeneratedId(GeneratedId("id".to_owned())),
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							OWNER_GROUP_FIELD,
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name(OWNER_GROUP_FIELD)
 						.unwrap(),
 					ElementValue::Null,
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							PERMISSIONS_FIELD,
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name(PERMISSIONS_FIELD)
 						.unwrap(),
 					ElementValue::IdGeneratedId(GeneratedId("permissions".to_owned())),
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							"enabled",
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name("enabled")
 						.unwrap(),
 					ElementValue::Bool(true),
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							"endDate",
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name("endDate")
 						.unwrap(),
 					ElementValue::Date(DateTime::from_millis(1723193495816)),
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							"startDate",
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name("startDate")
 						.unwrap(),
 					ElementValue::Null,
 				),
 				(
-					attribute_model
-						.get_attribute_id_by_attribute_name(
-							OutOfOfficeNotification::type_ref(),
-							"notifications",
-						)
+					oofn_type_model
+						.get_attribute_id_by_attribute_name("notifications")
 						.unwrap(),
 					ElementValue::Array(vec![]),
 				),
@@ -1697,7 +1679,9 @@ mod tests {
 	fn test_ser_mailbox_group_root() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let mbgr_type_model = type_model_provider
+			.resolve_server_type_ref(&MailboxGroupRoot::type_ref())
+			.unwrap();
 		let group_root = MailboxGroupRoot {
 			_format: 0,
 			_id: Some(GeneratedId::test_random()),
@@ -1718,11 +1702,8 @@ mod tests {
 			&ElementValue::Number(0),
 			result
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							MailboxGroupRoot::type_ref(),
-							FORMAT_FIELD
-						)
+					&mbgr_type_model
+						.get_attribute_id_by_attribute_name(FORMAT_FIELD)
 						.unwrap()
 				)
 				.unwrap()
@@ -1733,15 +1714,21 @@ mod tests {
 	fn test_ser_group() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let group_type_model = type_model_provider
+			.resolve_server_type_ref(&Group::type_ref())
+			.unwrap();
+
+		let pub_enc_key_data_typemodel = type_model_provider
+			.resolve_server_type_ref(&sys::PubEncKeyData::type_ref())
+			.unwrap();
 		let group = generate_random_group(None, None);
 		let result = mapper.serialize_entity(group.clone()).unwrap();
 		assert_eq!(
 			&group.groupInfo,
 			result
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Group::type_ref(), "groupInfo")
+					&group_type_model
+						.get_attribute_id_by_attribute_name("groupInfo")
 						.unwrap()
 				)
 				.unwrap()
@@ -1752,8 +1739,8 @@ mod tests {
 			&ElementValue::Number(0),
 			result
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Group::type_ref(), FORMAT_FIELD)
+					&group_type_model
+						.get_attribute_id_by_attribute_name(FORMAT_FIELD)
 						.unwrap()
 				)
 				.unwrap()
@@ -1762,22 +1749,16 @@ mod tests {
 			&ElementValue::Bytes(vec![1, 2, 3]),
 			result
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							Group::type_ref(),
-							"pubAdminGroupEncGKey"
-						)
+					&group_type_model
+						.get_attribute_id_by_attribute_name("pubAdminGroupEncGKey")
 						.unwrap()
 				)
 				.unwrap()
 				.assert_array()[0]
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							sys::PubEncKeyData::type_ref(),
-							"pubEncSymKey"
-						)
+					&pub_enc_key_data_typemodel
+						.get_attribute_id_by_attribute_name("pubEncSymKey")
 						.unwrap()
 				)
 				.expect("has_pubEncSymKey")
@@ -1786,22 +1767,16 @@ mod tests {
 			&ElementValue::Number(PublicKeyIdentifierType::GroupId as i64),
 			result
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							Group::type_ref(),
-							"pubAdminGroupEncGKey"
-						)
+					&group_type_model
+						.get_attribute_id_by_attribute_name("pubAdminGroupEncGKey")
 						.unwrap()
 				)
 				.unwrap()
 				.assert_array()[0]
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							sys::PubEncKeyData::type_ref(),
-							"recipientIdentifierType"
-						)
+					&pub_enc_key_data_typemodel
+						.get_attribute_id_by_attribute_name("recipientIdentifierType")
 						.unwrap()
 				)
 				.expect("has_recipientIdentifierType")
@@ -1810,22 +1785,16 @@ mod tests {
 			&ElementValue::Number(CryptoProtocolVersion::TutaCrypt as i64),
 			result
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							Group::type_ref(),
-							"pubAdminGroupEncGKey"
-						)
+					&group_type_model
+						.get_attribute_id_by_attribute_name("pubAdminGroupEncGKey")
 						.unwrap()
 				)
 				.unwrap()
 				.assert_array()[0]
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							sys::PubEncKeyData::type_ref(),
-							"protocolVersion"
-						)
+					&group_type_model
+						.get_attribute_id_by_attribute_name("protocolVersion")
 						.unwrap()
 				)
 				.expect("has_protocolVersion")
@@ -1836,7 +1805,9 @@ mod tests {
 	fn test_ser_calendar_event_uid_index() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let ceui_type_model = type_model_provider
+			.resolve_client_type_ref(&CalendarEventUidIndex::type_ref())
+			.unwrap();
 		let _id = IdTupleCustom::new(GeneratedId::test_random(), CustomId::test_random());
 		let progenitor = IdTupleCustom::new(GeneratedId::test_random(), CustomId::test_random());
 		let calendar_event_uid_index = CalendarEventUidIndex {
@@ -1853,11 +1824,8 @@ mod tests {
 			ElementValue::IdTupleCustomElementId(_id),
 			*parsed_entity
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							CalendarEventUidIndex::type_ref(),
-							ID_FIELD
-						)
+					&ceui_type_model
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap()
 				)
 				.unwrap()
@@ -1866,11 +1834,8 @@ mod tests {
 			Array(vec![ElementValue::IdTupleCustomElementId(progenitor)]),
 			*parsed_entity
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							CalendarEventUidIndex::type_ref(),
-							"progenitor"
-						)
+					&ceui_type_model
+						.get_attribute_id_by_attribute_name("progenitor")
 						.unwrap()
 				)
 				.unwrap()
@@ -1901,15 +1866,15 @@ mod tests {
 
 		let type_model_provider = Arc::new(mock_type_model_provider());
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let attribute_model = AttributeModel::new(&type_model_provider);
+		let gi_type_model = type_model_provider.resolve_client_type_ref(&GroupInfo::type_ref()).unwrap();
 		let parsed_entity = mapper.serialize_entity(group_info).unwrap();
 
 		assert_eq!(
 			ElementValue::IdTupleGeneratedElementId(_id),
 			*parsed_entity
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(GroupInfo::type_ref(), ID_FIELD)
+					&gi_type_model
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap()
 				)
 				.unwrap()
@@ -1918,8 +1883,8 @@ mod tests {
 			ElementValue::Date(DateTime::from_millis(1533116004052)),
 			*parsed_entity
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(GroupInfo::type_ref(), "created")
+					&gi_type_model
+						.get_attribute_id_by_attribute_name("created")
 						.unwrap()
 				)
 				.unwrap()
@@ -1929,8 +1894,13 @@ mod tests {
 	#[test]
 	fn test_serde_mail() {
 		let type_model_provider = Arc::new(mock_type_model_provider());
+		let mail_type_model = type_model_provider
+			.resolve_server_type_ref(&Mail::type_ref())
+			.unwrap();
+		let mail_address_type_model = type_model_provider
+			.resolve_server_type_ref(&MailAddress::type_ref())
+			.unwrap();
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let mut mail = create_test_entity::<Mail>();
 		let mut bucket_key = create_test_entity::<BucketKey>();
 		let instance_session_key = create_test_entity::<InstanceSessionKey>();
@@ -1952,8 +1922,8 @@ mod tests {
 			&_id,
 			serialized
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), ID_FIELD)
+					&mail_type_model
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap()
 				)
 				.unwrap()
@@ -1963,8 +1933,8 @@ mod tests {
 			&mail_details_id,
 			serialized
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "mailDetails")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("mailDetails")
 						.unwrap()
 				)
 				.unwrap()
@@ -1975,8 +1945,8 @@ mod tests {
 			&attachment_id,
 			serialized
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "attachments")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("attachments")
 						.unwrap()
 				)
 				.unwrap()
@@ -1987,19 +1957,16 @@ mod tests {
 			sender_name,
 			serialized
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(Mail::type_ref(), "sender")
+					&mail_type_model
+						.get_attribute_id_by_attribute_name("sender")
 						.unwrap()
 				)
 				.unwrap()
 				.assert_array()[0]
 				.assert_dict()
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(
-							tutanota::MailAddress::type_ref(),
-							"name"
-						)
+					&mail_address_type_model
+						.get_attribute_id_by_attribute_name("name")
 						.unwrap()
 				)
 				.unwrap()
@@ -2020,14 +1987,15 @@ mod tests {
 
 		let type_model_provider = Arc::new(mock_type_model_provider());
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let attribute_model = AttributeModel::new(&type_model_provider);
 		let serialized = mapper.serialize_entity(mail_details_blob).unwrap();
 		assert_eq!(
 			&_id,
 			serialized
 				.get(
-					&attribute_model
-						.get_attribute_id_by_attribute_name(MailDetailsBlob::type_ref(), ID_FIELD)
+					&type_model_provider
+						.resolve_server_type_ref(&MailDetailsBlob::type_ref())
+						.unwrap()
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap()
 				)
 				.unwrap()

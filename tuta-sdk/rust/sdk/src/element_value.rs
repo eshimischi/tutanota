@@ -4,7 +4,6 @@ use crate::id::id_tuple::IdTupleGenerated;
 use crate::GeneratedId;
 
 use crate::date::DateTime;
-use crate::metamodel::AttributeId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
