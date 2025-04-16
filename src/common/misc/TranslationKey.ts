@@ -1995,3 +1995,4 @@ export type TranslationKeyType =
 	| "ratingSuggestionPage_title"
 	| "ratingFeedbackSent_msg"
 	| "ratingSuggestion_placeholder"
+	| "ratingSupportContactedSnackbar_msg"

@@ -2010,6 +2010,7 @@ export default {
 		"ratingNeedUrgentHelp_label": "I need urgent help",
 		"ratingSuggestionPage_title": "What's on your mind?",
 		"ratingFeedbackSent_msg": "Thank you for your feedback!",
-		"ratingSuggestion_placeholder": "Have an idea or feedback? Type away..."
+		"ratingSuggestion_placeholder": "Have an idea or feedback? Type away...",
+		"ratingSupportContactedSnackbar_msg": "Thank you for reporting your problem! The support team will contact you by email."
 	}
 }
