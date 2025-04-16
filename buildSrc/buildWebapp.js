@@ -114,6 +114,17 @@ export async function buildWebapp({ version, stage, host, measure, minify, proje
 							outputPath: path.join(resolvedBuildDir, "wasm/argon2.js"),
 						},
 					},
+					{
+						name: "crypto-primitives.wasm",
+						command: "wasm-pack build --target web ./tuta-sdk/rust/crypto-primitives",
+						// workingDir: "libs/webassembly/",
+						outputPath: path.join(resolvedBuildDir, "wasm/crypto-primitives.wasm"),
+						// fallback: {
+						// 	command: "make -f Makefile_argon2 fallback",
+						// 	workingDir: "libs/webassembly/",
+						// 	outputPath: path.join(resolvedBuildDir, "wasm/argon2.js"),
+						// },
+					},
 				],
 			}),
 		],
@@ -169,7 +180,16 @@ import "./${builtWorkerFile}"`,
 		app,
 	)
 	if (stage !== "release") {
-		await createHtml(env.create({ staticUrl: restUrl, version, mode: "App", dist: true, domainConfigs }), app)
+		await createHtml(
+			env.create({
+				staticUrl: restUrl,
+				version,
+				mode: "App",
+				dist: true,
+				domainConfigs,
+			}),
+			app,
+		)
 	}
 
 	await bundleServiceWorker(chunks, version, minify, buildDir)
