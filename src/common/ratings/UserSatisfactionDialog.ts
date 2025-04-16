@@ -1,5 +1,12 @@
 import { deviceConfig } from "../misc/DeviceConfig.js"
-import { completeEvaluationStage, completeTriggerStage, createEvent, TriggerType } from "./UserSatisfactionUtils.js"
+import {
+	completeEvaluationStage,
+	completeTriggerStage,
+	createEvent,
+	evaluateRatingEligibility,
+	isEventHappyMoment,
+	TriggerType,
+} from "./UserSatisfactionUtils.js"
 import { MultiPageDialog } from "../gui/dialogs/MultiPageDialog.js"
 import { EvaluationPage } from "./pages/EvaluationPage.js"
 import m from "mithril"
@@ -18,8 +25,8 @@ import { SupportDialogState } from "../support/SupportDialog.js"
 import { showSnackBar } from "../gui/base/SnackBar.js"
 import { client } from "../misc/ClientDetector.js"
 import { windowFacade } from "../misc/WindowFacade.js"
-import { TUTA_MAIL_APP_STORE_URL, TUTA_MAIL_GOOGLE_PLAY_URL } from "../api/common/TutanotaConstants.js"
-import { noOp } from "@tutao/tutanota-utils"
+import { getCurrentDate, TUTA_MAIL_APP_STORE_URL, TUTA_MAIL_GOOGLE_PLAY_URL } from "../api/common/TutanotaConstants.js"
+import { isEmpty, noOp } from "@tutao/tutanota-utils"
 import { Dialog } from "../gui/base/Dialog.js"
 
 export type UserSatisfactionDialogPage = "evaluation" | "dissatisfaction" | "androidPlayStore" | "supportTuta" | "suggestion" | "contactSupport"
@@ -122,16 +129,15 @@ export async function handleRatingByEvent(triggerType: TriggerType) {
 		createEvent(deviceConfig)
 	}
 
-	// FIXME
-	// const disallowReasons = await evaluateRatingEligibility(getCurrentDate(), deviceConfig, isApp())
-	//
-	// if (!isEmpty(disallowReasons)) {
-	// 	return
-	// }
-	//
-	// if (isEventHappyMoment(getCurrentDate(), deviceConfig)) {
-	showUserSatisfactionDialog(triggerType)
-	// }
+	const disallowReasons = await evaluateRatingEligibility(getCurrentDate(), deviceConfig, isApp())
+
+	if (!isEmpty(disallowReasons)) {
+		return
+	}
+
+	if (isEventHappyMoment(getCurrentDate(), deviceConfig)) {
+		showUserSatisfactionDialog(triggerType)
+	}
 }
 
 function onSupportRequestSend(dialog: Dialog) {
