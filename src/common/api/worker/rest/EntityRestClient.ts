@@ -157,8 +157,9 @@ export interface EntityRestInterface {
 
 	/**
 	 * Creates a single element on the server. Entities are encrypted before they are sent.
+	 * @return the element id generated on the server side or null if it is a custom id
 	 */
-	setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id>
+	setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id | null>
 
 	/**
 	 * Creates multiple elements on the server. Entities are encrypted before they are sent.
@@ -424,7 +425,7 @@ export class EntityRestClient implements EntityRestInterface {
 		return this._crypto.applyMigrationsForInstance<T>(instance)
 	}
 
-	async setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id> {
+	async setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id | null> {
 		const typeRef = instance._type
 		const { typeModel, path, headers, queryParams } = await this._validateAndPrepareRestRequest(
 			typeRef,
@@ -451,7 +452,7 @@ export class EntityRestClient implements EntityRestInterface {
 		})
 		const postReturnTypeModel = await resolveClientTypeReference(PersistenceResourcePostReturnTypeRef)
 		const untypedPersistencePostReturn = AttributeModel.removeNetworkDebuggingInfoIfNeeded(JSON.parse(persistencePostReturn))
-		return AttributeModel.getAttribute<Id>(untypedPersistencePostReturn, "generatedId", postReturnTypeModel)
+		return AttributeModel.getAttributeorNull<Id>(untypedPersistencePostReturn, "generatedId", postReturnTypeModel)
 	}
 
 	async setupMultiple<T extends SomeEntity>(listId: Id | null, instances: Array<T>): Promise<Array<Id>> {

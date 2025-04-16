@@ -299,7 +299,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		return await this._loadMultiple(typeRef, listId, ids, ownerEncSessionKeyProvider, opts)
 	}
 
-	setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id> {
+	setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id | null> {
 		return this.entityRestClient.setup(listId, instance, extraHeaders, options)
 	}
 

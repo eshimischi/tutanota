@@ -3355,7 +3355,7 @@ export const typeModels = {
 				"name": "typeId",
 				"id": 2556,
 				"type": "Number",
-				"cardinality": "One",
+				"cardinality": "ZeroOrOne",
 				"encrypted": false
 			}
 		},

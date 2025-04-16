@@ -115,7 +115,7 @@ export class EntityClient {
 		return this._target.loadMultiple(typeRef, listId, elementIds, ownerEncSessionKeyProvider, opts)
 	}
 
-	setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id> {
+	setup<T extends SomeEntity>(listId: Id | null, instance: T, extraHeaders?: Dict, options?: EntityRestClientSetupOptions): Promise<Id | null> {
 		return this._target.setup(listId, instance, extraHeaders, options)
 	}
 

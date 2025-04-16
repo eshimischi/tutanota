@@ -756,7 +756,7 @@ export type EntityUpdate = {
 	instanceListId: string;
 	instanceId: string;
 	operation: NumberString;
-	typeId: NumberString;
+	typeId: null | NumberString;
 }
 export const VersionTypeRef: TypeRef<Version> = new TypeRef("sys", 480)
 

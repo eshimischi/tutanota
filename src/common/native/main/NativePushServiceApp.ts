@@ -150,7 +150,7 @@ export class NativePushServiceApp {
 			lastNotificationDate: null,
 			app: this.app,
 		})
-		const id = await this.entityClient.setup(list, pushIdentifier)
+		const id = assertNotNull(await this.entityClient.setup(list, pushIdentifier))
 		return this.entityClient.load(PushIdentifierTypeRef, [list, id])
 	}
 
