@@ -6,6 +6,8 @@ import { UserSatisfactionDialogPage } from "../UserSatisfactionDialog.js"
 import { writeSupportMail } from "../../../mail-app/mail/editor/MailEditor.js"
 import { Icons } from "../../gui/base/icons/Icons.js"
 import { Card } from "../../gui/base/Card.js"
+import { client } from "../../misc/ClientDetector.js"
+import { px } from "../../gui/size.js"
 
 interface DissatisfactionPageAttrs {
 	dialog: Dialog
@@ -27,12 +29,16 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					padding: "1em 0",
 				},
 			},
-			m("img.pb.block.full-width", {
-				src: `${window.tutao.appState.prefixWithoutFile}/images/leaving-wizard/other.png`,
+			m("img.pb.block.center-h", {
+				src: `${window.tutao.appState.prefixWithoutFile}/images/rating/ears-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
 				alt: "",
 				rel: "noreferrer",
 				loading: "lazy",
 				decoding: "async",
+				style: {
+					width: "80%",
+					maxWidth: px(320),
+				},
 			}),
 			m(
 				".text-center",
@@ -43,7 +49,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 				},
 				[m(".h1", lang.get("ratingDissatisfied_title")), m("p", { style: { margin: 0 } }, lang.get("ratingDissatisfied_msg"))],
 			),
-			m(Card, { shouldDivide: true, classes: ["mt-auto"] }, [
+			m(Card, { shouldDivide: true }, [
 				m(SectionButton, {
 					leftIcon: {
 						icon: Icons.Bulb,
@@ -62,8 +68,7 @@ export class DissatisfactionPage implements Component<DissatisfactionPageAttrs> 
 					text: "ratingNeedUrgentHelp_label",
 					rightIcon: { icon: Icons.Open, title: "sendMail_label" },
 					onclick: () => {
-						dialog.close()
-						void writeSupportMail("")
+						navigate("contactSupport")
 					},
 				}),
 			]),

@@ -10,6 +10,7 @@ import { px } from "../../gui/size.js"
 import { showSnackBar } from "../../gui/base/SnackBar.js"
 import { lang } from "../../misc/LanguageViewModel.js"
 import { noOp } from "@tutao/tutanota-utils"
+import { client } from "../../misc/ClientDetector.js"
 
 interface SuggestionPageAttrs {
 	dialog: Dialog
@@ -26,7 +27,20 @@ export class SuggestionPage implements Component<SuggestionPageAttrs> {
 	view(): Children {
 		return m(
 			".flex.flex-column.pt.height-100p.gap-vpad",
-			m(Card, { shouldDivide: true }, m(".h1.text-center.pb-s.pt-s", lang.get("ratingSuggestionPage_title"))),
+			m(Card, [
+				m("img.pb.block.center-h", {
+					src: `${window.tutao.appState.prefixWithoutFile}/images/rating/suggestion-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
+					alt: "",
+					rel: "noreferrer",
+					loading: "lazy",
+					decoding: "async",
+					style: {
+						width: "50%",
+						maxWidth: px(200),
+					},
+				}),
+				m(".h1.text-center.pb-s.pt-s", lang.get("ratingSuggestionPage_title")),
+			]),
 			m(
 				Card,
 				{

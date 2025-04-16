@@ -36,8 +36,8 @@ export class SupportTutaPage implements Component<SupportTutaPageAttrs> {
 		}
 
 		return m(ImageWithOptionsDialog, {
-			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/rate-us-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
-			imageStyle: { maxWidth: px(300) },
+			image: `${window.tutao.appState.prefixWithoutFile}/images/rating/support-tuta-${client.isCalendarApp() ? "calendar" : "mail"}.png`,
+			imageStyle: { maxWidth: px(320) },
 			titleText: "ratingSupportTuta_title",
 			messageText: "ratingSupportTuta_msg",
 			mainActionText: this.getMainAction().langKey,
