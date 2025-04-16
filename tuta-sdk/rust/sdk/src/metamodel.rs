@@ -268,11 +268,48 @@ impl TypeModel {
 
 #[cfg(test)]
 mod tests {
-	use crate::metamodel::ApplicationModels;
+	use crate::metamodel::{AppName, ApplicationModel, ApplicationModels};
+
+	const CARGO_ROOT: &str = env!("CARGO_MANIFEST_DIR");
 
 	#[test]
 	pub fn can_deserialize_empty_application() {
 		let models: ApplicationModels = serde_json::from_str("{\"apps\": {}}").unwrap();
+	}
+
+	#[test]
+	pub fn can_deserialize_tutanota_type_model() {
+		for app in [
+			AppName::Base,
+			AppName::Usage,
+			AppName::Storage,
+			AppName::Gossip,
+			AppName::Monitor,
+			AppName::Sys,
+			AppName::Tutanota,
+		] {
+			eprintln!("Comparing type model for app: {app}");
+
+			let types = serde_json::from_str(&types_raw_string).unwrap();
+			let model = ApplicationModel {
+				types,
+				name: app,
+				version: 1,
+			};
+		}
+	}
+
+	fn get_type_models_for_app(app: AppName) -> String {
+		let file_content = std::fs::read_to_string(format!(
+			"{CARGO_ROOT}/src/common/api/entities/{app}/TypeModels.js"
+		))
+		.unwrap();
+		file_content
+			.split("export const typeModels = ")
+			.skip(1)
+			.next()
+			.unwrap()
+			.to_string()
 	}
 }
 
