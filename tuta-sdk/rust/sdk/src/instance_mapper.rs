@@ -10,7 +10,6 @@ use std::sync::Arc;
 use thiserror::Error;
 
 use crate::date::DateTime;
-use crate::element_value::ElementValue::Array;
 use crate::element_value::{ElementValue, ParsedEntity};
 use crate::entities::Entity;
 use crate::metamodel::{AssociationType, AttributeId, Cardinality, ModelAssociation, TypeModel};
@@ -93,7 +92,8 @@ impl de::Error for DeError {
 	where
 		T: Display,
 	{
-		Self(msg.to_string())
+		let m = msg.to_string();
+		Self(m)
 	}
 }
 
@@ -213,21 +213,13 @@ where
 		V: DeserializeSeed<'de>,
 	{
 		let (key, value) = self.value.take().expect("next_key must be called first!");
-		if key == "_finalIvs" || key == "_errors" {
-			seed.deserialize(DictionaryDeserializer::from_iterable(
-				value.assert_dict(),
-				self.type_model,
-				self.type_model_provider,
-			))
-		} else {
-			seed.deserialize(ElementValueDeserializer {
-				attribute_id: AttributeId::try_from(key.as_str())
-					.map_err(|_| DeError(format!("Invalid attribute Id: {key}")))?,
-				value,
-				type_model: self.type_model,
-				type_model_provider: self.type_model_provider,
-			})
-		}
+		let deserializer = ElementValueDeserializer {
+			attribute_id: ElementValueKey::new(key),
+			value,
+			type_model: self.type_model,
+			type_model_provider: self.type_model_provider,
+		};
+		seed.deserialize(deserializer)
 	}
 
 	fn next_entry_seed<K, V>(
@@ -241,16 +233,12 @@ where
 	{
 		match self.iter.next() {
 			Some((key, value)) => {
-				let attribute_id = key
-					.as_str()
-					.try_into()
-					.map_err(|_| DeError(format!("Invalid attribute Id: {key}")))?;
 				let key_result = kseed.deserialize(key.as_str().into_deserializer())?;
 				let value_result = vseed.deserialize(ElementValueDeserializer {
-					attribute_id,
-					value,
+					attribute_id: ElementValueKey::new(key),
 					type_model: self.type_model,
 					type_model_provider: self.type_model_provider,
+					value,
 				})?;
 				Ok(Some((key_result, value_result)))
 			},
@@ -270,16 +258,46 @@ where
 /// Deserializer for a single ElementValue.
 struct ElementValueDeserializer<'t> {
 	/// attribute_id for which we are deserializing the value. Useful for diagnostics.
-	attribute_id: AttributeId,
+	attribute_id: ElementValueKey,
 	/// The value being deserialized
 	value: ElementValue,
 	type_model: &'t TypeModel,
 	type_model_provider: &'t TypeModelProvider,
 }
 
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub enum ElementValueKey {
+	AttributeId(AttributeId),
+	MaybeErrorKeyseys(String),
+	FinalIvs,
+	Errors,
+}
+
+impl ElementValueKey {
+	fn new(key_str: String) -> Self {
+		if let Ok(number) = key_str.parse::<u64>() {
+			Self::AttributeId(AttributeId::from(number))
+		} else if key_str == "_errors" {
+			Self::Errors
+		} else if key_str == "_finalIvs" {
+			Self::FinalIvs
+		} else {
+			Self::MaybeErrorKeyseys(key_str)
+		}
+	}
+
+	pub fn get_attribute_id(&self) -> Option<&AttributeId> {
+		if let Self::AttributeId(id) = self {
+			Some(id)
+		} else {
+			None
+		}
+	}
+}
+
 impl ElementValueDeserializer<'_> {
 	fn wrong_type_err(&self, expected: &str) -> DeError {
-		DeError::wrong_type(&String::from(self.attribute_id), &self.value, expected)
+		DeError::wrong_type(&format!("{:?}", self.attribute_id), &self.value, expected)
 	}
 }
 
@@ -377,12 +395,13 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 			// Associations do not have ElementValue::Null values anymore,
 			// but empty arrays vec![] in case of Zero with cardinality ZeroOrOne
 			// i.e. all associations are now wrapped in an ElementValue::Array
-			ElementValue::Array(arr) => {
+			ElementValue::Array(array) if array.is_empty() => {
 				let is_association = self
-					.type_model
-					.is_attribute_id_association(&self.attribute_id);
-				// only associations are stored in arrays
-				if is_association && arr.is_empty() {
+					.attribute_id
+					.get_attribute_id()
+					.map(|attr_id| self.type_model.is_attribute_id_association(attr_id))
+					.unwrap_or_default();
+				if is_association {
 					visitor.visit_none()
 				} else {
 					visitor.visit_some(self)
@@ -397,9 +416,13 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 	where
 		V: Visitor<'de>,
 	{
+		let ElementValueKey::AttributeId(attribute_id) = self.attribute_id else {
+			todo!()
+		};
+
 		if let ElementValue::Array(arr) = self.value {
 			let array_deserializer = ArrayDeserializer {
-				attribute_id: self.attribute_id,
+				attribute_id,
 				iter: arr.into_iter(),
 				type_model: self.type_model,
 				type_model_provider: self.type_model_provider,
@@ -454,9 +477,16 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 			}
 		}
 
-		let is_association = self
-			.type_model
-			.is_attribute_id_association(&self.attribute_id);
+		let attribute_id = match self.attribute_id {
+			ElementValueKey::AttributeId(attribute_id) => attribute_id,
+			ElementValueKey::MaybeErrorKeyseys(_)
+			| ElementValueKey::Errors
+			| ElementValueKey::FinalIvs => {
+				todo!()
+			},
+		};
+
+		let is_association = self.type_model.is_attribute_id_association(&attribute_id);
 
 		if name == crate::id::id_tuple::ID_TUPLE_GENERATED_NAME {
 			match self.value {
@@ -517,7 +547,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 		} else if let ElementValue::Dict(dict) = self.value {
 			let attr_assoc = self
 				.type_model
-				.get_association_by_attribute_id(&self.attribute_id)
+				.get_association_by_attribute_id(&attribute_id)
 				.map_err(|err| {
 					DeError(format!(
 							"association for attribute id {:?} does not exist on type model with typeId {:?} {:?}",
@@ -550,7 +580,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 			let cardinality = self
 				.type_model
 				.associations
-				.get(&self.attribute_id)
+				.get(&attribute_id)
 				.ok_or_else(|| {
 					DeError(format!(
 							"association for attribute id {:?} does not exist on type model with typeId {:?}",
@@ -562,7 +592,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 
 			let attr_assoc = self
 				.type_model
-				.get_association_by_attribute_id(&self.attribute_id)
+				.get_association_by_attribute_id(&attribute_id)
 				.map_err(|err| {
 					DeError(format!(
 							"association for attribute id {:?} does not exist on type model with typeId {:?} {err:?}",
@@ -613,7 +643,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 				},
 				Cardinality::Any => {
 					let array_deserializer = ArrayDeserializer {
-						attribute_id: self.attribute_id,
+						attribute_id,
 						iter: arr.into_iter(),
 						type_model: ref_type_model,
 						type_model_provider: self.type_model_provider,
@@ -759,7 +789,7 @@ where
 			Some(value) => seed
 				.deserialize(ElementValueDeserializer {
 					value,
-					attribute_id: self.attribute_id,
+					attribute_id: ElementValueKey::AttributeId(self.attribute_id),
 					type_model: self.type_model,
 					type_model_provider: self.type_model_provider,
 				})
@@ -1125,12 +1155,12 @@ impl<'t> SerializeStruct for ElementValueStructSerializer<'t> {
 						},
 
 						(Cardinality::ZeroOrOne, ElementValue::Null) => {
-							map.insert(key.to_string(), Array(vec![]));
+							map.insert(key.to_string(), ElementValue::Array(vec![]));
 						},
 
 						// nom-null value with all cardinality
 						(Cardinality::One | Cardinality::ZeroOrOne, element_value) => {
-							map.insert(key.to_string(), Array(vec![element_value]));
+							map.insert(key.to_string(), ElementValue::Array(vec![element_value]));
 						},
 
 						// nom-null value with all cardinality
@@ -1472,6 +1502,7 @@ mod tests {
 	};
 	use crate::GeneratedId;
 	use std::sync::Arc;
+	use ElementValue::Array;
 
 	#[test]
 	fn test_de_group() {
@@ -1742,6 +1773,7 @@ mod tests {
 		let pub_enc_key_data_typemodel = type_model_provider
 			.resolve_server_type_ref(&sys::PubEncKeyData::type_ref())
 			.unwrap();
+
 		let group = generate_random_group(None, None);
 		let result = mapper.serialize_entity(group.clone()).unwrap();
 		assert_eq!(
@@ -1814,7 +1846,7 @@ mod tests {
 				.assert_array()[0]
 				.assert_dict()
 				.get(
-					&group_type_model
+					&pub_enc_key_data_typemodel
 						.get_attribute_id_by_attribute_name("protocolVersion")
 						.unwrap()
 				)

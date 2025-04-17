@@ -235,7 +235,7 @@ impl ImportEssential {
 			ownerKeyVersion: owner_enc_sk_for_import_state_get.version as i64,
 			totalMails: total_importable_mails,
 			targetMailFolder: target_mailset,
-			_errors: None,
+			_errors: Default::default(),
 			_finalIvs: Default::default(),
 		};
 

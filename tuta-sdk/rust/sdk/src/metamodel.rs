@@ -244,7 +244,8 @@ impl TypeModel {
 	) -> Result<&ModelAssociation, TypeModelError> {
 		self.associations.get(attribute_id).ok_or_else(|| {
 			TypeModelError(format!(
-				"no association found with attribute_id '{attribute_id:?}'",
+				"no association found with attribute_id '{attribute_id:?}' int type: {}",
+				self.name
 			))
 		})
 	}
@@ -270,8 +271,8 @@ impl TypeModel {
 		}
 
 		Err(TypeModelError(format!(
-			"did not find attribute with name '{}' in values or associations",
-			attribute_name
+			"did not find attribute with name '{attribute_name}' in values or associations in type: {}",
+			 self.name
 		)))
 	}
 

@@ -1226,7 +1226,8 @@ mod tests {
 		for value_type in ALL_VALUE_TYPES {
 			assert_eq!(
 				Err(ApiCallError::internal(
-					"Nil encrypted value is not accepted. ModelValue Id: 426".to_string()
+					"Nil encrypted value is not accepted. ModelValue Id: AttributeId(426)"
+						.to_string()
 				)),
 				EntityFacadeImpl::encrypt_value(
 					&create_model_value(value_type.clone(), true, Cardinality::One),

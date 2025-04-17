@@ -291,10 +291,9 @@ fn create_test_entity_dict_with_provider(
 	}
 
 	if model.is_encrypted() {
-		object.insert(
-			"_finalIvs".to_owned(),
-			ElementValue::Dict(Default::default()),
-		);
+		let empty_dict = ElementValue::Dict(Default::default());
+		object.insert("_finalIvs".to_string(), empty_dict.clone());
+		object.insert("_errors".to_owned(), empty_dict.clone());
 	}
 
 	object

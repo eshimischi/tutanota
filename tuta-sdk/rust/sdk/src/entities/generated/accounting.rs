@@ -17,7 +17,10 @@ pub struct CustomerAccountPosting {
 	pub invoiceNumber: Option<String>,
 	#[serde(rename = "84")]
 	pub amount: i64,
+
+	#[serde(default)]
 	pub _errors: Errors,
+	#[serde(default)]
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -48,7 +51,10 @@ pub struct CustomerAccountReturn {
 	pub _publicCryptoProtocolVersion: Option<i64>,
 	#[serde(rename = "90")]
 	pub postings: Vec<CustomerAccountPosting>,
+
+	#[serde(default)]
 	pub _errors: Errors,
+	#[serde(default)]
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
