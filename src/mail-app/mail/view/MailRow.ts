@@ -331,6 +331,7 @@ export class MailRow implements VirtualRow<Mail> {
 					// Not using the regular Label component as we have too
 					// many differences and list is a special case anyway.
 					m("span.small.text-center.text-ellipsis.border-radius-m", {
+						"data-testid": "label",
 						style: {
 							padding: `2px ${size.vpad_xsm}px`,
 							minWidth: "4ch",
