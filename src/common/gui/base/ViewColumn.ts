@@ -23,7 +23,7 @@ export class ViewColumn implements Component<Attrs> {
 	readonly maxWidth: number
 	private readonly headerCenter: MaybeLazy<MaybeTranslation>
 	private readonly ariaLabel: lazy<string>
-	private readonly testId: string
+	private readonly testId: string | null
 	width: number
 	offset: number // offset to the left
 
@@ -72,7 +72,7 @@ export class ViewColumn implements Component<Attrs> {
 		this.headerCenter = headerCenter || "emptyString_msg"
 
 		this.ariaLabel = ariaLabel ?? null
-		this.testId = testId ?? lang.getTranslationText(this.getTitle())
+		this.testId = testId ?? null
 		this.width = minWidth
 		this.offset = 0
 		this.isInForeground = false
@@ -88,7 +88,7 @@ export class ViewColumn implements Component<Attrs> {
 			".view-column.fill-absolute",
 			{
 				...landmark,
-				"data-testid": `section:${this.testId}`,
+				"data-testid": `section:${this.testId ?? lang.getTranslationText(this.getTitle())}`,
 				inert: !this.isVisible && !this.isInForeground,
 				oncreate: (vnode) => {
 					this.domColumn = vnode.dom as HTMLElement
