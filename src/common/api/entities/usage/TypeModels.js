@@ -43,7 +43,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"12": {
 		"name": "UsageTestMetricConfig",
@@ -92,7 +92,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"17": {
 		"name": "UsageTestMetricData",
@@ -131,7 +131,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"35": {
 		"name": "UsageTestStage",
@@ -188,7 +188,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"53": {
 		"name": "UsageTestAssignmentIn",
@@ -219,7 +219,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"56": {
 		"name": "UsageTestAssignment",
@@ -284,7 +284,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"63": {
 		"name": "UsageTestAssignmentOut",
@@ -325,7 +325,7 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"80": {
 		"name": "UsageTestParticipationIn",
@@ -382,6 +382,6 @@ export const typeModels = {
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	}
 }

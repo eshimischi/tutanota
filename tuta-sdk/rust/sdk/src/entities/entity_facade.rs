@@ -1329,9 +1329,7 @@ mod tests {
 				.assert_dict_mut_ref()
 				.insert(
 					mail_address_type_model
-						.get_attribute_id_by_attribute_name(
-							ID_FIELD,
-						)
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap(),
 					expected_aggregate_id.clone(),
 				);
@@ -1351,9 +1349,7 @@ mod tests {
 				.assert_dict_mut_ref()
 				.insert(
 					mail_address_type_model
-						.get_attribute_id_by_attribute_name(
-							ID_FIELD,
-						)
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap(),
 					ElementValue::Null,
 				);
@@ -1368,9 +1364,7 @@ mod tests {
 				.assert_dict_mut_ref()
 				.insert(
 					mail_address_type_model
-						.get_attribute_id_by_attribute_name(
-							ID_FIELD,
-						)
+						.get_attribute_id_by_attribute_name(ID_FIELD)
 						.unwrap(),
 					ElementValue::Null,
 				);
@@ -1389,7 +1383,7 @@ mod tests {
 				original_mail
 					.get_mut(
 						&mail_type_model
-							.get_attribute_id_by_attribute_name( "sender")
+							.get_attribute_id_by_attribute_name("sender")
 							.unwrap(),
 					)
 					.unwrap()
@@ -1397,9 +1391,7 @@ mod tests {
 					.assert_dict_mut_ref()
 					.insert(
 						mail_address_type_model
-							.get_attribute_id_by_attribute_name(
-								ID_FIELD,
-							)
+							.get_attribute_id_by_attribute_name(ID_FIELD)
 							.unwrap(),
 						expected_aggregate_id.clone(),
 					);
@@ -1414,9 +1406,7 @@ mod tests {
 					.assert_dict_mut_ref()
 					.insert(
 						mail_address_type_model
-							.get_attribute_id_by_attribute_name(
-								ID_FIELD,
-							)
+							.get_attribute_id_by_attribute_name(ID_FIELD)
 							.unwrap(),
 						expected_aggregate_id.clone(),
 					);
@@ -1443,18 +1433,13 @@ mod tests {
 				Some(&ElementValue::Bytes(owner_enc_session_key.to_vec())),
 				decrypted_mail.get(
 					&mail_type_model
-						.get_attribute_id_by_attribute_name(
-
-							OWNER_ENC_SESSION_KEY_FIELD
-						)
+						.get_attribute_id_by_attribute_name(OWNER_ENC_SESSION_KEY_FIELD)
 						.unwrap()
 				),
 			);
 			decrypted_mail.insert(
 				mail_type_model
-					.get_attribute_id_by_attribute_name(
-						OWNER_ENC_SESSION_KEY_FIELD,
-					)
+					.get_attribute_id_by_attribute_name(OWNER_ENC_SESSION_KEY_FIELD)
 					.unwrap(),
 				ElementValue::Null,
 			);
@@ -1464,9 +1449,7 @@ mod tests {
 				)),
 				decrypted_mail.get(
 					&mail_type_model
-						.get_attribute_id_by_attribute_name(
-							OWNER_KEY_VERSION_FIELD
-						)
+						.get_attribute_id_by_attribute_name(OWNER_KEY_VERSION_FIELD)
 						.unwrap()
 				),
 			);
@@ -1544,7 +1527,8 @@ mod tests {
 			.unwrap();
 		let mail_address_type_model = type_model_provider
 			.resolve_server_type_ref(&MailAddress::type_ref())
-			.unwrap();		let sk = GenericAesKey::from_bytes(rand::random::<[u8; 32]>().as_slice()).unwrap();
+			.unwrap();
+		let sk = GenericAesKey::from_bytes(rand::random::<[u8; 32]>().as_slice()).unwrap();
 		let new_iv = Iv::from_bytes(&rand::random::<[u8; 16]>()).unwrap();
 		let original_iv = Iv::generate(&RandomizerFacade::from_core(rng.clone()));
 

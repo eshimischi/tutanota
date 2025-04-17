@@ -44,7 +44,7 @@
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"16": {
 		"name": "ReadCounterReturn",
@@ -85,7 +85,7 @@
 			}
 		},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"49": {
 		"name": "WriteCounterData",
@@ -140,7 +140,7 @@
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"221": {
 		"name": "ApprovalMail",
@@ -221,7 +221,7 @@
 			}
 		},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"300": {
 		"name": "CounterValue",
@@ -260,7 +260,7 @@
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"305": {
 		"name": "ErrorReportFile",
@@ -299,7 +299,7 @@
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"316": {
 		"name": "ErrorReportData",
@@ -394,7 +394,7 @@
 		},
 		"associations": {},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	},
 	"335": {
 		"name": "ReportErrorIn",
@@ -436,6 +436,6 @@
 			}
 		},
 		"app": "monitor",
-		"version": "33"
+		"version": 33
 	}
 }

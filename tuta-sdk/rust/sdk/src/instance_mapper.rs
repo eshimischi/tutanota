@@ -1866,7 +1866,9 @@ mod tests {
 
 		let type_model_provider = Arc::new(mock_type_model_provider());
 		let mapper = InstanceMapper::new(type_model_provider.clone());
-		let gi_type_model = type_model_provider.resolve_client_type_ref(&GroupInfo::type_ref()).unwrap();
+		let gi_type_model = type_model_provider
+			.resolve_client_type_ref(&GroupInfo::type_ref())
+			.unwrap();
 		let parsed_entity = mapper.serialize_entity(group_info).unwrap();
 
 		assert_eq!(

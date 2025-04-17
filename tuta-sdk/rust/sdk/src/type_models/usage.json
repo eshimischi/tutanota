@@ -36,7 +36,7 @@
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"12": {
 		"name": "UsageTestMetricConfig",
@@ -85,7 +85,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"17": {
 		"name": "UsageTestMetricData",
@@ -124,7 +124,7 @@
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"35": {
 		"name": "UsageTestStage",
@@ -181,7 +181,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"53": {
 		"name": "UsageTestAssignmentIn",
@@ -212,7 +212,7 @@
 		},
 		"associations": {},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"56": {
 		"name": "UsageTestAssignment",
@@ -277,7 +277,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"63": {
 		"name": "UsageTestAssignmentOut",
@@ -318,7 +318,7 @@
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	},
 	"80": {
 		"name": "UsageTestParticipationIn",
@@ -375,6 +375,6 @@
 			}
 		},
 		"app": "usage",
-		"version": "3"
+		"version": 3
 	}
 }

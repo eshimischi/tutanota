@@ -36,7 +36,7 @@
 		},
 		"associations": {},
 		"app": "base",
-		"version": "2"
+		"version": 2
 	},
 	"4": {
 		"name": "ApplicationTypesGetOut",
@@ -83,6 +83,6 @@
 		},
 		"associations": {},
 		"app": "base",
-		"version": "2"
+		"version": 2
 	}
 }

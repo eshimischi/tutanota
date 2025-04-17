@@ -43,7 +43,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "base",
-		"version": "2"
+		"version": 2
 	},
 	"4": {
 		"name": "ApplicationTypesGetOut",
@@ -90,6 +90,6 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "base",
-		"version": "2"
+		"version": 2
 	}
 }

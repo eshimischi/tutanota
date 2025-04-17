@@ -53,7 +53,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"73": {
 		"name": "BlobWriteData",
@@ -84,7 +84,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"77": {
 		"name": "BlobAccessTokenPostIn",
@@ -134,7 +134,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"81": {
 		"name": "BlobAccessTokenPostOut",
@@ -167,7 +167,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"94": {
 		"name": "BlobReferencePutIn",
@@ -224,7 +224,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"100": {
 		"name": "BlobReferenceDeleteIn",
@@ -281,7 +281,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"125": {
 		"name": "BlobPostOut",
@@ -322,7 +322,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"129": {
 		"name": "BlobArchiveRef",
@@ -379,7 +379,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"144": {
 		"name": "BlobId",
@@ -410,7 +410,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"154": {
 		"name": "BlobServerUrl",
@@ -441,7 +441,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"157": {
 		"name": "BlobServerAccessInfo",
@@ -498,7 +498,7 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"172": {
 		"name": "InstanceId",
@@ -529,7 +529,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"175": {
 		"name": "BlobReadData",
@@ -578,6 +578,6 @@ export const typeModels = {
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	}
 }

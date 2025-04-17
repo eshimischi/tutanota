@@ -52,7 +52,7 @@
 		},
 		"associations": {},
 		"app": "accounting",
-		"version": "8"
+		"version": 8
 	},
 	"86": {
 		"name": "CustomerAccountReturn",
@@ -125,6 +125,6 @@
 			}
 		},
 		"app": "accounting",
-		"version": "8"
+		"version": 8
 	}
 }

@@ -46,7 +46,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"73": {
 		"name": "BlobWriteData",
@@ -77,7 +77,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"77": {
 		"name": "BlobAccessTokenPostIn",
@@ -127,7 +127,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"81": {
 		"name": "BlobAccessTokenPostOut",
@@ -160,7 +160,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"94": {
 		"name": "BlobReferencePutIn",
@@ -217,7 +217,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"100": {
 		"name": "BlobReferenceDeleteIn",
@@ -274,7 +274,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"125": {
 		"name": "BlobPostOut",
@@ -315,7 +315,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"129": {
 		"name": "BlobArchiveRef",
@@ -372,7 +372,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"144": {
 		"name": "BlobId",
@@ -403,7 +403,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"154": {
 		"name": "BlobServerUrl",
@@ -434,7 +434,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"157": {
 		"name": "BlobServerAccessInfo",
@@ -491,7 +491,7 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"172": {
 		"name": "InstanceId",
@@ -522,7 +522,7 @@
 		},
 		"associations": {},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	},
 	"175": {
 		"name": "BlobReadData",
@@ -571,6 +571,6 @@
 			}
 		},
 		"app": "storage",
-		"version": "12"
+		"version": 12
 	}
 }

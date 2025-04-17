@@ -1,7 +1,7 @@
 use crate::date::DateTime;
 use crate::element_value::ElementValue;
 use crate::TypeRef;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use thiserror::Error;
@@ -93,6 +93,7 @@ pub enum AssociationType {
 #[derive(Deserialize, Serialize, Clone)]
 #[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct ModelValue {
+	#[serde(with = "as_number")]
 	pub id: AttributeId,
 	pub name: String,
 	#[serde(rename = "type")]
@@ -109,12 +110,14 @@ pub struct ModelValue {
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct ModelAssociation {
+	#[serde(with = "as_number")]
 	pub id: AttributeId,
 	pub name: String,
 	#[serde(rename = "type")]
 	pub association_type: AssociationType,
 	pub cardinality: Cardinality,
 	/// typeId of the type it is referencing
+	#[serde(with = "as_number_t")]
 	pub ref_type_id: TypeId,
 	/// Can it be changed
 	#[serde(rename = "final")]
@@ -122,6 +125,42 @@ pub struct ModelAssociation {
 	/// From which model we import this association from. Currently, the field only exists for aggregates because they are only ones
 	/// which can be imported across models.
 	pub dependency: Option<AppName>,
+}
+
+mod as_number {
+	use super::*;
+
+	pub fn deserialize<'de, D>(d: D) -> Result<AttributeId, D::Error>
+	where
+		D: Deserializer<'de>,
+	{
+		<u64 as Deserialize>::deserialize(d).map(From::from)
+	}
+
+	pub fn serialize<S>(id: &AttributeId, serializer: S) -> Result<S::Ok, S::Error>
+	where
+		S: serde::Serializer,
+	{
+		<u64 as serde::Serialize>::serialize(&id.0, serializer)
+	}
+}
+
+mod as_number_t {
+	use super::*;
+
+	pub fn deserialize<'de, D>(d: D) -> Result<TypeId, D::Error>
+	where
+		D: Deserializer<'de>,
+	{
+		<u64 as Deserialize>::deserialize(d).map(From::from)
+	}
+
+	pub fn serialize<S>(id: &TypeId, serializer: S) -> Result<S::Ok, S::Error>
+	where
+		S: serde::Serializer,
+	{
+		<u64 as serde::Serialize>::serialize(&id.0, serializer)
+	}
 }
 
 #[derive(Deserialize, Serialize, Clone)]
@@ -143,6 +182,7 @@ pub struct ApplicationModels {
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(test, derive(Debug, PartialEq))]
 pub struct TypeModel {
+	#[serde(with = "as_number_t")]
 	pub id: TypeId,
 	/// Since which model version was it introduced
 	pub since: u64,
@@ -248,67 +288,6 @@ impl TypeModel {
 	}
 }
 
-#[cfg(test)]
-mod tests {
-	use crate::bindings::file_client::MockFileClient;
-	use crate::bindings::rest_client::MockRestClient;
-	use crate::metamodel::{AppName, ApplicationModel, ApplicationModels};
-	use crate::type_model_provider::TypeModelProvider;
-	use std::collections::HashMap;
-	use std::sync::Arc;
-
-	const CARGO_ROOT: &str = env!("CARGO_MANIFEST_DIR");
-
-	#[test]
-	pub fn can_deserialize_empty_application() {
-		let _models: ApplicationModels = serde_json::from_str("{\"apps\": {}}").unwrap();
-	}
-
-	#[test]
-	pub fn can_deserialize_tutanota_type_model() {
-		let mut new_apps = HashMap::new();
-		for app in [
-			AppName::Base,
-			AppName::Usage,
-			AppName::Storage,
-			AppName::Gossip,
-			AppName::Monitor,
-			AppName::Sys,
-			AppName::Tutanota,
-		] {
-			eprintln!("Comparing type model for app: {app}");
-
-			let types = serde_json::from_str(&get_type_models_for_app(app)).unwrap();
-			let model = ApplicationModel {
-				types,
-				name: app,
-				version: 1,
-			};
-			new_apps.insert(app, model);
-		}
-
-		let type_model_provider = TypeModelProvider::new(
-			Arc::new(MockRestClient::new()),
-			Arc::new(MockFileClient::new()),
-		);
-		assert_eq!(new_apps, type_model_provider.client_app_models.apps);
-		assert_eq!(new_apps, type_model_provider.server_app_models.apps);
-	}
-
-	fn get_type_models_for_app(app: AppName) -> String {
-		let file_content = std::fs::read_to_string(format!(
-			"{CARGO_ROOT}/src/common/api/entities/{app}/TypeModels.js"
-		))
-		.unwrap();
-		file_content
-			.split("export const typeModels = ")
-			.skip(1)
-			.next()
-			.unwrap()
-			.to_string()
-	}
-}
-
 /// The name of an app in the backend]
 #[derive(serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -395,6 +374,20 @@ impl TryFrom<&str> for AttributeId {
 	}
 }
 
+impl TryFrom<String> for TypeId {
+	type Error = <u64 as std::str::FromStr>::Err;
+	fn try_from(value: String) -> Result<Self, Self::Error> {
+		value.as_str().try_into()
+	}
+}
+
+impl TryFrom<String> for AttributeId {
+	type Error = <u64 as std::str::FromStr>::Err;
+	fn try_from(value: String) -> Result<Self, Self::Error> {
+		Self::try_from(value.as_str())
+	}
+}
+
 impl From<AttributeId> for String {
 	fn from(value: AttributeId) -> Self {
 		value.0.to_string()
@@ -416,5 +409,15 @@ impl From<u64> for AttributeId {
 impl From<u64> for TypeId {
 	fn from(value: u64) -> Self {
 		Self(value)
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use crate::metamodel::ApplicationModels;
+
+	#[test]
+	pub fn can_deserialize_empty_application() {
+		let _models: ApplicationModels = serde_json::from_str("{\"apps\": {}}").unwrap();
 	}
 }

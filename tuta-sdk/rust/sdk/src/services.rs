@@ -86,8 +86,8 @@ mod hidden {
 	use crate::entities::Entity;
 	use crate::services::{ExtraServiceParams, Service};
 	use crate::{ApiCallError, TypeRef};
-	use serde::{Serialize, Serializer};
 	use serde::de::DeserializeOwned;
+	use serde::{Serialize, Serializer};
 
 	/// Type that allows us to call the executor even
 	/// if the service doesn't have an input or output.

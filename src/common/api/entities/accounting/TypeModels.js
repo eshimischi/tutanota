@@ -59,7 +59,7 @@ export const typeModels = {
 		},
 		"associations": {},
 		"app": "accounting",
-		"version": "8"
+		"version": 8
 	},
 	"86": {
 		"name": "CustomerAccountReturn",
@@ -132,6 +132,6 @@ export const typeModels = {
 			}
 		},
 		"app": "accounting",
-		"version": "8"
+		"version": 8
 	}
 }

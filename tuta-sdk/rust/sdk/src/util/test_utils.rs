@@ -16,18 +16,17 @@ use crate::entities::generated::sys::{
 	ArchiveRef, ArchiveType, Group, GroupKeysRef, KeyPair, PubEncKeyData, TypeInfo,
 };
 use crate::instance_mapper::InstanceMapper;
+use crate::metamodel::AttributeId;
 use crate::metamodel::ElementType::Aggregated;
+use crate::metamodel::TypeId;
 use crate::metamodel::{
-	AppName, ApplicationModel, AssociationType, Cardinality, ElementType, ModelValue,
-	ValueType,
+	AppName, ApplicationModel, AssociationType, Cardinality, ElementType, ModelValue, ValueType,
 };
 use crate::tutanota_constants::CryptoProtocolVersion;
 use crate::tutanota_constants::PublicKeyIdentifierType;
 use crate::CustomId;
 use crate::GeneratedId;
 use crate::{IdTupleCustom, IdTupleGenerated};
-use crate::metamodel::AttributeId;
-use crate::metamodel::TypeId;
 use serde::de::DeserializeOwned;
 
 /// Generates a URL-safe random string of length `Size`.
