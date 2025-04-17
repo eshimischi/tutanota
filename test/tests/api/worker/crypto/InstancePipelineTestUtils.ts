@@ -122,7 +122,12 @@ export const dummyResolver = (tr: TypeRef<unknown>) => {
 	return Promise.resolve(model)
 }
 
-export function createEncryptedValueType(type: Values<typeof ValueType>, cardinality: Values<typeof Cardinality>): ModelValue & { encrypted: true } {
+export function createEncryptedValueType(
+	type: Values<typeof ValueType>,
+	cardinality: Values<typeof Cardinality>,
+): ModelValue & {
+	encrypted: true
+} {
 	return {
 		name: "test",
 		id: 426,

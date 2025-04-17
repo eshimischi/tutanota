@@ -33,12 +33,12 @@ import { EntityRestCache } from "./rest/DefaultEntityRestCache.js"
 import { SleepDetector } from "./utils/SleepDetector.js"
 import sysModelInfo from "../entities/sys/ModelInfo.js"
 import tutanotaModelInfo from "../entities/tutanota/ModelInfo.js"
-import { ApplicationTypesHash, resolveClientTypeReference } from "../common/EntityFunctions.js"
+import { ApplicationTypesHash, resolveClientTypeReference, resolveTypeRefFromAppAndTypeNameLegacy } from "../common/EntityFunctions.js"
 import { PhishingMarkerWebsocketDataTypeRef, ReportedMailFieldMarker } from "../entities/tutanota/TypeRefs"
 import { UserFacade } from "./facades/UserFacade"
 import { ExposedProgressTracker } from "../main/ProgressTracker.js"
 import { SyncTracker } from "../main/SyncTracker.js"
-import { Entity, ServerModelUntypedInstance, UntypedInstance } from "../common/EntityTypes"
+import { Entity, ServerModelUntypedInstance, SomeEntity } from "../common/EntityTypes"
 import { AppName } from "@tutao/tutanota-utils/dist/TypeRef"
 import { InstancePipeline } from "./crypto/InstancePipeline"
 import { ApplicationTypesFacade } from "./facades/ApplicationTypesFacade"
@@ -301,8 +301,7 @@ export class EventBusClient {
 				const entityUpdateData = await this.decodeEntityEventValue(WebsocketEntityDataTypeRef, JSON.parse(value))
 				await this.updateServerModelIfNeeded(entityUpdateData.applicationTypesHash)
 
-				const filteredEntityUpdates = await this.removeUnknownTypes(entityUpdateData.entityUpdates)
-				this.entityUpdateMessageQueue.add(entityUpdateData.eventBatchId, entityUpdateData.eventBatchOwner, filteredEntityUpdates)
+				this.entityUpdateMessageQueue.add(entityUpdateData.eventBatchId, entityUpdateData.eventBatchOwner, entityUpdateData.entityUpdates)
 				break
 			}
 			case MessageType.UnreadCounterUpdate: {
@@ -349,7 +348,9 @@ export class EventBusClient {
 	 */
 	private async removeUnknownTypes(eventBatch: EntityUpdate[]): Promise<EntityUpdate[]> {
 		return promiseFilter(eventBatch, async (entityUpdate) => {
-			const typeRef = new TypeRef(entityUpdate.application as AppName, parseInt(entityUpdate.typeId))
+			const typeRef = entityUpdate.typeId
+				? new TypeRef<SomeEntity>(entityUpdate.application as AppName, parseInt(entityUpdate.typeId))
+				: resolveTypeRefFromAppAndTypeNameLegacy(entityUpdate.application as AppName, entityUpdate.type)
 			try {
 				await resolveClientTypeReference(typeRef)
 				return true
@@ -546,8 +547,7 @@ export class EventBusClient {
 		// Count all batches that will actually be processed so that the progress is correct
 		let totalExpectedBatches = 0
 		for (const batch of timeSortedEventBatches) {
-			const filteredEntityUpdates = await this.removeUnknownTypes(batch.events)
-			const batchWasAddedToQueue = this.addBatch(getElementId(batch), getListId(batch), filteredEntityUpdates, eventQueue)
+			const batchWasAddedToQueue = this.addBatch(getElementId(batch), getListId(batch), batch.events, eventQueue)
 			if (batchWasAddedToQueue) {
 				// Set as last only if it was inserted with success
 				this.lastInitialEventBatch = getElementId(batch)

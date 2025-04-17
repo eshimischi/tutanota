@@ -21,7 +21,7 @@ import { GroupType, OperationType } from "../../../../../src/common/api/common/T
 import { aes256RandomKey, fixedIv, unauthenticatedAesDecrypt } from "@tutao/tutanota-crypto"
 import { resolveClientTypeReference } from "../../../../../src/common/api/common/EntityFunctions.js"
 import { createTestEntity } from "../../../TestUtils.js"
-import { containsEventOfType, entityUpateToUpdateData, EntityUpdateData } from "../../../../../src/common/api/common/utils/EntityUpdateUtils.js"
+import { containsEventOfType, entityUpdateToUpdateData, EntityUpdateData } from "../../../../../src/common/api/common/utils/EntityUpdateUtils.js"
 
 o.spec("Index Utils", () => {
 	o("encryptIndexKey", function () {
@@ -182,7 +182,7 @@ o.spec("Index Utils", () => {
 			let update = createTestEntity(EntityUpdateTypeRef)
 			update.operation = type
 			update.instanceId = id
-			return entityUpateToUpdateData(update)
+			return entityUpdateToUpdateData(update)
 		}
 
 		o(containsEventOfType([], OperationType.CREATE, "1")).equals(false)

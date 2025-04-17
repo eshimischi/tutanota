@@ -485,16 +485,16 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async deleteRange(typeRef: TypeRef<unknown>, listId: string): Promise<void> {
 		const { query, params } = sql`DELETE
-									  FROM ranges
-									  WHERE type = ${getTypeId(typeRef)}
-										AND listId = ${listId}`
+                                    FROM ranges
+                                    WHERE type = ${getTypeId(typeRef)}
+                                      AND listId = ${listId}`
 		await this.sqlCipherFacade.run(query, params)
 	}
 
 	async getRawListElementsOfType(typeRef: TypeRef<ListElementEntity>): Promise<Array<ListElementEntity>> {
 		const { query, params } = sql`SELECT entity
-									  from list_entities
-									  WHERE type = ${getTypeId(typeRef)}`
+                                    from list_entities
+                                    WHERE type = ${getTypeId(typeRef)}`
 		const items = (await this.sqlCipherFacade.all(query, params)) ?? []
 
 		const typeModel = await resolveClientTypeReference(typeRef)
@@ -506,8 +506,8 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async getRawElementsOfType(typeRef: TypeRef<ElementEntity>): Promise<Array<ElementEntity>> {
 		const { query, params } = sql`SELECT entity
-									  from element_entities
-									  WHERE type = ${getTypeId(typeRef)}`
+                                    from element_entities
+                                    WHERE type = ${getTypeId(typeRef)}`
 		const items = (await this.sqlCipherFacade.all(query, params)) ?? []
 		const typeModel = await resolveClientTypeReference(typeRef)
 		return promiseMap(
@@ -518,8 +518,8 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async getElementsOfType<T extends ElementEntity>(typeRef: TypeRef<T>): Promise<Array<T>> {
 		const { query, params } = sql`SELECT entity
-									  from element_entities
-									  WHERE type = ${getTypeId(typeRef)}`
+                                    from element_entities
+                                    WHERE type = ${getTypeId(typeRef)}`
 		const items = (await this.sqlCipherFacade.all(query, params)) ?? []
 		return await this.deserializeList(
 			typeRef,
@@ -529,9 +529,9 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 
 	async getWholeList<T extends ListElementEntity>(typeRef: TypeRef<T>, listId: Id): Promise<Array<T>> {
 		const { query, params } = sql`SELECT entity
-									  FROM list_entities
-									  WHERE type = ${getTypeId(typeRef)}
-										AND listId = ${listId}`
+                                    FROM list_entities
+                                    WHERE type = ${getTypeId(typeRef)}
+                                      AND listId = ${listId}`
 		const items = (await this.sqlCipherFacade.all(query, params)) ?? []
 		return await this.deserializeList(
 			typeRef,
@@ -699,29 +699,29 @@ export class OfflineStorage implements CacheStorage, ExposedCacheStorage {
 					MAX_SAFE_SQL_VARS - 1,
 					encodedElementIds,
 					(c) => sql`DELETE
-							   FROM element_entities
-							   WHERE type = ${getTypeId(typeRef)}
-								 AND elementId IN ${paramList(c)}`,
+                               FROM element_entities
+                               WHERE type = ${getTypeId(typeRef)}
+                                 AND elementId IN ${paramList(c)}`,
 				)
 			case TypeId.ListElement:
 				return await this.runChunked(
 					MAX_SAFE_SQL_VARS - 2,
 					encodedElementIds,
 					(c) => sql`DELETE
-							   FROM list_entities
-							   WHERE type = ${getTypeId(typeRef)}
-								 AND listId = ${listId}
-								 AND elementId IN ${paramList(c)}`,
+                               FROM list_entities
+                               WHERE type = ${getTypeId(typeRef)}
+                                 AND listId = ${listId}
+                                 AND elementId IN ${paramList(c)}`,
 				)
 			case TypeId.BlobElement:
 				return await this.runChunked(
 					MAX_SAFE_SQL_VARS - 2,
 					encodedElementIds,
 					(c) => sql`DELETE
-							   FROM blob_element_entities
-							   WHERE type = ${getTypeId(typeRef)}
-								 AND listId = ${listId}
-								 AND elementId IN ${paramList(c)}`,
+                               FROM blob_element_entities
+                               WHERE type = ${getTypeId(typeRef)}
+                                 AND listId = ${listId}
+                                 AND elementId IN ${paramList(c)}`,
 				)
 			default:
 				throw new Error("must be a persistent type")

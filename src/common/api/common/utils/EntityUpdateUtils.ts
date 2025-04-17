@@ -1,30 +1,34 @@
 import { OperationType } from "../TutanotaConstants.js"
 import { EntityUpdate } from "../../entities/sys/TypeRefs.js"
 import { SomeEntity } from "../EntityTypes.js"
-import { isSameTypeRefByAttr, TypeRef } from "@tutao/tutanota-utils"
+import { AppName, isSameTypeRefByAttr, TypeRef } from "@tutao/tutanota-utils"
 import { isSameId } from "./EntityUtils.js"
+import { resolveTypeRefFromAppAndTypeNameLegacy } from "../EntityFunctions"
 
 export type EntityUpdateData = {
 	application: string
-	typeId: number
+	typeId: number | null
+	type: string
 	instanceListId: string
 	instanceId: string
 	operation: OperationType
 }
 
-export function entityUpateToUpdateData(update: EntityUpdate): EntityUpdateData {
+export function entityUpdateToUpdateData(update: EntityUpdate): EntityUpdateData {
 	return {
-		typeId: parseInt(update.typeId),
 		application: update.application,
-		instanceId: update.instanceId,
+		typeId: update.typeId ? parseInt(update.typeId) : null,
+		type: update.type,
 		instanceListId: update.instanceListId,
+		instanceId: update.instanceId,
 		operation: update.operation as OperationType,
 	}
 }
 
 export function isUpdateForTypeRef(typeRef: TypeRef<unknown>, update: EntityUpdateData | EntityUpdate): boolean {
-	const typeId = typeof update.typeId === "number" ? update.typeId : parseInt(update.typeId)
-	return isSameTypeRefByAttr(typeRef, update.application, typeId)
+	const typeId = typeof update.typeId === "number" ? update.typeId : update.typeId ? parseInt(update.typeId) : null
+	const typeIdOfEntityUpdateType = typeId ? typeId : resolveTypeRefFromAppAndTypeNameLegacy(update.application as AppName, update.type).typeId
+	return isSameTypeRefByAttr(typeRef, update.application, typeIdOfEntityUpdateType)
 }
 
 export function isUpdateFor<T extends SomeEntity>(entity: T, update: EntityUpdateData): boolean {

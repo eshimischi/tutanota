@@ -96,6 +96,21 @@ export class ClientModelInfo {
 			return typeModel
 		}
 	}
+
+	/**
+	 * To be removed 45 days after attrIds server release
+	 * @param app
+	 * @param typeName
+	 */
+	public resolveTypeRefFromAppAndTypeNameLegacy(app: AppName, typeName: string): TypeRef<any> {
+		const typeModels = this.typeModels[app]
+		for (const [typeModelId, typeModel] of Object.entries(typeModels)) {
+			if (typeModel.name == typeName) {
+				return new TypeRef(app, parseInt(typeModelId))
+			}
+		}
+		throw new Error("Cannot find type with name " + typeName + " in app " + app)
+	}
 }
 
 // fixme: pull into own file
@@ -345,4 +360,8 @@ const serverModelInfo = new ServerModelInfo(clientModelInfo)
 export const resolveClientTypeReference = (typeRef: TypeRef<any>) => clientModelInfo.resolveTypeReference(typeRef)
 
 export const resolveServerTypeReference = (typeRef: TypeRef<any>) => serverModelInfo.resolveTypeReference(typeRef)
+
+export const resolveTypeRefFromAppAndTypeNameLegacy = (app: AppName, typeName: string): TypeRef<any> => {
+	return clientModelInfo.resolveTypeRefFromAppAndTypeNameLegacy(app, typeName)
+}
 export const modelInfos = clientModelInfo.modelInfos

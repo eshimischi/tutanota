@@ -654,6 +654,7 @@ export class MailViewModel {
 						instanceListId: importedFolder.entries,
 						operation: OperationType.CREATE,
 						typeId: MailSetEntryTypeRef.typeId,
+						type: "MailSetEntry",
 						application: MailSetEntryTypeRef.app,
 					})
 				})

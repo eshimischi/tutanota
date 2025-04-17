@@ -4,7 +4,7 @@ import stream from "mithril/stream"
 import Stream from "mithril/stream"
 import { assertMainOrNode } from "../common/Env"
 import { EntityUpdate, WebsocketCounterData } from "../entities/sys/TypeRefs"
-import { containsEventOfType, entityUpateToUpdateData, EntityUpdateData } from "../common/utils/EntityUpdateUtils.js"
+import { entityUpdateToUpdateData, EntityUpdateData } from "../common/utils/EntityUpdateUtils.js"
 
 assertMainOrNode()
 
@@ -46,7 +46,7 @@ export class EventController {
 		if (this.logins.isUserLoggedIn()) {
 			// the UserController must be notified first as other event receivers depend on it to be up-to-date
 			loginsUpdates = this.logins.getUserController().entityEventsReceived(
-				entityUpdates.map((e) => entityUpateToUpdateData(e)),
+				entityUpdates.map((e) => entityUpdateToUpdateData(e)),
 				eventOwnerGroupId,
 			)
 		}

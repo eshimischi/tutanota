@@ -8,7 +8,7 @@ import {
 	getCacheModeBehavior,
 	OwnerEncSessionKeyProvider,
 } from "./EntityRestClient"
-import { resolveClientTypeReference } from "../../common/EntityFunctions"
+import { resolveClientTypeReference, resolveTypeRefFromAppAndTypeNameLegacy } from "../../common/EntityFunctions"
 import { OperationType } from "../../common/TutanotaConstants"
 import { assertNotNull, difference, getFirstOrThrow, getTypeId, groupBy, isSameTypeRef, lastThrow, TypeRef } from "@tutao/tutanota-utils"
 import {
@@ -47,7 +47,7 @@ import type { ListElementEntity, SomeEntity, TypeModel } from "../../common/Enti
 import { QueuedBatch } from "../EventQueue.js"
 import { ENTITY_EVENT_BATCH_EXPIRE_MS } from "../EventBusClient"
 import { CustomCacheHandlerMap } from "./CustomCacheHandler.js"
-import { containsEventOfType, entityUpateToUpdateData, getEventOfType, isUpdateForTypeRef } from "../../common/utils/EntityUpdateUtils.js"
+import { containsEventOfType, entityUpdateToUpdateData, getEventOfType, isUpdateForTypeRef } from "../../common/utils/EntityUpdateUtils.js"
 import { isCustomIdType } from "../offline/OfflineStorage.js"
 import { AppName } from "@tutao/tutanota-utils/dist/TypeRef"
 
@@ -737,7 +737,9 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		// we first handle potential post multiple updates in get multiple requests
 		for (let [instanceListId, updates] of createUpdatesForLETsPerList) {
 			const firstUpdate = updates[0]
-			const typeRef = new TypeRef<ListElementEntity>(firstUpdate.application as AppName, parseInt(firstUpdate.typeId))
+			const typeRef = firstUpdate.typeId
+				? new TypeRef<SomeEntity>(firstUpdate.application as AppName, parseInt(firstUpdate.typeId))
+				: resolveTypeRefFromAppAndTypeNameLegacy(firstUpdate.application as AppName, firstUpdate.type)
 			const ids = updates.map((update) => update.instanceId)
 
 			// We only want to load the instances that are in cache range
@@ -777,9 +779,11 @@ export class DefaultEntityRestCache implements EntityRestCache {
 		const otherEventUpdates: EntityUpdate[] = []
 		// we need an array of UpdateEntityData
 		for (let update of regularUpdates) {
-			const { operation, typeId, application } = update
+			const { operation, typeId, application, type } = update
 			const { instanceListId, instanceId } = getUpdateInstanceId(update)
-			const typeRef = new TypeRef<SomeEntity>(application as AppName, parseInt(typeId))
+			const typeRef = typeId
+				? new TypeRef<SomeEntity>(application as AppName, parseInt(typeId))
+				: resolveTypeRefFromAppAndTypeNameLegacy(application as AppName, type)
 
 			switch (operation) {
 				case OperationType.UPDATE: {
@@ -793,7 +797,7 @@ export class DefaultEntityRestCache implements EntityRestCache {
 					if (
 						isSameTypeRef(MailSetEntryTypeRef, typeRef) &&
 						containsEventOfType(
-							updatesArray.map((e) => entityUpateToUpdateData(e)),
+							updatesArray.map((e) => entityUpdateToUpdateData(e)),
 							OperationType.CREATE,
 							instanceId,
 						)

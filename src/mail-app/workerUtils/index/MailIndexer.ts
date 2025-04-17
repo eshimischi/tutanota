@@ -72,7 +72,7 @@ import { ProgressMonitor } from "../../../common/api/common/utils/ProgressMonito
 import { InfoMessageHandler } from "../../../common/gui/InfoMessageHandler.js"
 import { ElementDataOS, GroupDataOS, Metadata, MetaDataOS } from "../../../common/api/worker/search/IndexTables.js"
 import { MailFacade } from "../../../common/api/worker/facades/lazy/MailFacade.js"
-import { containsEventOfType, entityUpateToUpdateData } from "../../../common/api/common/utils/EntityUpdateUtils.js"
+import { containsEventOfType, entityUpdateToUpdateData } from "../../../common/api/common/utils/EntityUpdateUtils.js"
 import { b64UserIdHash } from "../../../common/api/worker/search/DbFacade.js"
 import { hasError } from "../../../common/api/common/utils/ErrorUtils.js"
 import { getDisplayedSender, getMailBodyText, MailAddressAndName } from "../../../common/api/common/CommonMailUtils.js"
@@ -692,7 +692,7 @@ export class MailIndexer {
 					containsEventOfType(
 						// FIXME: before merging to master: currently we loop and map in quite some places,
 						// is this ok?
-						events.map((e) => entityUpateToUpdateData(e)),
+						events.map((e) => entityUpdateToUpdateData(e)),
 						OperationType.DELETE,
 						event.instanceId,
 					)
@@ -730,7 +730,7 @@ export class MailIndexer {
 			} else if (event.operation === OperationType.DELETE) {
 				if (
 					!containsEventOfType(
-						events.map((e) => entityUpateToUpdateData(e)),
+						events.map((e) => entityUpdateToUpdateData(e)),
 						OperationType.CREATE,
 						event.instanceId,
 					)
