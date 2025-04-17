@@ -152,14 +152,27 @@ where
 	serde::forward_to_deserialize_any! {
 		bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
 		byte_buf option unit unit_struct newtype_struct seq tuple
-		tuple_struct map enum identifier ignored_any
+		tuple_struct enum identifier ignored_any
 	}
 
-	fn deserialize_any<V>(self, _: V) -> Result<V::Value, Self::Error>
+	fn deserialize_map<V>(self, visitor: V) -> Result<V::Value, Self::Error>
 	where
 		V: Visitor<'de>,
 	{
-		Err(de::Error::custom("deserialize_any is not supported!"))
+		visitor.visit_map(self)
+	}
+
+	fn deserialize_any<V>(self, value: V) -> Result<V::Value, Self::Error>
+	where
+		V: Visitor<'de>,
+	{
+		// value.visit_map(self)
+
+		let type_name = &self.type_model.name;
+		let key = self.value.map(|(k, _)| k).unwrap_or("NO KEY".to_string());
+		Err(de::Error::custom(format_args!(
+			"deserialize_any is not supported! key: `{key}`, value type: `{type_name}`",
+		)))
 	}
 
 	fn deserialize_struct<V>(
@@ -200,14 +213,21 @@ where
 		V: DeserializeSeed<'de>,
 	{
 		let (key, value) = self.value.take().expect("next_key must be called first!");
-		let deserializer = ElementValueDeserializer {
-			attribute_id: AttributeId::try_from(key.as_str())
-				.map_err(|_| DeError(format!("Invalid attribute Id: {key}")))?,
-			value,
-			type_model: self.type_model,
-			type_model_provider: self.type_model_provider,
-		};
-		seed.deserialize(deserializer)
+		if key == "_finalIvs" || key == "_errors" {
+			seed.deserialize(DictionaryDeserializer::from_iterable(
+				value.assert_dict(),
+				self.type_model,
+				self.type_model_provider,
+			))
+		} else {
+			seed.deserialize(ElementValueDeserializer {
+				attribute_id: AttributeId::try_from(key.as_str())
+					.map_err(|_| DeError(format!("Invalid attribute Id: {key}")))?,
+				value,
+				type_model: self.type_model,
+				type_model_provider: self.type_model_provider,
+			})
+		}
 	}
 
 	fn next_entry_seed<K, V>(
@@ -279,7 +299,7 @@ impl<'de> Deserializer<'de> for ElementValueDeserializer<'de> {
 		let type_name = self.value.type_variant_name();
 		Err(de::Error::custom(format_args!(
 			"deserialize_any is not supported! key: `{:?}`, value type: `{type_name}`",
-			self.attribute_id
+			self.type_model.name
 		)))
 	}
 
@@ -691,7 +711,7 @@ struct ArrayDeserializer<'t, I>
 where
 	I: Iterator<Item = ElementValue>,
 {
-	/// Key under which the entities are. Will be passed to the deserializer for elements.
+	/// key under which the entities are. Will be passed to the deserializer for elements.
 	attribute_id: AttributeId,
 	iter: I,
 	type_model: &'t TypeModel,
@@ -1052,7 +1072,8 @@ impl<'t> SerializeStruct for ElementValueStructSerializer<'t> {
 				type_model_provider,
 			} => {
 				if key == "_errors" {
-					// Throw decryption errors away since they are not part of the actual type.
+					// Throw decryption errors and saved Ivs away since
+					// they are not part of the actual type.
 					return Ok(());
 				}
 

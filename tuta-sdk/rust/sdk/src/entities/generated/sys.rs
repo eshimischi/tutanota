@@ -128,7 +128,7 @@ pub struct GroupInfo {
 	pub group: GeneratedId,
 	#[serde(rename = "687")]
 	pub mailAddressAliases: Vec<MailAddressAlias>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -650,7 +650,7 @@ pub struct AccountingInfo {
 	pub invoiceInfo: Option<GeneratedId>,
 	#[serde(rename = "2424")]
 	pub appStoreSubscription: Option<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1546,7 +1546,7 @@ pub struct PushIdentifier {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "2426")]
 	pub app: i64,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2080,7 +2080,7 @@ pub struct PaymentDataServicePutData {
 	pub confirmedCountry: Option<String>,
 	#[serde(rename = "1320")]
 	pub creditCard: Option<CreditCard>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2291,6 +2291,7 @@ pub struct EmailSenderListElement {
 	pub r#type: i64,
 	#[serde(rename = "1705")]
 	pub field: i64,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2325,7 +2326,7 @@ pub struct CustomerServerProperties {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "959")]
 	pub emailSenderList: Vec<EmailSenderListElement>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2465,7 +2466,7 @@ pub struct AuditLogEntry {
 	pub groupInfo: Option<IdTupleGenerated>,
 	#[serde(rename = "1307")]
 	pub modifiedGroupInfo: Option<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2741,7 +2742,7 @@ pub struct Session {
 	pub challenges: Vec<Challenge>,
 	#[serde(rename = "1205")]
 	pub user: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2967,7 +2968,7 @@ pub struct WhitelabelChild {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1268")]
 	pub customer: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3033,6 +3034,7 @@ pub struct CreditCard {
 	pub expirationMonth: String,
 	#[serde(rename = "1319")]
 	pub expirationYear: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3089,7 +3091,7 @@ pub struct OrderProcessingAgreement {
 	pub signerUserGroupInfo: IdTupleGenerated,
 	#[serde(rename = "1337")]
 	pub customer: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3522,6 +3524,7 @@ pub struct AlarmInfo {
 	pub alarmIdentifier: String,
 	#[serde(rename = "1540")]
 	pub calendarRef: CalendarEventRef,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3552,7 +3555,7 @@ pub struct UserAlarmInfo {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1548")]
 	pub alarmInfo: AlarmInfo,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3623,6 +3626,7 @@ pub struct RepeatRule {
 	pub excludedDates: Vec<DateWrapper>,
 	#[serde(rename = "2525")]
 	pub advancedRules: Vec<CalendarAdvancedRepeatRule>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3656,6 +3660,7 @@ pub struct AlarmNotification {
 	pub notificationSessionKeys: Vec<NotificationSessionKey>,
 	#[serde(rename = "1573")]
 	pub user: GeneratedId,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3675,7 +3680,7 @@ pub struct AlarmServicePost {
 	pub _format: i64,
 	#[serde(rename = "1578")]
 	pub alarmNotifications: Vec<AlarmNotification>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3811,7 +3816,7 @@ pub struct ReceivedGroupInvitation {
 	pub sharedGroup: GeneratedId,
 	#[serde(rename = "1616")]
 	pub sentInvitation: IdTupleGenerated,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3893,6 +3898,7 @@ pub struct InvoiceItem {
 	pub endDate: Option<DateTime>,
 	#[serde(rename = "1649")]
 	pub singleType: bool,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3953,7 +3959,7 @@ pub struct Invoice {
 	pub customer: GeneratedId,
 	#[serde(rename = "1672")]
 	pub bookings: Vec<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3988,7 +3994,7 @@ pub struct MissedNotification {
 	pub notificationInfos: Vec<NotificationInfo>,
 	#[serde(rename = "1703")]
 	pub alarmNotifications: Vec<AlarmNotification>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -4159,7 +4165,7 @@ pub struct GiftCard {
 	pub migrated: bool,
 	#[serde(rename = "2238")]
 	pub _ownerKeyVersion: Option<i64>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -4247,7 +4253,7 @@ pub struct GiftCardCreateData {
 	pub keyHash: Vec<u8>,
 	#[serde(rename = "2275")]
 	pub ownerKeyVersion: i64,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -4330,7 +4336,7 @@ pub struct GiftCardRedeemGetReturn {
 	pub value: i64,
 	#[serde(rename = "1823")]
 	pub giftCard: IdTupleGenerated,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -4810,6 +4816,7 @@ pub struct DateWrapper {
 	pub _id: Option<CustomId>,
 	#[serde(rename = "2075")]
 	pub date: DateTime,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -5409,7 +5416,7 @@ pub struct GroupKeyUpdate {
 	pub groupKeyVersion: i64,
 	#[serde(rename = "2379")]
 	pub bucketKey: BucketKey,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -5744,6 +5751,7 @@ pub struct CalendarAdvancedRepeatRule {
 	pub ruleType: i64,
 	#[serde(rename = "2524")]
 	pub interval: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 

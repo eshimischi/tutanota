@@ -26,7 +26,7 @@ pub trait Entity: 'static {
 /// FinalIv holds such an IV for a specific field.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 #[serde(transparent)]
-pub struct FinalIv(#[serde(with = "serde_bytes")] Vec<u8>);
+pub struct FinalIv(#[serde(with = "serde_bytes")] pub Vec<u8>);
 
 uniffi::custom_newtype!(FinalIv, Vec<u8>);
 

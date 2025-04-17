@@ -403,7 +403,7 @@ mod tests {
 	pub async fn post_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
-			_errors: None,
+			_errors: Default::default(),
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::POST);
 		let result = executor
@@ -423,7 +423,7 @@ mod tests {
 	pub async fn put_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
-			_errors: None,
+			_errors: Default::default(),
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::PUT);
 		let result = executor
@@ -443,7 +443,7 @@ mod tests {
 	pub async fn get_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
-			_errors: None,
+			_errors: Default::default(),
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::GET);
 		let result = executor
@@ -463,7 +463,7 @@ mod tests {
 	pub async fn delete_should_map_unencrypted_data_and_response() {
 		let hello_input_data = HelloUnEncInput {
 			message: "Something".to_string(),
-			_errors: None,
+			_errors: Default::default(),
 		};
 		let executor = maps_unencrypted_data_and_response(HttpMethod::DELETE);
 		let result = executor

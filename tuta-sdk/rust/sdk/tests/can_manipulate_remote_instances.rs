@@ -67,7 +67,7 @@ async fn can_create_remote_instance() {
 		lastUsageTime: Default::default(),
 		pushServiceType: 2, // PushServiceType.EMAIL
 		// when this is returned and deserialized, this will be set but empty
-		_errors: Some(Default::default()),
+		_errors: Default::default(),
 		// none of these need to be set
 		_permissions: Default::default(),
 		_finalIvs: Default::default(),

@@ -465,7 +465,7 @@ pub const HELLO_OUTPUT_ENCRYPTED: &str = r#"{
 		},
 		"associations": {},
 		"app": "test",
-		"version": "75"
+		"version": 75
 	}"#;
 impl Entity for HelloEncOutput {
 	fn type_ref() -> TypeRef {
@@ -496,7 +496,7 @@ pub const HELLO_INPUT_ENCRYPTED: &str = r#"{
 		},
 		"associations": {},
 		"app": "test",
-		"version": "75"
+		"version": 75
 	}"#;
 impl Entity for HelloEncInput {
 	fn type_ref() -> TypeRef {
@@ -537,7 +537,7 @@ pub const HELLO_OUTPUT_UNENCRYPTED: &str = r#"{
 		},
 		"associations": {},
 		"app": "test",
-		"version": "75"
+		"version": 75
 	}"#;
 
 impl Entity for HelloUnEncOutput {
@@ -569,7 +569,7 @@ pub const HELLO_INPUT_UNENCRYPTED: &str = r#"{
 		},
 		"associations": {},
 		"app": "test",
-		"version": "75"
+		"version": 75
 	}"#;
 
 impl Entity for HelloUnEncInput {
@@ -602,7 +602,7 @@ pub struct HelloEncOutput {
 pub struct HelloUnEncInput {
 	#[serde(rename = "149")]
 	pub message: String,
-	pub _errors: Option<crate::entities::Errors>,
+	pub _errors: crate::entities::Errors,
 }
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct HelloUnEncOutput {

@@ -52,7 +52,7 @@ pub struct TutanotaFile {
 	pub subFiles: Option<Subfiles>,
 	#[serde(rename = "1225")]
 	pub blobs: Vec<super::sys::Blob>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -83,7 +83,7 @@ pub struct FileSystem {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "35")]
 	pub files: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -107,6 +107,7 @@ pub struct ContactMailAddress {
 	pub address: String,
 	#[serde(rename = "48")]
 	pub customTypeName: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -130,6 +131,7 @@ pub struct ContactPhoneNumber {
 	pub number: String,
 	#[serde(rename = "53")]
 	pub customTypeName: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -153,6 +155,7 @@ pub struct ContactAddress {
 	pub address: String,
 	#[serde(rename = "58")]
 	pub customTypeName: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -176,6 +179,7 @@ pub struct ContactSocialId {
 	pub socialId: String,
 	#[serde(rename = "63")]
 	pub customTypeName: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -258,7 +262,7 @@ pub struct Contact {
 	pub messengerHandles: Vec<ContactMessengerHandle>,
 	#[serde(rename = "1390")]
 	pub pronouns: Vec<ContactPronouns>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -312,6 +316,7 @@ pub struct MailAddress {
 	pub address: String,
 	#[serde(rename = "96")]
 	pub contact: Option<IdTupleGenerated>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -384,7 +389,7 @@ pub struct Mail {
 	pub bucketKey: Option<super::sys::BucketKey>,
 	#[serde(rename = "1465")]
 	pub sets: Vec<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -433,7 +438,7 @@ pub struct MailBox {
 	pub importedAttachments: GeneratedId,
 	#[serde(rename = "1585")]
 	pub mailImportStates: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -541,7 +546,7 @@ pub struct ContactList {
 	pub contacts: GeneratedId,
 	#[serde(rename = "856")]
 	pub photos: Option<PhotosRef>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -699,7 +704,7 @@ pub struct TutanotaProperties {
 	pub imapSyncConfig: Vec<ImapSyncConfiguration>,
 	#[serde(rename = "578")]
 	pub inboxRules: Vec<InboxRule>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -784,7 +789,7 @@ pub struct MailFolder {
 	pub parentFolder: Option<IdTupleGenerated>,
 	#[serde(rename = "1459")]
 	pub entries: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -853,7 +858,7 @@ pub struct CreateMailFolderData {
 	pub ownerKeyVersion: i64,
 	#[serde(rename = "452")]
 	pub parentFolder: Option<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -873,7 +878,7 @@ pub struct CreateMailFolderReturn {
 	pub _format: i64,
 	#[serde(rename = "457")]
 	pub newFolder: IdTupleGenerated,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -893,7 +898,7 @@ pub struct DeleteMailFolderData {
 	pub _format: i64,
 	#[serde(rename = "460")]
 	pub folders: Vec<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -938,6 +943,7 @@ pub struct DraftRecipient {
 	pub name: String,
 	#[serde(rename = "485")]
 	pub mailAddress: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1033,6 +1039,7 @@ pub struct DraftData {
 	pub removedAttachments: Vec<IdTupleGenerated>,
 	#[serde(rename = "819")]
 	pub replyTos: Vec<EncryptedMailAddress>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1061,7 +1068,7 @@ pub struct DraftCreateData {
 	pub ownerKeyVersion: i64,
 	#[serde(rename = "515")]
 	pub draftData: DraftData,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1101,7 +1108,7 @@ pub struct DraftUpdateData {
 	pub draftData: DraftData,
 	#[serde(rename = "522")]
 	pub draft: IdTupleGenerated,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1121,7 +1128,7 @@ pub struct DraftUpdateReturn {
 	pub _format: i64,
 	#[serde(rename = "525")]
 	pub attachments: Vec<IdTupleGenerated>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1320,6 +1327,7 @@ pub struct InboxRule {
 	pub value: String,
 	#[serde(rename = "577")]
 	pub targetFolder: IdTupleGenerated,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1341,6 +1349,7 @@ pub struct EncryptedMailAddress {
 	pub name: String,
 	#[serde(rename = "615")]
 	pub address: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1740,6 +1749,7 @@ pub struct CalendarRepeatRule {
 	pub excludedDates: Vec<super::sys::DateWrapper>,
 	#[serde(rename = "1590")]
 	pub advancedRules: Vec<AdvancedRepeatRule>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1797,7 +1807,7 @@ pub struct CalendarEvent {
 	pub attendees: Vec<CalendarEventAttendee>,
 	#[serde(rename = "1092")]
 	pub organizer: Option<EncryptedMailAddress>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1832,7 +1842,7 @@ pub struct CalendarGroupRoot {
 	pub longEvents: GeneratedId,
 	#[serde(rename = "1103")]
 	pub index: Option<CalendarEventIndexRef>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1917,6 +1927,7 @@ pub struct GroupSettings {
 	pub group: GeneratedId,
 	#[serde(rename = "1449")]
 	pub defaultAlarmsList: Vec<DefaultAlarmInfo>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1953,7 +1964,7 @@ pub struct UserSettingsGroupRoot {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "979")]
 	pub groupSettings: Vec<GroupSettings>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -1991,7 +2002,7 @@ pub struct CreateGroupPostReturn {
 	pub _format: i64,
 	#[serde(rename = "987")]
 	pub group: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2208,6 +2219,7 @@ pub struct CalendarEventAttendee {
 	pub status: i64,
 	#[serde(rename = "1087")]
 	pub address: EncryptedMailAddress,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2284,7 +2296,7 @@ pub struct CalendarEventUpdate {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1112")]
 	pub file: IdTupleGenerated,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2415,6 +2427,7 @@ pub struct EmailTemplateContent {
 	pub text: String,
 	#[serde(rename = "1157")]
 	pub languageCode: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2449,7 +2462,7 @@ pub struct EmailTemplate {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1167")]
 	pub contents: Vec<EmailTemplateContent>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2469,6 +2482,7 @@ pub struct KnowledgeBaseEntryKeyword {
 	pub _id: Option<CustomId>,
 	#[serde(rename = "1170")]
 	pub keyword: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2503,7 +2517,7 @@ pub struct KnowledgeBaseEntry {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1180")]
 	pub keywords: Vec<KnowledgeBaseEntryKeyword>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2536,7 +2550,7 @@ pub struct TemplateGroupRoot {
 	pub templates: GeneratedId,
 	#[serde(rename = "1189")]
 	pub knowledgeBase: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2587,7 +2601,7 @@ pub struct MailboxProperties {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1267")]
 	pub mailAddressProperties: Vec<MailAddressProperties>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2683,6 +2697,7 @@ pub struct MailAddressProperties {
 	pub mailAddress: String,
 	#[serde(rename = "1266")]
 	pub senderName: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2704,6 +2719,7 @@ pub struct Header {
 	pub headers: Option<String>,
 	#[serde(rename = "1272")]
 	pub compressedHeaders: Option<String>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2725,6 +2741,7 @@ pub struct Body {
 	pub text: Option<String>,
 	#[serde(rename = "1276")]
 	pub compressedText: Option<String>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2805,7 +2822,7 @@ pub struct MailDetailsDraft {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1297")]
 	pub details: MailDetails,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2836,7 +2853,7 @@ pub struct MailDetailsBlob {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1305")]
 	pub details: MailDetails,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2905,7 +2922,7 @@ pub struct ContactListEntry {
 	pub emailAddress: String,
 	#[serde(rename = "1409")]
 	pub _ownerKeyVersion: Option<i64>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2936,7 +2953,7 @@ pub struct ContactListGroupRoot {
 	pub _ownerKeyVersion: Option<i64>,
 	#[serde(rename = "1340")]
 	pub entries: GeneratedId,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -2985,6 +3002,7 @@ pub struct ContactCustomDate {
 	pub customTypeName: String,
 	#[serde(rename = "1360")]
 	pub dateIso: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3008,6 +3026,7 @@ pub struct ContactWebsite {
 	pub customTypeName: String,
 	#[serde(rename = "1365")]
 	pub url: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3031,6 +3050,7 @@ pub struct ContactRelationship {
 	pub customTypeName: String,
 	#[serde(rename = "1370")]
 	pub person: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3054,6 +3074,7 @@ pub struct ContactMessengerHandle {
 	pub customTypeName: String,
 	#[serde(rename = "1375")]
 	pub handle: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3075,6 +3096,7 @@ pub struct ContactPronouns {
 	pub language: String,
 	#[serde(rename = "1379")]
 	pub pronouns: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3132,6 +3154,7 @@ pub struct DefaultAlarmInfo {
 	pub _id: Option<CustomId>,
 	#[serde(rename = "1448")]
 	pub trigger: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3235,6 +3258,7 @@ pub struct ManageLabelServiceLabelData {
 	pub name: String,
 	#[serde(rename = "1483")]
 	pub color: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3261,7 +3285,7 @@ pub struct ManageLabelServicePostIn {
 	pub ownerGroup: GeneratedId,
 	#[serde(rename = "1489")]
 	pub data: ManageLabelServiceLabelData,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3436,7 +3460,7 @@ pub struct ImportMailData {
 	pub recipients: Recipients,
 	#[serde(rename = "1551")]
 	pub importedAttachments: Vec<ImportAttachment>,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3561,7 +3585,7 @@ pub struct ImportMailGetIn {
 	pub totalMails: i64,
 	#[serde(rename = "1599")]
 	pub targetMailFolder: IdTupleGenerated,
-	pub _errors: Option<Errors>,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
@@ -3583,6 +3607,7 @@ pub struct AdvancedRepeatRule {
 	pub ruleType: i64,
 	#[serde(rename = "1589")]
 	pub interval: String,
+	pub _errors: Errors,
 	pub _finalIvs: HashMap<String, FinalIv>,
 }
 
