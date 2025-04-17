@@ -52,10 +52,19 @@ struct CalendarEntity: AppEntity {
 }
 
 struct CalendarQuery: EntityQuery {
+	@IntentParameterDependency<ConfigurationAppIntent>(
+		\.$account
+   	)
+   	var config
+
 	func entities(for identifiers: [CalendarEntity.ID]) async throws -> [CalendarEntity] {
 		TUTSLog("fetch calendar entities")
-		guard let userId = ConfigurationAppIntent().account?.id else { return [] }
-		return try await CalendarEntity.fetchCalendars(userId)
+
+		guard let userId = config?.account.id else { return [] }
+
+		TUTSLog("WOW! Look this amazing account: \(userId)")
+
+		return try await CalendarEntity.fetchCalendars(userId).filter { identifiers.contains($0.id) }
 	}
 
 	func suggestedEntities() async throws -> some ResultsCollection {

@@ -20,7 +20,7 @@ struct Provider: AppIntentTimelineProvider {
 		let currentDate = Date()
 		for hourOffset in 0 ..< 5 {
 			let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-			let entry = SimpleEntry(date: entryDate, configuration: ConfigurationAppIntent())
+			let entry = SimpleEntry(date: entryDate, configuration: configuration)
 			entries.append(entry)
 		}
 
@@ -45,7 +45,7 @@ struct AgendaWidgetEntryView : View {
 			Text(entry.configuration.account?.email ?? "No account selected" )
 
             Text("Calendars:")
-			// Text(entry.configuration ?? "No calendars selected" )
+			Text(entry.configuration.calendars?.map { $0.name }.joined(separator: ", ") ?? "" )
 		}.containerBackground(for: .widget) { Color.clear }
     }
 }
