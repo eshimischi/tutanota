@@ -63,8 +63,6 @@ async function doBuild(opts) {
 		measure()
 		const version = await getTutanotaAppVersion()
 
-		await checkOfflineDatabaseMigrations()
-
 		if (opts.existing) {
 			console.log("Found existing option (-e). Skipping Webapp build.")
 		} else {
